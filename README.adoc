@@ -1,0 +1,9 @@
+== Angular 2 Demo
+
+This project was generated using https://github.com/angular/angular-cli[Angular CLI].
+
+To run it, run `ng serve`.
+
+To test it, run `ng test`.
+
+To run its integration tests, run `ng serve` in one terminal and `ng e2e` in another.
