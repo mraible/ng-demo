@@ -1,9 +1,13 @@
 = Angular 2 Demo
 
-This project was generated using https://github.com/angular/angular-cli[Angular CLI].
+This tutorial shows you how to build a simple search and edit application using https://angular.io[Angular 2] and
+https://github.com/angular/angular-cli[Angular CLI].
 
-To run it, run `ng serve`.
+.Source Code
+****
+If you'd like to get right to it, the https://github.com/mraible/ng2-demo[source is on GitHub]. To run the app,
+use `ng serve`. To test it, run `ng test`. To run its integration tests, run `ng serve` in one terminal and
+`ng e2e` in another.
+****
 
-To test it, run `ng test`.
 
-To run its integration tests, run `ng serve` in one terminal and `ng e2e` in another.
