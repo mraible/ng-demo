@@ -11,7 +11,6 @@ import {Person, SearchService} from "../shared/index";
   directives: [FORM_DIRECTIVES, CORE_DIRECTIVES, ROUTER_DIRECTIVES]
 })
 export class SearchComponent implements OnInit {
-  loading:boolean;
   query:string;
   searchResults:Array<Person>;
 
