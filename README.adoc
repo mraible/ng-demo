@@ -676,7 +676,25 @@ button {
 }
 ----
 
-At this point, you should be able to search for a person and update their information.
+At this point, if you try to search and edit a person, the edit screen will now show. If you look in your console, you'll see the following error.
+
+----
+EXCEPTION: Error: Uncaught (in promise): Component 'EditComponent' does not have route configuration
+----
+
+This is because Angular CLI added an `/edit` route, but it did not include a parameter on the route. Modify `ng2-demo.component.ts` so
+the `/edit` route has an `id` parameter.
+
+[source,js]
+.src/app/ng2-demo.component.ts
+----
+@Routes([
+  {path: '/search', component: SearchComponent},
+  {path: '/edit/:id', component: EditComponent}
+])
+----
+
+Now you should be able to search for a person and update their information.
 
 [[edit-form]]
 .Edit component

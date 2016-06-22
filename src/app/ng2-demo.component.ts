@@ -17,7 +17,7 @@ import { EditComponent } from './+edit';
 })
 @Routes([
   {path: '/search', component: SearchComponent},
-  {path: '/edit', component: EditComponent}
+  {path: '/edit/:id', component: EditComponent}
 ])
 export class Ng2DemoAppComponent {
   title = 'ng2-demo works!';
