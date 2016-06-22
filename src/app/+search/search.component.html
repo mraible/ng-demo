@@ -3,7 +3,6 @@
   <input type="search" [(ngModel)]="query" (keyup.enter)="search()">
   <button type="button" (click)="search()">Search</button>
 </form>
-<div *ngIf="loading">loading...</div>
 <table *ngIf="searchResults">
   <thead>
   <tr>
@@ -14,7 +13,7 @@
   </thead>
   <tbody>
   <tr *ngFor="let person of searchResults; let i=index">
-    <td>{{person.name}}</td>
+    <td><a [routerLink]="['/edit', person.id]">{{person.name}}</a></td>
     <td>{{person.phone}}</td>
     <td>{{person.address.street}}<br/>
       {{person.address.city}}, {{person.address.state}} {{person.address.zip}}

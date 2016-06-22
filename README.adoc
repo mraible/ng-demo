@@ -557,7 +557,7 @@ make things easier when writing integration tests with Protractor.
 </div>
 ----
 
-Modify `EditComponent` to import model and service claases and to use the `SearchService` to get data.
+Modify `EditComponent` to import model and service classes and to use the `SearchService` to get data.
 
 [source,javascript]
 .src/app/+edit/edit.component.ts
@@ -567,7 +567,7 @@ import { Person, Address, SearchService } from '../shared/index';
 import { RouteSegment, Router } from '@angular/router';
 
 @Component({
-  selector: 'sd-edit',
+  selector: 'app-edit',
   moduleId: module.id,
   templateUrl: 'edit.component.html',
   styleUrls: ['edit.component.css']
@@ -669,7 +669,7 @@ You can add CSS to `src/app/+edit/edit.component.css` if you want to make the fo
 ----
 :host {
   display: block;
-  padding: 0 16px;
+  padding: 0 20px;
 }
 
 button {
@@ -1054,43 +1054,41 @@ import { MockSearchService } from '../shared/search/mocks/search.service';
 
 import { EditComponent } from './edit.component';
 
-export function main() {
-  describe('Edit component', () => {
-    var mockSearchService:MockSearchService;
+describe('Edit component', () => {
+  var mockSearchService:MockSearchService;
 
-    beforeEachProviders(() => {
-      mockSearchService = new MockSearchService();
+  beforeEachProviders(() => {
+    mockSearchService = new MockSearchService();
 
-      return [
-        mockSearchService.getProviders(),
-        ROUTER_FAKE_PROVIDERS,
-        provide(RouteSegment, { useValue: new MockRouteSegment({ 'id': '1' }) })
-      ];
-    });
-
-    it('should fetch a single record', inject([TestComponentBuilder], (tcb:TestComponentBuilder) => {
-      return tcb.createAsync(EditComponent).then((fixture) => {
-        let person = {name: 'Emmanuel Sanders', address: {city: 'Denver'}};
-        mockSearchService.setResponse(person);
-
-        fixture.detectChanges();
-        // verify service was called
-        expect(mockSearchService.getByIdSpy).toHaveBeenCalledWith(1);
-
-        // verify data was set on component when initialized
-        let editComponent = fixture.debugElement.componentInstance;
-        expect(editComponent.editAddress.city).toBe('Denver');
-
-        // verify HTML renders as expected
-        var compiled = fixture.debugElement.nativeElement;
-        expect(compiled.querySelector('h3')).toHaveText('Emmanuel Sanders');
-      });
-    }));
+    return [
+      mockSearchService.getProviders(),
+      ROUTER_FAKE_PROVIDERS,
+      provide(RouteSegment, { useValue: new MockRouteSegment({ 'id': '1' }) })
+    ];
   });
-}
+
+  it('should fetch a single record', inject([TestComponentBuilder], (tcb:TestComponentBuilder) => {
+    return tcb.createAsync(EditComponent).then((fixture) => {
+      let person = {name: 'Emmanuel Sanders', address: {city: 'Denver'}};
+      mockSearchService.setResponse(person);
+
+      fixture.detectChanges();
+      // verify service was called
+      expect(mockSearchService.getByIdSpy).toHaveBeenCalledWith(1);
+
+      // verify data was set on component when initialized
+      let editComponent = fixture.debugElement.componentInstance;
+      expect(editComponent.editAddress.city).toBe('Denver');
+
+      // verify HTML renders as expected
+      var compiled = fixture.debugElement.nativeElement;
+      expect(compiled.querySelector('h3')).toHaveText('Emmanuel Sanders');
+    });
+  }));
+});
 ----
 
-You should see "[green]#✔ 22 tests completed#" in the shell window that's running `ng test`. If you don't, try cancelling the command and restarting.
+You should see "Executed 5 of 5 [green]SUCCESS[/green] (0.238 secs / 0.259 secs)" in the shell window that's running `ng test`. If you don't, try cancelling the command and restarting.
 
 == Integration test the search UI
 
@@ -1104,56 +1102,52 @@ ng serve
 ng e2e
 ----
 
-You should receive an error stating that the "nav text for About" is incorrect.
+All tests should pass.
 
-[[protractor-nav-error]]
-.Protractor nav test error
-image::src/assets/images/protractor-nav-error.png[Protractor nav test error, 800, scaledwidth="100%"]
-
-This happens because we added a Search link to the navbar and didn't update the test that looks for the last child.
-
-[source,javascript]
-.src/app/app.component.e2e-spec.ts
 ----
-it('should have correct nav text for About', () => {
-    expect(element(by.css('sd-app sd-navbar nav a:last-child')).getText()).toEqual('ABOUT');
-});
+⌁ [mraible:~/ng2-demo] tutorial(+0/-0) 35s 130 ± ng e2e
+
+> ng2-demo@0.0.0 pree2e /Users/mraible/ng2-demo
+> webdriver-manager update
+
+selenium standalone is up to date.
+chromedriver is up to date.
+
+> ng2-demo@0.0.0 e2e /Users/mraible/ng2-demo
+> protractor "config/protractor.conf.js"
+
+[21:45:37] I/direct - Using ChromeDriver directly...
+[21:45:37] I/launcher - Running 1 instances of WebDriver
+Spec started
+
+  ng2-demo App
+    ✓ should display message saying app works
+
+Executed 1 of 1 spec SUCCESS in 2 secs.
+[21:45:40] I/launcher - 0 instance(s) of WebDriver still running
+[21:45:40] I/launcher - chrome #01 passed
+
+All end-to-end tests pass.
+⌁ [mraible:~/ng2-demo] tutorial(+0/-0) 5s ±
 ----
-
-Replace this test with the one below, and add a new one to verify the Search link is last.
-
-[source,javascript]
-.src/client/app/app.component.e2e-spec.ts
-----
-it('should have correct nav text for About', () => {
-  expect(element(by.css('sd-app sd-navbar nav a:nth-child(2)')).getText()).toEqual('ABOUT');
-});
-
-it('should have correct nav text for Search', () => {
-  expect(element(by.css('sd-app sd-navbar nav a:last-child')).getText()).toEqual('SEARCH');
-});
-----
-
-Now when you run `npm run e2e`, all specs should pass.
 
 === Testing the search feature
 
-Create a new `search.component.e2e-spec.ts` spec in the same directory as your `SearchComponent`. Add tests to verify elements are rendered correctly and
-search works. At the time of this writing, Protractor's `by.model` and `by.repeater` don't work with Angular 2. For this reason, I used `by.css` to
-verify the HTML renders as expected.
+Create end-to-end tests in `e2e/search.e2e.ts` to verify the search feature works. Populate it with the following code:
 
 [source,javascript]
-.src/client/app/+search/search.component.e2e-spec.ts
+.e2e/search.e2e.ts
 ----
 describe('Search', () => {
 
   beforeEach(() => {
     browser.get('/search');
+    element(by.linkText('Search')).click();
   });
 
   it('should have an input and search button', () => {
-    expect(element(by.css('sd-app sd-search form input')).isPresent()).toEqual(true);
-    expect(element(by.css('sd-app sd-search form button')).isPresent()).toEqual(true);
+    expect(element(by.css('ng2-demo-app app-search form input')).isPresent()).toEqual(true);
+    expect(element(by.css('ng2-demo-app app-search form button')).isPresent()).toEqual(true);
   });
 
   it('should allow searching', () => {
@@ -1163,19 +1157,20 @@ describe('Search', () => {
     searchButton.click().then(() => {
       // doesn't work as expected - results in 0
       //expect(element.all(by.repeater('person of searchResults')).count()).toEqual(3);
-      var list = element.all(by.css('sd-search table tbody tr'));
+      var list = element.all(by.css('app-search table tbody tr'));
       expect(list.count()).toBe(3);
     });
   });
 });
+
 ----
 
 === Testing the edit feature
 
-Create an `edit.component.e2e-spec.ts` spec to verify the `EditComponent` renders a person's information and that you can update their information.
+Create a `e2e/edit.e2e.ts` test to verify the `EditComponent` renders a person's information and that you can update their information.
 
 [source,javascript]
-.src/client/app/+edit/edit.component.e2e-spec.ts
+.e2e/edit.e2e.ts
 ----
 describe('Edit', () => {
 
@@ -1201,36 +1196,13 @@ describe('Edit', () => {
     ' Won!'.split('').forEach((c) => name.sendKeys(c));
     save.click();
     // verify one element matched this change
-    var list = element.all(by.css('sd-search table tbody tr'));
+    var list = element.all(by.css('app-search table tbody tr'));
     expect(list.count()).toBe(1);
   });
 });
 ----
 
-Run `npm run e2e` to verify all your end-to-end tests pass. You might receive a failure for the "Home" test.
-
-[[protractor-home-error]]
-.Protractor Home error
-image::src/assets/images/protractor-home-error.png[Protractor home error, 800, scaledwidth="100%"]
-
-If you do, open `src/client/app/+home/home.component.e2e-spec.ts` and change line 17 from this:
-
-[source,javascript]
-.src/client/app/+home/home.component.e2e-spec.ts
-----
-element(by.css('sd-home form input')).sendKeys('Tim Berners-Lee');
-----
-
-To this:
-
-[source,javascript]
-.src/client/app/+home/home.component.e2e-spec.ts
-----
-let input = element(by.css('sd-home form input'));
-'Tim Berners-Lee'.split('').forEach((c) => input.sendKeys(c));
-----
-
-Run `npm run e2e` again. You should see a success message similar to the one below in your terminal window.
+Run `ng e2e` to verify all your end-to-end tests pass. You should see a success message similar to the one below in your terminal window.
 
 [[protractor-success]]
 .Protractor success
@@ -1239,52 +1211,11 @@ image::src/assets/images/protractor-success.png[Protractor success, 800, scaledw
 If you made it this far and have all 13 specs passing - congratulations!
 You're well on your way to writing quality code with Angular 2 and verifying it works.
 
-== Source code
-
-A completed project with this code is available on GitHub at https://github.com/mraible/angular2-tutorial.
-
-== Continuous Integration
-
-The angular2-seed project ships with a `.travis.yml` that you can use to run continuous integration for this application
-through https://travis-ci.org/[Travis CI]. To enable builds on Travis CI, login and enable builds for the
-GitHub repo you created the project in. Then trigger your first build with a `git push`.
-
-When I first tried this, I received a https://travis-ci.org/mraible/angular2-tutorial/jobs/135517549#L1189[failure] because
-Protractor on Travis CI is https://github.com/mgechev/angular2-seed/issues/970[unable to navigate directly]
-to the search and edit components. I was able to workaround this by modifying `search.component.e2e-spec.ts` to start
-at the top and navigate to the component.
-
-[source,javascript]
-.src/client/app/+search/search.component.e2e-spec.ts
+[NOTE]
 ----
-beforeEach(() => {
-  browser.get('/');
-  element(by.linkText('SEARCH')).click();
-});
-----
-
-I did something similar with `edit.component.e2e-spec.ts`:
-
-[source,javascript]
-.src/client/app/+edit/edit.component.e2e-spec.ts
-----
-beforeEach(() => {
-  browser.get('/');
-  element(by.linkText('SEARCH')).click();
-  let search = element(by.css('sd-search form input'));
-  'Man'.split('').forEach((c) => search.sendKeys(c));
-  element(by.css('sd-search form button')).click();
-  element(by.linkText('Peyton Manning')).click();
-});
-----
-
-== Summary
-
-I hope you've enjoyed this quick-and-easy tutorial on creating and testing Angular 2 applications. Angular CLI doesn't
-currently support generating test coverage reports, but you can https://github.com/angular/angular-cli/issues/883[watch
+Angular CLI doesn't currently support generating test coverage reports, but you can https://github.com/angular/angular-cli/issues/883[watch
 this issue] and you'll be notified when it does.
-
-I learned a lot about testing from https://www.ng-book.com/2/[ng-book 2] and its Testing chapter. I recommend reading it.
+----
 
 == Source code
 
@@ -1293,4 +1224,5 @@ A completed project with this code in it is available on GitHub at https://githu
 == Summary
 
 I hope you've enjoyed this quick-and-easy tutorial on how to get started with Angular 2 and Angular CLI. Angular CLI
-takes much of the pain out of setting up an Angular 2 project and using Typescript.
+takes much of the pain out of setting up an Angular 2 project and using Typescript. I expect great things from Angular CLI,
+because the Angular 2 setup process needs it. ;)

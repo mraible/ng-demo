@@ -2,8 +2,9 @@ import { Component } from '@angular/core';
 import { SearchComponent } from './+search';
 import { Routes , ROUTER_DIRECTIVES, ROUTER_PROVIDERS} from '@angular/router';
 import 'rxjs/add/operator/map';
-import {SearchService} from './shared/index';
-import {HTTP_PROVIDERS} from '@angular/http';
+import { SearchService } from './shared/index';
+import { HTTP_PROVIDERS } from '@angular/http';
+import { EditComponent } from './+edit';
 
 @Component({
   moduleId: module.id,
@@ -15,7 +16,8 @@ import {HTTP_PROVIDERS} from '@angular/http';
   viewProviders: [SearchService]
 })
 @Routes([
-  {path: '/search', component: SearchComponent}
+  {path: '/search', component: SearchComponent},
+  {path: '/edit', component: EditComponent}
 ])
 export class Ng2DemoAppComponent {
   title = 'ng2-demo works!';
