@@ -32,16 +32,15 @@ application with search and edit features.
 
 == What you'll need
 
-* About 30-45 minutes.
+* About 20-30 minutes.
 * A favorite text editor or IDE. I recommend https://www.jetbrains.com/idea/[IntelliJ IDEA] and its
-https://plugins.jetbrains.com/plugin/8395?pr=idea[Angular 2 TypeScript Live Templates pluginplugin].
-* https://github.com/angular/angular-cli[Angular CLI] installed.
+https://plugins.jetbrains.com/plugin/8395?pr=idea[Angular 2 TypeScript Live Templates plugin].
 * http://nodejs.org/[Node.js] and npm installed. I recommend using https://github.com/creationix/nvm[nvm].
+* https://github.com/angular/angular-cli[Angular CLI] installed. If you don't have Angular CLI installed, install it using `npm install -g angular-cli@latest`.
 
 == Create your project
 
-If you don't have Angular CLI installed, install it using `npm install -g angular-cli@latest`. Create a new project
-using the `ng new` command:
+Create a new project using the `ng new` command:
 
 ----
 ng new ng2-demo
@@ -1211,11 +1210,8 @@ image::src/assets/images/protractor-success.png[Protractor success, 800, scaledw
 If you made it this far and have all 13 specs passing - congratulations!
 You're well on your way to writing quality code with Angular 2 and verifying it works.
 
-[NOTE]
-----
-Angular CLI doesn't currently support generating test coverage reports, but you can https://github.com/angular/angular-cli/issues/883[watch
+NOTE: Angular CLI doesn't currently support generating test coverage reports, but you can https://github.com/angular/angular-cli/issues/883[watch
 this issue] and you'll be notified when it does.
-----
 
 == Source code
 
