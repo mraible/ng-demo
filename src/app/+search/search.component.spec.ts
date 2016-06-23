@@ -1,18 +1,10 @@
-import {provide} from '@angular/core';
-import {TestComponentBuilder} from '@angular/compiler/testing';
-import {
-  it,
-  describe,
-  expect,
-  inject,
-  beforeEachProviders,
-} from '@angular/core/testing';
-
-import {RouteSegment} from '@angular/router';
-import {MockRouteSegment} from '../shared/search/mocks/routes';
-import {MockSearchService} from '../shared/search/mocks/search.service';
-
-import {SearchComponent} from './search.component';
+import { provide } from "@angular/core";
+import { TestComponentBuilder } from "@angular/compiler/testing";
+import { it, describe, expect, inject, beforeEachProviders } from "@angular/core/testing";
+import { RouteSegment } from "@angular/router";
+import { MockRouteSegment } from "../shared/search/mocks/routes";
+import { MockSearchService } from "../shared/search/mocks/search.service";
+import { SearchComponent } from "./search.component";
 
 describe('Search component', () => {
   var mockSearchService:MockSearchService;

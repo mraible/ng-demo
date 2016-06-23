@@ -13,7 +13,7 @@
 :language: javadocript
 :sourcedir: .
 
-This tutorial shows you how to build a simple search and edit application using https://angular.io[Angular 2] and
+This tutorial shows you how to build a simple search and edit application using https://angular.io[Angular 2] (RC3) and
 https://github.com/angular/angular-cli[Angular CLI].
 
 .Source Code
@@ -51,7 +51,7 @@ ng new ng2-demo
 Angular CLI requires Node 4 or greater. I used node v4.2.6 and npm 3.9.3 for this tutorial.
 ====
 
-This will create a `ng-demo` project and run `npm install` in it. It takes about a minute to complete,
+This will create a `ng2-demo` project and run `npm install` in it. It takes about a minute to complete,
 but will vary based on your internet connection speed.
 
 ----
@@ -59,10 +59,10 @@ $ ng new ng2-demo
 installing ng2
   create .clang-format
   create .editorconfig
-  create src/app/ng2-demo.component.css
-  create src/app/ng2-demo.component.html
-  create src/app/ng2-demo.component.spec.ts
-  create src/app/ng2-demo.component.ts
+  create src/app/app.component.css
+  create src/app/app.component.html
+  create src/app/app.component.spec.ts
+  create src/app/app.component.ts
   create src/app/environment.ts
   create src/app/index.ts
   create src/app/shared/index.ts
@@ -80,7 +80,7 @@ installing ng2
   create config/karma-test-shim.js
   create config/karma.conf.js
   create config/protractor.conf.js
-  create e2e/app.e2e.ts
+  create e2e/app.e2e-spec.ts
   create e2e/app.po.ts
   create e2e/tsconfig.json
   create e2e/typings.d.ts
@@ -169,7 +169,7 @@ installing component
   create src/app/+search/shared/index.ts
 ----
 
-To navigate to this component, add a link in `src/app/ng2-demo.component.html`.
+To navigate to this component, add a link in `src/app/app.component.html`.
 
 [source,xml]
 ----
@@ -209,8 +209,8 @@ import { ROUTER_DIRECTIVES } from '@angular/router';
 
 [NOTE]
 ====
-The file `src/app/+search/index.ts` exports `SearchComponent` and `Ng2DemoAppComponent`
-(in `src/app/ng2-demo.component.ts`) imports it and maps its route. This happened when you ran Angular CLI's
+The file `src/app/+search/index.ts` exports `SearchComponent` and `AppComponent`
+(in `src/app/app.component.ts`) imports it and maps its route. This happened when you ran Angular CLI's
 `g route` command.
 ====
 
@@ -388,11 +388,11 @@ This happens because the app hasn't provided this service to components. To fix 
 export * from './search/search.service';
 ----
 
-To fix the "No provider" error from above, update `ng2-demo.component.ts` to import the `SearchService`
+To fix the "No provider" error from above, update `app.component.ts` to import the `SearchService`
 and add the service to the list of providers.
 
 [source,javascript]
-.src/app/ng2-demo.component.ts
+.src/app/app.component.ts
 ----
 import { SearchService } from './shared/index';
 
@@ -676,17 +676,17 @@ button {
 }
 ----
 
-At this point, if you try to search and edit a person, the edit screen will now show. If you look in your console, you'll see the following error.
+At this point, if you try to search and edit a person, the edit screen will not render. If you look in your console, you'll see the following error.
 
 ----
 EXCEPTION: Error: Uncaught (in promise): Component 'EditComponent' does not have route configuration
 ----
 
-This is because Angular CLI added an `/edit` route, but it did not include a parameter on the route. Modify `ng2-demo.component.ts` so
+This is because Angular CLI added an `/edit` route, but it did not include a parameter on the route. Modify `app.component.ts` so
 the `/edit` route has an `id` parameter.
 
 [source,js]
-.src/app/ng2-demo.component.ts
+.src/app/app.component.ts
 ----
 @Routes([
   {path: '/search', component: SearchComponent},
@@ -738,6 +738,16 @@ import { ROUTER_DIRECTIVES, RouteSegment } from '@angular/router';
 
 After making all these changes, you should be able to search/edit/update a person's information. If it works - nice job!
 
+== Testing
+
+Now that you've built an application, it's important to test it to ensure it works. The best reason for writing tests is
+to automate your testing. Without tests, you'll likely be testing manually. This manual testing will take longer and longer
+as your application grows.
+
+In this section, you'll learn to use http://jasmine.github.io/[Jasmine] for unit testing controllers and https://angular.github.io/protractor/[Protractor] for
+integration testing. Angular's documentation has a good https://angular.io/docs/ts/latest/guide/testing.html[guide to unit testing] if you'd
+like more information on testing and why it's important.
+
 === Unit test the SearchService
 
 Modify `src/app/shared/search/search.service.spec.ts` and setup the test's infrastructure using https://angular.io/docs/js/latest/api/http/testing/MockBackend-class.html[MockBackend]
@@ -775,7 +785,7 @@ export function main() {
 }
 ----
 
-If you run `ng test`, all tests will pass, but you don't see "Search Service" as a listed test. You can fix this by adding the first test of `getAll()`. This test shows how
+If you run `ng test`, all tests will pass, but you won't see "Search Service" as a listed test. You can fix this by adding the first test of `getAll()`. This test shows how
 `MockBackend` can be used to mock results and set the response.
 
 TIP: When you are testing code that returns either a Promise or an RxJS Observable, you can use the `fakeAsync` helper to test that code as if it were synchronous.
@@ -1150,10 +1160,10 @@ All end-to-end tests pass.
 
 === Testing the search feature
 
-Create end-to-end tests in `e2e/search.e2e.ts` to verify the search feature works. Populate it with the following code:
+Create end-to-end tests in `e2e/search.e2e-spec.ts` to verify the search feature works. Populate it with the following code:
 
 [source,javascript]
-.e2e/search.e2e.ts
+.e2e/search.e2e-spec.ts
 ----
 describe('Search', () => {
 
@@ -1184,10 +1194,10 @@ describe('Search', () => {
 
 === Testing the edit feature
 
-Create a `e2e/edit.e2e.ts` test to verify the `EditComponent` renders a person's information and that you can update their information.
+Create a `e2e/edit.e2e-spec.ts` test to verify the `EditComponent` renders a person's information and that you can update their information.
 
 [source,javascript]
-.e2e/edit.e2e.ts
+.e2e/edit.e2e-spec.ts
 ----
 describe('Edit', () => {
 
