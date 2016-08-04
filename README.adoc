@@ -38,6 +38,9 @@ https://plugins.jetbrains.com/plugin/8395?pr=idea[Angular 2 TypeScript Live Temp
 * http://nodejs.org/[Node.js] and npm installed. I recommend using https://github.com/creationix/nvm[nvm].
 * https://github.com/angular/angular-cli[Angular CLI] installed. If you don't have Angular CLI installed, install it using `npm install -g angular-cli@latest`.
 
+TIP: https://augury.angular.io/[Angular Augury] is a Google Chrome Dev Tools extension for debugging Angular 2 applications.
+I haven't needed it much myself, but I can see how it might come in handy.
+
 == Create your project
 
 Create a new project using the `ng new` command:
@@ -55,10 +58,10 @@ This will create a `ng2-demo` project and run `npm install` in it. It takes abou
 but will vary based on your internet connection speed.
 
 ----
-$ ng new ng2-demo
+[mraible:~/dev] $ ng new ng2-demo
 installing ng2
-  create .clang-format
   create .editorconfig
+  create README.md
   create src/app/app.component.css
   create src/app/app.component.html
   create src/app/app.component.spec.ts
@@ -90,14 +93,23 @@ installing ng2
   create tslint.json
   create typings.json
 Successfully initialized git.
-⠼ Installing packages for tooling via npm
+⠦ Installing packages for tooling via npm
 ├── es6-shim (ambient)
 ├── angular-protractor (ambient dev)
 ├── jasmine (ambient dev)
 └── selenium-webdriver (ambient dev)
 
 Installed packages for tooling via npm.
-58s $
+⏚ [mraible:~/dev] 1m18s $
+----
+
+You can see the what version of Angular CLI you're using with `ng --version`.
+
+----
+$ ng --version
+angular-cli: 1.0.0-beta.8
+node: 4.2.6
+os: darwin x64
 ----
 
 [TIP]
