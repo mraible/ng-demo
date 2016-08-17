@@ -9,6 +9,6 @@ describe('ng2-demo App', function() {
 
   it('should display message saying app works', () => {
     page.navigateTo();
-    expect(page.getParagraphText()).toEqual('ng2-demo works!');
+    expect(page.getParagraphText()).toEqual('app works!');
   });
 });

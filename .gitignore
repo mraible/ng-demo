@@ -28,3 +28,7 @@ testem.log
 #System Files
 .DS_Store
 Thumbs.db
+
+*.iws
+
+README.html

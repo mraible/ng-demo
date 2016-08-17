@@ -1,19 +1,15 @@
-import {RouteSegment} from '@angular/router';
+import { ActivatedRoute, UrlSegment, Params, Data } from '@angular/router';
+import { Observable } from "rxjs";
 
-export class MockRouteSegment implements RouteSegment {
-  urlSegments:any;
-  parameters:any;
-  outlet:string;
-  _type:any;
-  _componentFactory:any;
-  type:any;
-  stringifiedUrlSegments:string;
+export class MockActivatedRoute extends ActivatedRoute {
+  params: any;
 
   constructor(parameters?:{ [key:string]:any; }) {
-    this.parameters = parameters;
+    super();
+    this.params = parameters;
   }
 
   getParam(param:string) {
-    return this.parameters[param];
+    return this.params[param];
   }
 }

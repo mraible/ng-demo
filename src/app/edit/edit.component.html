@@ -1,0 +1,26 @@
+<div *ngIf="person">
+  <h3>{{editName}}</h3>
+  <div>
+    <label>Id:</label>
+    {{person.id}}
+  </div>
+  <div>
+    <label>Name:</label>
+    <input [(ngModel)]="editName" id="name" placeholder="name"/>
+  </div>
+  <div>
+    <label>Phone:</label>
+    <input [(ngModel)]="editPhone" id="phone" placeholder="Phone"/>
+  </div>
+  <fieldset>
+    <legend>Address:</legend>
+    <address>
+      <input [(ngModel)]="editAddress.street" id="street"><br/>
+      <input [(ngModel)]="editAddress.city" id="city">,
+      <input [(ngModel)]="editAddress.state" id="state" size="2">
+      <input [(ngModel)]="editAddress.zip" id="zip" size="5">
+    </address>
+  </fieldset>
+  <button (click)="save()" id="save">Save</button>
+  <button (click)="cancel()" id="cancel">Cancel</button>
+</div>
