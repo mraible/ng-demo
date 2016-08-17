@@ -51,7 +51,7 @@ ng new ng2-demo
 
 [NOTE]
 ====
-Angular CLI requires Node 4 or greater. I used node v4.2.6 and npm 3.9.3 for this tutorial.
+The latest release of Angular CLI (beta 10)
 ====
 
 This will create a `ng2-demo` project and run `npm install` in it. It takes about a minute to complete,
@@ -115,47 +115,6 @@ os: darwin x64
 [TIP]
 ====
 If you have the `tee` command installed, you can view this project's files using `tree -I "dist|node_modules|typings|tmp" .`.
-----
-$ tree -I "dist|node_modules|typings|tmp"
-.
-├── README.md
-├── angular-cli-build.js
-├── angular-cli.json
-├── config
-│   ├── environment.dev.ts
-│   ├── environment.js
-│   ├── environment.prod.ts
-│   ├── karma-test-shim.js
-│   ├── karma.conf.js
-│   └── protractor.conf.js
-├── e2e
-│   ├── app.e2e-spec.ts
-│   ├── app.po.ts
-│   ├── tsconfig.json
-│   └── typings.d.ts
-├── package.json
-├── public
-├── src
-│   ├── app
-│   │   ├── app.component.css
-│   │   ├── app.component.html
-│   │   ├── app.component.spec.ts
-│   │   ├── app.component.ts
-│   │   ├── environment.ts
-│   │   ├── index.ts
-│   │   └── shared
-│   │       └── index.ts
-│   ├── favicon.ico
-│   ├── index.html
-│   ├── main.ts
-│   ├── system-config.ts
-│   ├── tsconfig.json
-│   └── typings.d.ts
-├── tslint.json
-└── typings.json
-
-6 directories, 29 files
-----
 ====
 
 == Run the application
