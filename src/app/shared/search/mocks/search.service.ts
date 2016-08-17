@@ -1,7 +1,7 @@
-import {provide} from '@angular/core';
-import {SpyObject} from './helper';
+import { provide } from '@angular/core';
+import { SpyObject } from './helper';
 
-import {SearchService} from '../search.service';
+import { SearchService } from '../search.service';
 import Spy = jasmine.Spy;
 
 export class MockSearchService extends SpyObject {

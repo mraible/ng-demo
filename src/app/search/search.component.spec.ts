@@ -1,20 +1,22 @@
+/* tslint:disable:no-unused-variable */
+
 import { provide } from "@angular/core";
-import { TestComponentBuilder } from "@angular/compiler/testing";
-import { it, describe, expect, inject, beforeEachProviders } from "@angular/core/testing";
-import { RouteSegment } from "@angular/router";
-import { MockRouteSegment } from "../shared/search/mocks/routes";
+import { ActivatedRoute } from "@angular/router";
+import { MockActivatedRoute } from "../shared/search/mocks/routes";
 import { MockSearchService } from "../shared/search/mocks/search.service";
 import { SearchComponent } from "./search.component";
+import { TestComponentBuilder } from "@angular/core/testing/test_component_builder";
+import { inject } from "@angular/core/testing/test_bed";
 
-describe('Search component', () => {
-  var mockSearchService:MockSearchService;
+describe('Component: Search', () => {
+  var mockSearchService: MockSearchService;
 
-  beforeEachProviders(() => {
+  beforeEach(() => {
     mockSearchService = new MockSearchService();
 
     return [
       mockSearchService.getProviders(),
-      provide(RouteSegment, {useValue: new MockRouteSegment({'term': 'peyton'})})
+      provide(ActivatedRoute, {useValue: new MockActivatedRoute({'term': 'peyton'})})
     ];
   });
 
@@ -34,3 +36,4 @@ describe('Search component', () => {
     });
   }));
 });
+

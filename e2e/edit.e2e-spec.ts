@@ -1,12 +1,7 @@
 describe('Edit', () => {
 
   beforeEach(() => {
-    browser.get('/');
-    element(by.linkText('Search')).click();
-    let search = element(by.css('app-search form input'));
-    'Man'.split('').forEach((c) => search.sendKeys(c));
-    element(by.css('app-search form button')).click();
-    element(by.linkText('Peyton Manning')).click();
+    browser.get('/edit/1');
   });
 
   let name = element(by.id('name'));

@@ -1,22 +1,24 @@
-import { provide } from "@angular/core";
-import { TestComponentBuilder } from "@angular/compiler/testing";
-import { it, describe, expect, inject, beforeEachProviders } from "@angular/core/testing";
-import { RouteSegment } from "@angular/router";
-import { ROUTER_FAKE_PROVIDERS } from "@angular/router/testing";
-import { MockRouteSegment } from "../shared/search/mocks/routes";
-import { MockSearchService } from "../shared/search/mocks/search.service";
-import { EditComponent } from "./edit.component";
+/* tslint:disable:no-unused-variable */
 
-describe('Edit component', () => {
+import { provide } from '@angular/core';
+import { TestComponentBuilder } from '@angular/compiler/testing';
+
+import { MockActivatedRoute } from '../shared/search/mocks/routes';
+import { MockSearchService } from '../shared/search/mocks/search.service';
+
+import { EditComponent } from './edit.component';
+import { ActivatedRoute } from "@angular/router";
+import { inject } from "@angular/core/testing/test_bed";
+
+describe('Component: Edit', () => {
   var mockSearchService:MockSearchService;
 
-  beforeEachProviders(() => {
+  beforeEach(() => {
     mockSearchService = new MockSearchService();
 
     return [
       mockSearchService.getProviders(),
-      ROUTER_FAKE_PROVIDERS,
-      provide(RouteSegment, {useValue: new MockRouteSegment({'id': '1'})})
+      provide(ActivatedRoute, { useValue: new MockActivatedRoute({ 'id': '1' }) })
     ];
   });
 
@@ -35,7 +37,7 @@ describe('Edit component', () => {
 
       // verify HTML renders as expected
       var compiled = fixture.debugElement.nativeElement;
-      expect(compiled.querySelector('h3')).toHaveText('Emmanuel Sanders');
+      expect(compiled.querySelector('h3')).toBe('Emmanuel Sanders');
     });
   }));
 });

@@ -1,13 +1,13 @@
-import {Injectable} from '@angular/core';
-import {Http, Response} from '@angular/http';
+import { Injectable } from '@angular/core';
+import { Http, Response } from '@angular/http';
 
 @Injectable()
 export class SearchService {
-  constructor(private http:Http) {
-  }
+
+  constructor(private http: Http) { }
 
   getAll() {
-    return this.http.get('app/shared/search/data/people.json').map((res:Response) => res.json());
+    return this.http.get('app/shared/search/data/people.json').map((res: Response) => res.json());
   }
 
   search(q:string) {

@@ -3,10 +3,10 @@ import {StringMapWrapper} from '@angular/core/src/facade/collection';
 export interface GuinessCompatibleSpy extends jasmine.Spy {
   /** By chaining the spy with and.returnValue, all calls to the function will return a specific
    * value. */
-  andReturn(val:any):void;
+  andReturn(val: any): void;
   /** By chaining the spy with and.callFake, all calls to the spy will delegate to the supplied
    * function. */
-  andCallFake(fn:Function):GuinessCompatibleSpy;
+  andCallFake(fn: Function): GuinessCompatibleSpy;
   /** removes all recorded calls */
   reset();
 }
@@ -19,17 +19,15 @@ export class SpyObject {
       object = new SpyObject();
     }
 
-    var m = StringMapWrapper.merge(config, overrides);
-    StringMapWrapper.forEach(m, (value, key) => {
-      object.spy(key).andReturn(value);
-    });
+    let m = StringMapWrapper.merge(config, overrides);
+    StringMapWrapper.forEach(m, (value, key) => { object.spy(key).andReturn(value); });
     return object;
   }
 
   constructor(type = null) {
     if (type) {
-      for (var prop in type.prototype) {
-        var m = null;
+      for (let prop in type.prototype) {
+        let m = null;
         try {
           m = type.prototype[prop];
         } catch (e) {
@@ -52,13 +50,11 @@ export class SpyObject {
     return this[name];
   }
 
-  prop(name, value) {
-    this[name] = value;
-  }
+  prop(name, value) { this[name] = value; }
 
   /** @internal */
-  _createGuinnessCompatibleSpy(name):GuinessCompatibleSpy {
-    var newSpy:GuinessCompatibleSpy = <any>jasmine.createSpy(name);
+  _createGuinnessCompatibleSpy(name): GuinessCompatibleSpy {
+    let newSpy: GuinessCompatibleSpy = <any>jasmine.createSpy(name);
     newSpy.andCallFake = <any>newSpy.and.callFake;
     newSpy.andReturn = <any>newSpy.and.returnValue;
     newSpy.reset = <any>newSpy.calls.reset;

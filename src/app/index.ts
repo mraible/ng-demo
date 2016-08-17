@@ -1,2 +1,3 @@
-export * from './environment';
-export * from './ng2-demo.component';
+export * from './environments/environment';
+export * from './app.component';
+export * from './app.module';
