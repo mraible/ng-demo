@@ -1,11 +1,11 @@
 import { Routes, RouterModule } from '@angular/router';
-import { SearchComponent } from "./search/index";
-import { EditComponent } from "./edit/index";
-import { AppComponent } from "./app.component";
+import { SearchComponent } from './search/index';
+import { EditComponent } from './edit/index';
 
 const appRoutes: Routes = [
   { path: 'search', component: SearchComponent },
-  { path: 'edit/:id', component: EditComponent }
+  { path: 'edit/:id', component: EditComponent },
+  { path: '', redirectTo: '/search', pathMatch: 'full' }
 ];
 
 export const appRoutingProviders: any[] = [];

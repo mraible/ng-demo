@@ -1,18 +1,16 @@
-import { provide } from '@angular/core';
 import { SpyObject } from './helper';
-
 import { SearchService } from '../search.service';
 import Spy = jasmine.Spy;
 
 export class MockSearchService extends SpyObject {
-  getAllSpy:Spy;
-  getByIdSpy:Spy;
-  searchSpy:Spy;
-  saveSpy:Spy;
-  fakeResponse:any;
+  getAllSpy: Spy;
+  getByIdSpy: Spy;
+  searchSpy: Spy;
+  saveSpy: Spy;
+  fakeResponse: any;
 
   constructor() {
-    super(SearchService);
+    super( SearchService );
 
     this.fakeResponse = null;
     this.getAllSpy = this.spy('getAll').andReturn(this);
@@ -21,15 +19,11 @@ export class MockSearchService extends SpyObject {
     this.saveSpy = this.spy('save').andReturn(this);
   }
 
-  subscribe(callback:any) {
+  subscribe(callback: any) {
     callback(this.fakeResponse);
   }
 
-  setResponse(json:any):void {
+  setResponse(json: any): void {
     this.fakeResponse = json;
-  }
-
-  getProviders():Array<any> {
-    return [provide(SearchService, {useValue: this})];
   }
 }

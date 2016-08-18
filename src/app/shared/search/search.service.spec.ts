@@ -1,27 +1,31 @@
-/* tslint:disable:no-unused-variable */
+/* tslint:disable:no-unused-letiable */
 
-import { MockBackend } from "@angular/http/testing";
-import { provide } from "@angular/core";
-import { Http, ConnectionBackend, BaseRequestOptions, Response, ResponseOptions } from "@angular/http";
-import { SearchService } from "./search.service";
-import { tick, fakeAsync } from "@angular/core/testing/fake_async";
-import { inject } from "@angular/core/testing/test_bed";
-import { addProviders } from "@angular/core/testing/testing";
+import { MockBackend } from '@angular/http/testing';
+import { Http, ConnectionBackend, BaseRequestOptions, Response, ResponseOptions } from '@angular/http';
+import { SearchService } from './search.service';
+import { tick, fakeAsync } from '@angular/core/testing/fake_async';
+import { inject, TestBed } from '@angular/core/testing/test_bed';
 
 describe('SearchService', () => {
   beforeEach(() => {
-    addProviders([BaseRequestOptions, MockBackend, SearchService,
-      provide(Http, {
-        useFactory: (backend: ConnectionBackend, defaultOptions: BaseRequestOptions) => {
+
+    TestBed.configureTestingModule({
+      providers: [
+        {
+          provide: Http, useFactory: (backend: ConnectionBackend, defaultOptions: BaseRequestOptions) => {
           return new Http(backend, defaultOptions);
         }, deps: [MockBackend, BaseRequestOptions]
-      })
-    ]);
+        },
+        {provide: SearchService, useClass: SearchService},
+        {provide: MockBackend, useClass: MockBackend},
+        {provide: BaseRequestOptions, useClass: BaseRequestOptions}
+      ]
+    });
   });
 
   it('should retrieve all search results',
     inject([SearchService, MockBackend], fakeAsync((searchService: SearchService, mockBackend: MockBackend) => {
-      var res: Response;
+      let res: Response;
       mockBackend.connections.subscribe(c => {
         expect(c.request.url).toBe('app/shared/search/data/people.json');
         let response = new ResponseOptions({body: '[{"name": "John Elway"}, {"name": "Gary Kubiak"}]'});
@@ -37,7 +41,7 @@ describe('SearchService', () => {
 
   it('should filter by search term',
     inject([SearchService, MockBackend], fakeAsync((searchService: SearchService, mockBackend: MockBackend) => {
-      var res;
+      let res;
       mockBackend.connections.subscribe(c => {
         expect(c.request.url).toBe('app/shared/search/data/people.json');
         let response = new ResponseOptions({body: '[{"name": "John Elway"}, {"name": "Gary Kubiak"}]'});
@@ -53,7 +57,7 @@ describe('SearchService', () => {
 
   it('should fetch by id',
     inject([SearchService, MockBackend], fakeAsync((searchService: SearchService, mockBackend: MockBackend) => {
-      var res;
+      let res;
       mockBackend.connections.subscribe(c => {
         expect(c.request.url).toBe('app/shared/search/data/people.json');
         let response = new ResponseOptions({body: '[{"id": 1, "name": "John Elway"}, {"id": 2, "name": "Gary Kubiak"}]'});

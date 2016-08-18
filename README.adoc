@@ -182,7 +182,8 @@ import { Routes, RouterModule } from '@angular/router';
 import { SearchComponent } from "./search/index";
 
 const appRoutes: Routes = [
-  { path: 'search', component: SearchComponent }
+  { path: 'search', component: SearchComponent },
+  { path: '', redirectTo: '/search', pathMatch: 'full' }
 ];
 
 export const appRoutingProviders: any[] = [];
@@ -330,20 +331,20 @@ import { Http, Response } from '@angular/http';
 
 @Injectable()
 export class SearchService {
-  constructor(private http:Http) {}
+  constructor(private http: Http) {}
 
   getAll() {
-    return this.http.get('app/shared/search/data/people.json').map((res:Response) => res.json());
+    return this.http.get('app/shared/search/data/people.json').map((res: Response) => res.json());
   }
 }
 
 export class Address {
-  street:string;
-  city:string;
-  state:string;
-  zip:string;
+  street: string;
+  city: string;
+  state: string;
+  zip: string;
 
-  constructor(obj?:any) {
+  constructor(obj?: any) {
     this.street = obj && obj.street || null;
     this.city = obj && obj.city || null;
     this.state = obj && obj.state || null;
@@ -352,12 +353,12 @@ export class Address {
 }
 
 export class Person {
-  id:number;
-  name:string;
-  phone:string;
-  address:Address;
+  id: number;
+  name: string;
+  phone: string;
+  address: Address;
 
-  constructor(obj?:any) {
+  constructor(obj?: any) {
     this.id = obj && Number(obj.id) || null;
     this.name = obj && obj.name || null;
     this.phone = obj && obj.phone || null;
@@ -400,7 +401,7 @@ Then implement the `search()` method to call the service's `getAll()` method.
 ----
 search(): void {
   this.searchService.getAll().subscribe(
-    data => {this.searchResults = data;},
+    data => { this.searchResults = data; },
     error => console.log(error)
   );
 }
@@ -486,14 +487,14 @@ But wait, we still don't have search functionality! To add a search feature, add
 [source,javascript]
 .src/app/shared/search/search.service.ts
 ----
-search(q:string) {
+search(q: string) {
   if (!q || q === '*') {
     q = '';
   } else {
     q = q.toLowerCase();
   }
   return this.getAll().map(data => {
-    let results:any = [];
+    let results: any = [];
     data.map(item => {
       if (JSON.stringify(item).toLowerCase().includes(q)) {
         results.push(item);
@@ -511,7 +512,7 @@ Then refactor `SearchComponent` to call this method with its `query` variable.
 ----
 search(): void {
   this.searchService.search(this.query).subscribe(
-    data => {this.searchResults = data;},
+    data => { this.searchResults = data; },
     error => console.log(error)
   );
 }
@@ -535,7 +536,7 @@ Then add `onSelect(person)` to `search.component.ts`. You'll need to import `Rou
 
 [source,javascript]
 ----
-import { Router } from "@angular/router";
+import { Router } from '@angular/router';
 ...
 export class SearchComponent implements OnInit {
   ...
@@ -567,11 +568,12 @@ Add a route for this component in `app.routing.ts`:
 
 [source,javascript]
 ----
-import { EditComponent } from "./edit/index";
+import { EditComponent } from './edit/index';
 
 const appRoutes: Routes = [
   { path: 'search', component: SearchComponent },
-  { path: 'edit/:id', component: EditComponent }
+  { path: 'edit/:id', component: EditComponent },
+  { path: '', redirectTo: '/search', pathMatch: 'full' }
 ];
 ----
 
@@ -589,11 +591,11 @@ make things easier when writing integration tests with Protractor.
   </div>
   <div>
     <label>Name:</label>
-    <input [(ngModel)]="editName" id="name" placeholder="name"/>
+    <input [(ngModel)]="editName" name="name" id="name" placeholder="name"/>
   </div>
   <div>
     <label>Phone:</label>
-    <input [(ngModel)]="editPhone" id="phone" placeholder="Phone"/>
+    <input [(ngModel)]="editPhone" name="phone" id="phone" placeholder="Phone"/>
   </div>
   <fieldset>
     <legend>Address:</legend>
@@ -615,9 +617,9 @@ Modify `EditComponent` to import model and service classes and to use the `Searc
 .src/app/edit/edit.component.ts
 ----
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Address, Person, SearchService } from "../shared/index";
-import { Subscription } from "rxjs";
-import { ActivatedRoute, Router } from "@angular/router";
+import { Address, Person, SearchService } from '../shared/index';
+import { Subscription } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-edit',
@@ -634,7 +636,8 @@ export class EditComponent implements OnInit, OnDestroy {
 
   constructor(private route: ActivatedRoute,
               private router: Router,
-              private service: SearchService) { }
+              private service: SearchService) {
+  }
 
   ngOnInit() {
     this.sub = this.route.params.subscribe(params => {
@@ -684,14 +687,14 @@ be aware of updated objects in `localStorage`.
 [source,javascript]
 .src/app/shared/search/search.service.ts
 ----
-search(q:string) {
+search(q: string) {
   if (!q || q === '*') {
     q = '';
   } else {
     q = q.toLowerCase();
   }
   return this.getAll().map(data => {
-    let results:any = [];
+    let results: any = [];
     data.map(item => {
       // check for item in localStorage
       if (localStorage['person' + item.id]) {
@@ -762,10 +765,12 @@ Since the `SearchComponent` doesn't execute a search automatically when you exec
 ----
 sub: Subscription;
 
-constructor(private searchService: SearchService, private router: Router, private route: ActivatedRoute) {
+constructor(private searchService: SearchService, private route: ActivatedRoute, private router: Router) {
   this.sub = this.route.params.subscribe(params => {
-    this.query = decodeURIComponent(params['term']);
-    this.search();
+    if (params['term']) {
+      this.query = decodeURIComponent(params['term']);
+      this.search();
+    }
   });
 }
 ----
@@ -802,13 +807,19 @@ and https://angular.io/docs/js/latest/api/http/BaseRequestOptions-class.html[Bas
 ----
 describe('SearchService', () => {
   beforeEach(() => {
-    addProviders([BaseRequestOptions, MockBackend, SearchService,
-      provide(Http, {
-        useFactory: (backend: ConnectionBackend, defaultOptions: BaseRequestOptions) => {
+
+    TestBed.configureTestingModule({
+      providers: [
+        {
+          provide: Http, useFactory: (backend: ConnectionBackend, defaultOptions: BaseRequestOptions) => {
           return new Http(backend, defaultOptions);
         }, deps: [MockBackend, BaseRequestOptions]
-      })
-    ]);
+        },
+        {provide: SearchService, useClass: SearchService},
+        {provide: MockBackend, useClass: MockBackend},
+        {provide: BaseRequestOptions, useClass: BaseRequestOptions}
+      ]
+    });
   });
 });
 ----
@@ -826,7 +837,7 @@ The test below should be on the same level as `beforeEachProviders`.
 ----
 it('should retrieve all search results',
   inject([SearchService, MockBackend], fakeAsync((searchService: SearchService, mockBackend: MockBackend) => {
-    var res: Response;
+    let res: Response;
     mockBackend.connections.subscribe(c => {
       expect(c.request.url).toBe('app/shared/search/data/people.json');
       let response = new ResponseOptions({body: '[{"name": "John Elway"}, {"name": "Gary Kubiak"}]'});
@@ -848,7 +859,7 @@ Running `ng test` should result in "Executed 5 of 5 [green]#SUCCESS#". Add a cou
 ----
 it('should filter by search term',
   inject([SearchService, MockBackend], fakeAsync((searchService: SearchService, mockBackend: MockBackend) => {
-    var res;
+    let res;
     mockBackend.connections.subscribe(c => {
       expect(c.request.url).toBe('app/shared/search/data/people.json');
       let response = new ResponseOptions({body: '[{"name": "John Elway"}, {"name": "Gary Kubiak"}]'});
@@ -864,7 +875,7 @@ it('should filter by search term',
 
 it('should fetch by id',
   inject([SearchService, MockBackend], fakeAsync((searchService: SearchService, mockBackend: MockBackend) => {
-    var res;
+    let res;
     mockBackend.connections.subscribe(c => {
       expect(c.request.url).toBe('app/shared/search/data/people.json');
       let response = new ResponseOptions({body: '[{"id": 1, "name": "John Elway"}, {"id": 2, "name": "Gary Kubiak"}]'});
@@ -891,21 +902,19 @@ Create `src/app/shared/search/mocks/search.service.ts` and populate it with spie
 [source,javascript]
 .src/app/shared/search/mocks/search.service.ts
 ----
-import { provide } from '@angular/core';
 import { SpyObject } from './helper';
-
 import { SearchService } from '../search.service';
 import Spy = jasmine.Spy;
 
 export class MockSearchService extends SpyObject {
-  getAllSpy:Spy;
-  getByIdSpy:Spy;
-  searchSpy:Spy;
-  saveSpy:Spy;
-  fakeResponse:any;
+  getAllSpy: Spy;
+  getByIdSpy: Spy;
+  searchSpy: Spy;
+  saveSpy: Spy;
+  fakeResponse: any;
 
   constructor() {
-    super(SearchService);
+    super( SearchService );
 
     this.fakeResponse = null;
     this.getAllSpy = this.spy('getAll').andReturn(this);
@@ -914,16 +923,12 @@ export class MockSearchService extends SpyObject {
     this.saveSpy = this.spy('save').andReturn(this);
   }
 
-  subscribe(callback:any) {
+  subscribe(callback: any) {
     callback(this.fakeResponse);
   }
 
-  setResponse(json:any):void {
+  setResponse(json: any): void {
     this.fakeResponse = json;
-  }
-
-  getProviders():Array<any> {
-    return [provide(SearchService, {useValue: this})];
   }
 }
 ----
@@ -1000,47 +1005,52 @@ export class SpyObject {
 }
 ----
 
-Alongside, create `routes.ts` to mock Angular's `RouteSegment`.
+Alongside, create `routes.ts` to mock Angular's `Router` and `ActivatedRoute`.
 
 [source,javascript]
 .src/app/shared/search/mocks/routes.ts
 ----
-import { RouteSegment } from '@angular/router';
+import { ActivatedRoute, Params } from '@angular/router';
+import { Observable } from 'rxjs';
 
-export class MockRouteSegment implements RouteSegment {
-  urlSegments:any;
-  parameters:any;
-  outlet:string;
-  _type:any;
-  _componentFactory:any;
-  type:any;
-  stringifiedUrlSegments:string;
+export class MockActivatedRoute extends ActivatedRoute {
+  params: Observable<Params>;
 
-  constructor(parameters?:{ [key:string]:any; }) {
-    this.parameters = parameters;
+  constructor(parameters?: { [key: string]: any; }) {
+    super();
+    this.params = Observable.of(parameters);
   }
+}
 
-  getParam(param:string) {
-    return this.parameters[param];
-  }
+export class MockRouter {
+  navigate = jasmine.createSpy('navigate');
 }
 ----
 
-With mocks in place, you can update the test for `SearchComponent` that uses these as providers.
+With mocks in place, you can create the test for `SearchComponent` to use these as providers.
 
 [source,javascript]
 .src/app/search/search.component.spec.ts
 ----
 describe('Component: Search', () => {
-  var mockSearchService: MockSearchService;
+  let mockSearchService: MockSearchService;
+  let mockActivatedRoute: MockActivatedRoute;
+  let mockRouter: MockRouter;
 
   beforeEach(() => {
     mockSearchService = new MockSearchService();
+    mockActivatedRoute = new MockActivatedRoute({'term': 'peyton'});
+    mockRouter = new MockRouter();
 
-    return [
-      mockSearchService.getProviders(),
-      provide(ActivatedRoute, {useValue: new MockActivatedRoute({'term': 'peyton'})})
-    ];
+    TestBed.configureTestingModule({
+      declarations: [SearchComponent],
+      providers: [
+        {provide: SearchService, useValue: mockSearchService},
+        {provide: ActivatedRoute, useValue: mockActivatedRoute},
+        {provide: Router, useValue: mockRouter}
+      ],
+      imports: [FormsModule]
+    });
   });
 });
 ----
@@ -1051,21 +1061,19 @@ parameter.
 [source,javascript]
 .src/app/search/search.component.spec.ts
 ----
-it('should search when a term is set and search() is called', inject([TestComponentBuilder], (tcb:TestComponentBuilder) => {
-  return tcb.createAsync(SearchComponent).then((fixture) => {
-    let searchComponent = fixture.debugElement.componentInstance;
-    searchComponent.query = 'M';
-    searchComponent.search();
-    expect(mockSearchService.searchSpy).toHaveBeenCalledWith('M');
-  });
-}));
+it('should search when a term is set and search() is called', () => {
+  let fixture = TestBed.createComponent(SearchComponent);
+  let searchComponent = fixture.debugElement.componentInstance;
+  searchComponent.query = 'M';
+  searchComponent.search();
+  expect(mockSearchService.searchSpy).toHaveBeenCalledWith('M');
+});
 
-it('should search automatically when a term is on the URL', inject([TestComponentBuilder], (tcb:TestComponentBuilder) => {
-  return tcb.createAsync(SearchComponent).then((fixture) => {
-    fixture.detectChanges();
-    expect(mockSearchService.searchSpy).toHaveBeenCalledWith('peyton');
-  });
-}));
+it('should search automatically when a term is on the URL', () => {
+  let fixture = TestBed.createComponent(SearchComponent);
+  fixture.detectChanges();
+  expect(mockSearchService.searchSpy).toHaveBeenCalledWith('peyton');
+});
 ----
 
 Update the test for `EditComponent` as well, verifying fetching a single record works. Notice how you can access the component directly with
@@ -1074,58 +1082,59 @@ Update the test for `EditComponent` as well, verifying fetching a single record 
 [source,javascript]
 .src/app/edit/edit.component.spec.ts
 ----
-import { provide } from '@angular/core';
-import { TestComponentBuilder } from '@angular/compiler/testing';
-import {
-  it,
-  describe,
-  expect,
-  inject,
-  beforeEachProviders,
-} from '@angular/core/testing';
+/* tslint:disable:no-unused-variable */
 
-import { RouteSegment } from '@angular/router';
-import { ROUTER_FAKE_PROVIDERS } from '@angular/router/testing';
-import { MockRouteSegment } from '../shared/search/mocks/routes';
 import { MockSearchService } from '../shared/search/mocks/search.service';
-
 import { EditComponent } from './edit.component';
+import { TestBed } from '@angular/core/testing/test_bed';
+import { SearchService } from '../shared/search/search.service';
+import { MockRouter, MockActivatedRoute } from '../shared/search/mocks/routes';
+import { ActivatedRoute, Router } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 
-describe('Edit component', () => {
-  var mockSearchService:MockSearchService;
+describe('Component: Edit', () => {
+  let mockSearchService: MockSearchService;
+  let mockActivatedRoute: MockActivatedRoute;
+  let mockRouter: MockRouter;
 
-  beforeEachProviders(() => {
+  beforeEach(() => {
     mockSearchService = new MockSearchService();
+    mockActivatedRoute = new MockActivatedRoute({'id': 1});
+    mockRouter = new MockRouter();
 
-    return [
-      mockSearchService.getProviders(),
-      ROUTER_FAKE_PROVIDERS,
-      provide(RouteSegment, { useValue: new MockRouteSegment({ 'id': '1' }) })
-    ];
+    TestBed.configureTestingModule({
+      declarations: [EditComponent],
+      providers: [
+        {provide: SearchService, useValue: mockSearchService},
+        {provide: ActivatedRoute, useValue: mockActivatedRoute},
+        {provide: Router, useValue: mockRouter}
+      ],
+      imports: [FormsModule]
+    });
   });
 
-  it('should fetch a single record', inject([TestComponentBuilder], (tcb:TestComponentBuilder) => {
-    return tcb.createAsync(EditComponent).then((fixture) => {
-      let person = {name: 'Emmanuel Sanders', address: {city: 'Denver'}};
-      mockSearchService.setResponse(person);
+  it('should fetch a single record', () => {
+    const fixture = TestBed.createComponent(EditComponent);
 
-      fixture.detectChanges();
-      // verify service was called
-      expect(mockSearchService.getByIdSpy).toHaveBeenCalledWith(1);
+    let person = {name: 'Emmanuel Sanders', address: {city: 'Denver'}};
+    mockSearchService.setResponse(person);
 
-      // verify data was set on component when initialized
-      let editComponent = fixture.debugElement.componentInstance;
-      expect(editComponent.editAddress.city).toBe('Denver');
+    fixture.detectChanges();
+    // verify service was called
+    expect(mockSearchService.getByIdSpy).toHaveBeenCalledWith(1);
 
-      // verify HTML renders as expected
-      var compiled = fixture.debugElement.nativeElement;
-      expect(compiled.querySelector('h3')).toHaveText('Emmanuel Sanders');
-    });
-  }));
+    // verify data was set on component when initialized
+    let editComponent = fixture.debugElement.componentInstance;
+    expect(editComponent.editAddress.city).toBe('Denver');
+
+    // verify HTML renders as expected
+    let compiled = fixture.debugElement.nativeElement;
+    expect(compiled.querySelector('h3').innerHTML).toBe('Emmanuel Sanders');
+  });
 });
 ----
 
-You should see "Executed 5 of 5 [green]SUCCESS[/green] (0.238 secs / 0.259 secs)" in the shell window that's running `ng test`. If you don't, try cancelling the command and restarting.
+You should see "Executed 8 of 8 [green]SUCCESS[/green] (0.238 secs / 0.259 secs)" in the shell window that's running `ng test`. If you don't, try cancelling the command and restarting.
 
 == Integration test the search UI
 
@@ -1186,8 +1195,8 @@ describe('Search', () => {
   });
 
   it('should have an input and search button', () => {
-    expect(element(by.css('ng2-demo-app app-search form input')).isPresent()).toEqual(true);
-    expect(element(by.css('ng2-demo-app app-search form button')).isPresent()).toEqual(true);
+    expect(element(by.css('app-root app-search form input')).isPresent()).toEqual(true);
+    expect(element(by.css('app-root app-search form button')).isPresent()).toEqual(true);
   });
 
   it('should allow searching', () => {
@@ -1195,8 +1204,6 @@ describe('Search', () => {
     let searchBox = element(by.css('input'));
     searchBox.sendKeys('M');
     searchButton.click().then(() => {
-      // doesn't work as expected - results in 0
-      //expect(element.all(by.repeater('person of searchResults')).count()).toEqual(3);
       var list = element.all(by.css('app-search table tbody tr'));
       expect(list.count()).toBe(3);
     });
@@ -1259,7 +1266,6 @@ to improve this coverage, please send me a pull request!
 [[test-coverage]]
 .Test coverage
 image::src/assets/images/test-coverage.png[Test coverage, 800, scaledwidth="100%"]
-
 
 == Source code
 

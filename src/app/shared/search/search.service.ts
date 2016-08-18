@@ -4,20 +4,20 @@ import { Http, Response } from '@angular/http';
 @Injectable()
 export class SearchService {
 
-  constructor(private http: Http) { }
+  constructor(private http: Http) {}
 
   getAll() {
     return this.http.get('app/shared/search/data/people.json').map((res: Response) => res.json());
   }
 
-  search(q:string) {
+  search(q: string) {
     if (!q || q === '*') {
       q = '';
     } else {
       q = q.toLowerCase();
     }
     return this.getAll().map(data => {
-      let results:any = [];
+      let results: any = [];
       data.map(item => {
         // check for item in localStorage
         if (localStorage['person' + item.id]) {
@@ -46,12 +46,12 @@ export class SearchService {
 }
 
 export class Address {
-  street:string;
-  city:string;
-  state:string;
-  zip:string;
+  street: string;
+  city: string;
+  state: string;
+  zip: string;
 
-  constructor(obj?:any) {
+  constructor(obj?: any) {
     this.street = obj && obj.street || null;
     this.city = obj && obj.city || null;
     this.state = obj && obj.state || null;
@@ -60,12 +60,12 @@ export class Address {
 }
 
 export class Person {
-  id:number;
-  name:string;
-  phone:string;
-  address:Address;
+  id: number;
+  name: string;
+  phone: string;
+  address: Address;
 
-  constructor(obj?:any) {
+  constructor(obj?: any) {
     this.id = obj && Number(obj.id) || null;
     this.name = obj && obj.name || null;
     this.phone = obj && obj.phone || null;

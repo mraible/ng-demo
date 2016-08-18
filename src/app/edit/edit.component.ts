@@ -18,7 +18,8 @@ export class EditComponent implements OnInit, OnDestroy {
 
   constructor(private route: ActivatedRoute,
               private router: Router,
-              private service: SearchService) { }
+              private service: SearchService) {
+  }
 
   ngOnInit() {
     this.sub = this.route.params.subscribe(params => {

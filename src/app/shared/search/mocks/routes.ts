@@ -1,15 +1,15 @@
-import { ActivatedRoute, UrlSegment, Params, Data } from '@angular/router';
-import { Observable } from "rxjs";
+import { ActivatedRoute, Params } from '@angular/router';
+import { Observable } from 'rxjs';
 
 export class MockActivatedRoute extends ActivatedRoute {
-  params: any;
+  params: Observable<Params>;
 
-  constructor(parameters?:{ [key:string]:any; }) {
+  constructor(parameters?: { [key: string]: any; }) {
     super();
-    this.params = parameters;
+    this.params = Observable.of(parameters);
   }
+}
 
-  getParam(param:string) {
-    return this.params[param];
-  }
+export class MockRouter {
+  navigate = jasmine.createSpy('navigate');
 }
