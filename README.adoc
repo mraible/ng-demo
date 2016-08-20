@@ -38,6 +38,13 @@ https://plugins.jetbrains.com/plugin/8395?pr=idea[Angular 2 TypeScript Live Temp
 * http://nodejs.org/[Node.js] and npm installed. I recommend using https://github.com/creationix/nvm[nvm].
 * https://github.com/angular/angular-cli[Angular CLI] installed. If you don't have Angular CLI installed, install it using `npm install -g angular-cli@latest`.
 
+[NOTE]
+====
+The latest release of Angular CLI (beta 10) uses Angular 2 RC4. Because of this, I used the master branch of
+Angular CLI to create this tutorial. To do this, clone https://github.com/angular/angular-cli[angular-cli] and
+run `npm link` in the directory you cloned it into.
+====
+
 TIP: https://augury.angular.io/[Angular Augury] is a Google Chrome Dev Tools extension for debugging Angular 2 applications.
 I haven't needed it much myself, but I can see how it might come in handy.
 
@@ -102,8 +109,8 @@ You can see the what version of Angular CLI you're using with `ng --version`.
 
 ----
 $ ng --version
-angular-cli: 1.0.0-beta.10
-node: 4.2.6
+angular-cli: local (v1.0.0-beta.11-webpack.2, branch: master)
+node: 4.4.7
 os: darwin x64
 ----
 
@@ -174,7 +181,7 @@ setup a route to the `SearchComponent` you just generated. Here's a quick summar
 .src/app/app.routing.ts
 ----
 import { Routes, RouterModule } from '@angular/router';
-import { SearchComponent } from "./search/index";
+import { SearchComponent } from './search/index';
 
 const appRoutes: Routes = [
   { path: 'search', component: SearchComponent },
@@ -218,9 +225,10 @@ export class AppModule { }
 Now that you have routing setup, you can continue writing the search feature.
 ****
 
-To navigate to the `SearchComponent`, add a link in `src/app/app.component.html`.
+To allow navigation to the `SearchComponent`, you can add a link in `src/app/app.component.html`.
 
 [source,html]
+.src/app/app.component.html
 ----
 <nav>
   <a routerLink="/search" routerLinkActive="active">Search</a>
@@ -230,7 +238,7 @@ To navigate to the `SearchComponent`, add a link in `src/app/app.component.html`
 Open `src/app/search/search.component.html` and replace its default HTML with the following:
 
 [source,xml]
-.src/client/app/search/search.component.html
+.src/app/search/search.component.html
 ----
 <h2>Search</h2>
 <form>
@@ -240,8 +248,8 @@ Open `src/app/search/search.component.html` and replace its default HTML with th
 <pre>{{searchResults | json}}</pre>
 ----
 
-If you still have `ng serve` running, your browser should refresh automatically. If not, navigate to http://localhost:4200,
-click on the "Search" link and you should see the search form.
+If you still have `ng serve` running, your browser should refresh automatically. If not, navigate to
+http://localhost:4200, and you should see the search form.
 
 [[search-component]]
 .Search component
@@ -315,7 +323,7 @@ Then, create `src/app/shared/search/data/people.json` to hold your data.
 ----
 
 Modify `src/app/shared/search/search.service.ts` and provide `Http` as a dependency in its constructor.
-In this same file, create a method to gather all the people. Also, define the `Address` and `Person` classes
+In this same file, create a `getAll()` method to gather all the people. Also, define the `Address` and `Person` classes
 that JSON will be marshalled to.
 
 [source,javascript]
@@ -380,7 +388,7 @@ import { Person, SearchService } from '../shared/index';
 You can now add `query` and `searchResults` variables. While you're there, modify the constructor to inject the `SearchService`.
 
 [source,javascript]
-.src/client/app/search/search.component.ts
+.src/app/search/search.component.ts
 ----
 export class SearchComponent implements OnInit {
   query: string;
@@ -423,8 +431,8 @@ import { SearchService } from './shared/index';
 })
 ----
 
-Now clicking the search button should work. To make the results look better,
-remove the `<pre>` tag and replace it with a `<table>`.
+Now clicking the search button should work. To make the results look better, remove the `<pre>` tag and replace it with
+a `<table>`.
 
 [source,xml]
 .src/app/search/search.component.html
@@ -758,16 +766,19 @@ Since the `SearchComponent` doesn't execute a search automatically when you exec
 [source,javascript]
 .src/app/search/search.component.ts
 ----
-sub: Subscription;
+import { Router, ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
+...
+  sub: Subscription;
 
-constructor(private searchService: SearchService, private route: ActivatedRoute, private router: Router) {
-  this.sub = this.route.params.subscribe(params => {
-    if (params['term']) {
-      this.query = decodeURIComponent(params['term']);
-      this.search();
-    }
-  });
-}
+  constructor(private searchService: SearchService, private router: Router, private route: ActivatedRoute) {
+    this.sub = this.route.params.subscribe(params => {
+      if (params['term']) {
+        this.query = decodeURIComponent(params['term']);
+        this.search();
+      }
+    });
+  }
 ----
 
 You'll want to implement `OnDestroy` and define the `ngOnDestroy` method to clean up this subscription.
@@ -775,8 +786,13 @@ You'll want to implement `OnDestroy` and define the `ngOnDestroy` method to clea
 [source,javascript]
 .src/app/search/search.component.ts
 ----
-ngOnDestroy() {
-  this.sub.unsubscribe();
+import { Component, OnInit, OnDestroy } from '@angular/core';
+
+export class SearchComponent implements OnInit, OnDestroy {
+...
+  ngOnDestroy() {
+    this.sub.unsubscribe();
+  }
 }
 ----
 
@@ -800,6 +816,12 @@ and https://angular.io/docs/js/latest/api/http/BaseRequestOptions-class.html[Bas
 [source,javascript]
 .src/app/shared/search/search.service.spec.ts
 ----
+import { MockBackend } from '@angular/http/testing';
+import { Http, ConnectionBackend, BaseRequestOptions, Response, ResponseOptions } from '@angular/http';
+import { SearchService } from './search.service';
+import { tick, fakeAsync } from '@angular/core/testing/fake_async';
+import { inject, TestBed } from '@angular/core/testing/test_bed';
+
 describe('SearchService', () => {
   beforeEach(() => {
 
@@ -819,13 +841,22 @@ describe('SearchService', () => {
 });
 ----
 
-If you run `ng test`, all tests will pass, but you won't see "Search Service" as a listed test. You can fix this by adding the first test of `getAll()`. This test shows how
-`MockBackend` can be used to mock results and set the response.
+If you run `ng test`, you will likely see some errors about the test stubs that Angular CLI created for you. You can ignore these for now.
+
+----
+ERROR in [default] /Users/mraible/ng2-demo/src/app/edit/edit.component.spec.ts:10:20
+Supplied parameters do not match any signature of call target.
+
+ERROR in [default] /Users/mraible/ng2-demo/src/app/search/search.component.spec.ts:10:20
+Supplied parameters do not match any signature of call target.
+----
+
+Add the first test of `getAll()` to `search.service.spec.ts`. This test shows how `MockBackend` can be used to mock results and set the response.
 
 TIP: When you are testing code that returns either a Promise or an RxJS Observable, you can use the `fakeAsync` helper to test that code as if it were synchronous.
 Promises are be fulfilled and Observables are notified immediately after you call `tick()`.
 
-The test below should be on the same level as `beforeEachProviders`.
+The test below should be on the same level as `beforeEach`.
 
 [source,javascript]
 .src/app/shared/search/search.service.spec.ts
@@ -847,7 +878,9 @@ it('should retrieve all search results',
 );
 ----
 
-Running `ng test` should result in "Executed 5 of 5 [green]#SUCCESS#". Add a couple more tests for filtering by search term and fetching by id.
+Notice that tests continually run as you add them when using `ng test`. You can run tests once by using `ng test --watch=false`.
+You will likely see "Executed 5 of 5 [red]#(1 FAILED)#" in your terminal. Add a couple more tests for filtering by search
+term and fetching by id.
 
 [source,javascript]
 .src/app/shared/search/search.service.spec.ts
@@ -884,8 +917,6 @@ it('should fetch by id',
   }))
 );
 ----
-
-Notice that tests continually run as you add them when using `ng test`. You can run tests once by using `ng test --watch=false`.
 
 === Unit test the SearchComponent
 
@@ -954,15 +985,15 @@ export class SpyObject {
       object = new SpyObject();
     }
 
-    var m = StringMapWrapper.merge(config, overrides);
+    let m = StringMapWrapper.merge(config, overrides);
     StringMapWrapper.forEach(m, (value, key) => { object.spy(key).andReturn(value); });
     return object;
   }
 
   constructor(type = null) {
     if (type) {
-      for (var prop in type.prototype) {
-        var m = null;
+      for (let prop in type.prototype) {
+        let m = null;
         try {
           m = type.prototype[prop];
         } catch (e) {
@@ -989,7 +1020,7 @@ export class SpyObject {
 
   /** @internal */
   _createGuinnessCompatibleSpy(name): GuinessCompatibleSpy {
-    var newSpy: GuinessCompatibleSpy = <any>jasmine.createSpy(name);
+    let newSpy: GuinessCompatibleSpy = <any>jasmine.createSpy(name);
     newSpy.andCallFake = <any>newSpy.and.callFake;
     newSpy.andReturn = <any>newSpy.and.returnValue;
     newSpy.reset = <any>newSpy.calls.reset;
@@ -1022,11 +1053,19 @@ export class MockRouter {
 }
 ----
 
-With mocks in place, you can create the test for `SearchComponent` to use these as providers.
+With mocks in place, you can `TestBed.configureTestingModule()` to setup `SearchComponent` to use these as providers.
 
 [source,javascript]
 .src/app/search/search.component.spec.ts
 ----
+import { ActivatedRoute, Router } from '@angular/router';
+import { MockActivatedRoute, MockRouter } from '../shared/search/mocks/routes';
+import { MockSearchService } from '../shared/search/mocks/search.service';
+import { SearchComponent } from './search.component';
+import { TestBed } from '@angular/core/testing/test_bed';
+import { FormsModule } from '@angular/forms';
+import { SearchService } from '../shared/search/search.service';
+
 describe('Component: Search', () => {
   let mockSearchService: MockSearchService;
   let mockActivatedRoute: MockActivatedRoute;
@@ -1050,8 +1089,8 @@ describe('Component: Search', () => {
 });
 ----
 
-Add two tests, one to verify a search term is used when it's set on the component and a second to verify search is called when a term is passed in as a route
-parameter.
+Add two tests, one to verify a search term is used when it's set on the component, and a second to verify search is
+called when a term is passed in as a route parameter.
 
 [source,javascript]
 .src/app/search/search.component.spec.ts
@@ -1071,14 +1110,14 @@ it('should search automatically when a term is on the URL', () => {
 });
 ----
 
-Update the test for `EditComponent` as well, verifying fetching a single record works. Notice how you can access the component directly with
+After adding these tests, you should see the first instance of all tests passing (Executed 8 of 8 [green]#SUCCESS#).
+
+Update the test for `EditComponent`, verifying fetching a single record works. Notice how you can access the component directly with
 `fixture.debugElement.componentInstance`, or its rendered version with `fixture.debugElement.nativeElement`.
 
 [source,javascript]
 .src/app/edit/edit.component.spec.ts
 ----
-/* tslint:disable:no-unused-variable */
-
 import { MockSearchService } from '../shared/search/mocks/search.service';
 import { EditComponent } from './edit.component';
 import { TestBed } from '@angular/core/testing/test_bed';
@@ -1129,7 +1168,7 @@ describe('Component: Edit', () => {
 });
 ----
 
-You should see "Executed 8 of 8 [green]SUCCESS[/green] (0.238 secs / 0.259 secs)" in the shell window that's running `ng test`. If you don't, try cancelling the command and restarting.
+You should see "Executed 8 of 8 [green]#SUCCESS# (0.238 secs / 0.259 secs)" in the shell window that's running `ng test`. If you don't, try cancelling the command and restarting.
 
 === Integration test the search UI
 
@@ -1208,7 +1247,7 @@ describe('Search', () => {
 
 === Testing the edit feature
 
-Create a `e2e/edit.e2e-spec.ts` test to verify the `EditComponent` renders a person's information and that you can update their information.
+Create a `e2e/edit.e2e-spec.ts` test to verify the `EditComponent` renders a person's information and that their information can be updated.
 
 [source,javascript]
 .e2e/edit.e2e-spec.ts

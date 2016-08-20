@@ -13,7 +13,7 @@ export class SearchComponent implements OnInit, OnDestroy {
   searchResults: Array<Person>;
   sub: Subscription;
 
-  constructor(private searchService: SearchService, private route: ActivatedRoute, private router: Router) {
+  constructor(private searchService: SearchService, private router: Router, private route: ActivatedRoute) {
     this.sub = this.route.params.subscribe(params => {
       if (params['term']) {
         this.query = decodeURIComponent(params['term']);
