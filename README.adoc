@@ -175,7 +175,7 @@ This will likely be re-enabled in a future release.
 The https://angular.io/docs/ts/latest/guide/router.html[Router documentation] for Angular 2 RC5 provides the information you need to
 setup a route to the `SearchComponent` you just generated. Here's a quick summary:
 
-1. Create `src/app/app.routing.ts` to define your routes.
+Create `src/app/app.routing.ts` to define your routes.
 
 [source,javascript]
 .src/app/app.routing.ts
@@ -193,7 +193,7 @@ export const appRoutingProviders: any[] = [];
 export const routing = RouterModule.forRoot(appRoutes);
 ----
 
-2. In `src/app/app.module.ts`, import the two constants you exported and configure them in `@NgModule`:
+In `src/app/app.module.ts`, import the two constants you exported and configure them in `@NgModule`:
 
 [source,javascript]
 ----
@@ -213,7 +213,7 @@ import { SearchComponent } from './search/search.component';
 export class AppModule { }
 ----
 
-3. In `src/app/app.component.html`, add a `RouterOutlet` to display routes.
+In `src/app/app.component.html`, add a `RouterOutlet` to display routes.
 
 [source,html]
 .src/app/app.component.html
