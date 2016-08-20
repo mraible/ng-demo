@@ -1,4 +1,4 @@
-/* tslint:disable:no-unused-letiable */
+/* tslint:disable:no-unused-variable */
 
 import { MockBackend } from '@angular/http/testing';
 import { Http, ConnectionBackend, BaseRequestOptions, Response, ResponseOptions } from '@angular/http';

@@ -43,4 +43,3 @@ describe('Component: Search', () => {
     expect(mockSearchService.searchSpy).toHaveBeenCalledWith('peyton');
   });
 });
-
