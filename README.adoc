@@ -49,11 +49,6 @@ Create a new project using the `ng new` command:
 ng new ng2-demo
 ----
 
-[NOTE]
-====
-The latest release of Angular CLI (beta 10)
-====
-
 This will create a `ng2-demo` project and run `npm install` in it. It takes about a minute to complete,
 but will vary based on your internet connection speed.
 
