@@ -892,7 +892,7 @@ it('should fetch by id',
 
 Notice that tests continually run as you add them when using `ng test`. You can run tests once by using `ng test --watch=false`.
 
-== Unit test the SearchComponent
+=== Unit test the SearchComponent
 
 To unit test the `SearchComponent`, create a `MockSearchProvider` that has http://angular-tips.com/blog/2014/03/introduction-to-unit-test-spies/[spies].
 These allow you to _spy_ on functions to check if they were called.
@@ -1136,7 +1136,7 @@ describe('Component: Edit', () => {
 
 You should see "Executed 8 of 8 [green]SUCCESS[/green] (0.238 secs / 0.259 secs)" in the shell window that's running `ng test`. If you don't, try cancelling the command and restarting.
 
-== Integration test the search UI
+=== Integration test the search UI
 
 To test if the application works end-to-end, you can write tests with http://angular.github.io/protractor[Protractor]. These are also known as integration tests,
 since they test the _integration_ between all layers of your application.
