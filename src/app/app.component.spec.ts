@@ -2,10 +2,13 @@
 
 import { addProviders, async, inject } from '@angular/core/testing';
 import { AppComponent } from './app.component';
+import { TestBed } from '@angular/core/testing/test_bed';
 
 describe('App: Ng2Demo', () => {
   beforeEach(() => {
-    addProviders([AppComponent]);
+    TestBed.configureTestingModule({
+      providers: [AppComponent]
+    });
   });
 
   it('should create the app',
