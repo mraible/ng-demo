@@ -570,6 +570,7 @@ installing component
 Add a route for this component in `app.routing.ts`:
 
 [source,javascript]
+.src/app/app.routing.ts
 ----
 import { EditComponent } from './edit/index';
 
@@ -1309,7 +1310,6 @@ Simply login and enable builds for the GitHub repo you created the project in. T
 in your root directory and `git push`. This will trigger the first build.
 
 [source,yaml]
-.travis.yml
 ----
 language: node_js
 sudo: true
