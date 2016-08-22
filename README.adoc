@@ -42,7 +42,7 @@ https://plugins.jetbrains.com/plugin/8395?pr=idea[Angular 2 TypeScript Live Temp
 ====
 The latest release of Angular CLI (beta 10) uses Angular 2 RC4. Because of this, I used the master branch of
 Angular CLI to create this tutorial. To do this, clone https://github.com/angular/angular-cli[angular-cli] and
-run `npm link` in the directory you cloned it into.
+run `npm link` in the directory you cloned it into. If you have issues, see https://github.com/angular/angular-cli/issues/1773[#1733].
 ====
 
 TIP: https://augury.angular.io/[Angular Augury] is a Google Chrome Dev Tools extension for debugging Angular 2 applications.
@@ -1238,7 +1238,7 @@ describe('Search', () => {
     let searchBox = element(by.css('input'));
     searchBox.sendKeys('M');
     searchButton.click().then(() => {
-      var list = element.all(by.css('app-search table tbody tr'));
+      let list = element.all(by.css('app-search table tbody tr'));
       expect(list.count()).toBe(3);
     });
   });
@@ -1276,7 +1276,7 @@ describe('Edit', () => {
     ' Won!'.split('').forEach((c) => name.sendKeys(c));
     save.click();
     // verify one element matched this change
-    var list = element.all(by.css('app-search table tbody tr'));
+    let list = element.all(by.css('app-search table tbody tr'));
     expect(list.count()).toBe(1);
   });
 });
