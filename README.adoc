@@ -806,8 +806,7 @@ to automate your testing. Without tests, you'll likely be testing manually. This
 as your application grows.
 
 In this section, you'll learn to use http://jasmine.github.io/[Jasmine] for unit testing controllers and https://angular.github.io/protractor/[Protractor] for
-integration testing. Angular's documentation has a good https://angular.io/docs/ts/latest/guide/testing.html[guide to unit testing] if you'd
-like more information on testing and why it's important.
+integration testing. Angular's testing documentation lists https://angular.io/docs/ts/latest/guide/testing.html[good reasons] to test, but doesn't currently have many examples.
 
 === Unit test the SearchService
 
