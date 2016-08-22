@@ -32,7 +32,7 @@ application with search and edit features.
 
 == What you'll need
 
-* About 20-30 minutes.
+* About 30-40 minutes.
 * A favorite text editor or IDE. I recommend https://www.jetbrains.com/idea/[IntelliJ IDEA] and its
 https://plugins.jetbrains.com/plugin/8395?pr=idea[Angular 2 TypeScript Live Templates plugin].
 * http://nodejs.org/[Node.js] and npm installed. I recommend using https://github.com/creationix/nvm[nvm].
