@@ -1357,6 +1357,6 @@ A completed project with this code in it is available on GitHub at https://githu
 
 == Summary
 
-I hope you've enjoyed this quick-and-easy tutorial on how to get started with Angular 2 and Angular CLI. Angular CLI
+I hope you've enjoyed this in-depth tutorial on how to get started with Angular 2 and Angular CLI. Angular CLI
 takes much of the pain out of setting up an Angular 2 project and using Typescript. I expect great things from Angular CLI,
-mostly because the Angular 2 setup process needs it. ;)
+mostly because the Angular 2 setup process can be tedious and CLI greatly simplifies things.
