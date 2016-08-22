@@ -811,7 +811,7 @@ integration testing. Angular's testing documentation lists https://angular.io/do
 === Unit test the SearchService
 
 Modify `src/app/shared/search/search.service.spec.ts` and setup the test's infrastructure using https://angular.io/docs/js/latest/api/http/testing/MockBackend-class.html[MockBackend]
-and https://angular.io/docs/js/latest/api/http/BaseRequestOptions-class.html[BaseRequestOptions].
+and https://angular.io/docs/ts/latest/api/http/index/BaseRequestOptions-class.html[BaseRequestOptions].
 
 [source,javascript]
 .src/app/shared/search/search.service.spec.ts
