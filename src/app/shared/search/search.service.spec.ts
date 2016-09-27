@@ -1,6 +1,6 @@
 /* tslint:disable:no-unused-variable */
 
-import { TestBed, async, inject, tick, fakeAsync } from '@angular/core/testing';
+import { TestBed, inject, tick, fakeAsync } from '@angular/core/testing';
 import { SearchService } from './search.service';
 import { BaseRequestOptions, Http, ConnectionBackend, Response, ResponseOptions } from '@angular/http';
 import { MockBackend } from '@angular/http/testing';

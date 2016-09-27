@@ -2,7 +2,7 @@
 
 :author: Matt Raible
 :email:  matt@raibledesigns.com
-:revnumber: 1.0
+:revnumber: 1.1
 :revdate:   {docdate}
 :subject: Angular CLI
 :keywords: Angular CLI, Angular 2, JavaScript, TypeScript, node, npm, Jasmine, Protractor
@@ -13,7 +13,7 @@
 :language: javadocript
 :sourcedir: .
 
-This tutorial shows you how to build a simple search and edit application using https://angular.io[Angular 2] (RC5) and
+This tutorial shows you how to build a simple search and edit application using https://angular.io[Angular 2] and
 https://github.com/angular/angular-cli[Angular CLI].
 
 .Source Code
@@ -38,13 +38,6 @@ https://plugins.jetbrains.com/plugin/8395?pr=idea[Angular 2 TypeScript Live Temp
 * http://nodejs.org/[Node.js] and npm installed. I recommend using https://github.com/creationix/nvm[nvm].
 * https://github.com/angular/angular-cli[Angular CLI] installed. If you don't have Angular CLI installed, install it using `npm install -g angular-cli@latest`.
 
-[NOTE]
-====
-The latest release of Angular CLI (beta 10) uses Angular 2 RC4. Because of this, I used the master branch of
-Angular CLI to create this tutorial. To do this, clone https://github.com/angular/angular-cli[angular-cli] and
-run `npm link` in the directory you cloned it into. If you have issues, see https://github.com/angular/angular-cli/issues/1773[#1733].
-====
-
 TIP: https://augury.angular.io/[Angular Augury] is a Google Chrome Dev Tools extension for debugging Angular 2 applications.
 I haven't needed it much myself, but I can see how it might come in handy.
 
@@ -60,7 +53,7 @@ This will create a `ng2-demo` project and run `npm install` in it. It takes abou
 but will vary based on your internet connection speed.
 
 ----
-[mraible:~/dev] 45s $ ng new ng2-demo
+[mraible:~/dev] $ ng new ng2-demo
 installing ng2
   create .editorconfig
   create README.md
@@ -68,49 +61,42 @@ installing ng2
   create src/app/app.component.html
   create src/app/app.component.spec.ts
   create src/app/app.component.ts
-  create src/app/environment.ts
+  create src/app/app.module.ts
   create src/app/index.ts
   create src/app/shared/index.ts
+  create src/assets/.gitkeep
+  create src/assets/.npmignore
+  create src/environments/environment.prod.ts
+  create src/environments/environment.ts
   create src/favicon.ico
   create src/index.html
   create src/main.ts
-  create src/system-config.ts
+  create src/polyfills.ts
+  create src/styles.css
+  create src/test.ts
   create src/tsconfig.json
   create src/typings.d.ts
-  create angular-cli-build.js
   create angular-cli.json
-  create config/environment.dev.ts
-  create config/environment.js
-  create config/environment.prod.ts
-  create config/karma-test-shim.js
-  create config/karma.conf.js
-  create config/protractor.conf.js
   create e2e/app.e2e-spec.ts
   create e2e/app.po.ts
   create e2e/tsconfig.json
-  create e2e/typings.d.ts
   create .gitignore
+  create karma.conf.js
   create package.json
-  create public/.npmignore
+  create protractor.conf.js
   create tslint.json
-  create typings.json
 Successfully initialized git.
-⠙ Installing packages for tooling via npm
-├── es6-shim (global)
-├── angular-protractor (global dev)
-├── jasmine (global dev)
-└── selenium-webdriver (global dev)
-
+Installing packages for tooling via npm.
 Installed packages for tooling via npm.
-[mraible:~/dev] 1m5s $
+[mraible:~/dev] 1m29s $
 ----
 
 You can see the what version of Angular CLI you're using with `ng --version`.
 
 ----
 $ ng --version
-angular-cli: local (v1.0.0-beta.11-webpack.2, branch: master)
-node: 4.4.7
+angular-cli: 1.0.0-beta.15
+node: 4.5.0
 os: darwin x64
 ----
 
@@ -139,7 +125,7 @@ You can make sure your new project's tests pass, run `ng test`:
 $ ng test
 Built project successfully. Stored in "dist/".
 ...
-Chrome 52.0.2743 (Mac OS X 10.11.6): Executed 2 of 2 SUCCESS (0.039 secs / 0.012 secs)
+Chrome 52.0.2743 (Mac OS X 10.11.6): Executed 3 of 3 SUCCESS (0.039 secs / 0.012 secs)
 ----
 
 == Add a search feature
@@ -160,7 +146,6 @@ installing component
   create src/app/search/search.component.html
   create src/app/search/search.component.spec.ts
   create src/app/search/search.component.ts
-  create src/app/search/index.ts
 ----
 
 .Adding a Search Route
@@ -172,7 +157,7 @@ In previous versions of CLI, you could generate a route *and* a component. Howev
 This will likely be re-enabled in a future release.
 ====
 
-The https://angular.io/docs/ts/latest/guide/router.html[Router documentation] for Angular 2 RC5 provides the information you need to
+The https://angular.io/docs/ts/latest/guide/router.html[Router documentation] for Angular 2 provides the information you need to
 setup a route to the `SearchComponent` you just generated. Here's a quick summary:
 
 Create `src/app/app.routing.ts` to define your routes.
@@ -331,6 +316,7 @@ that JSON will be marshalled to.
 ----
 import { Injectable } from '@angular/core';
 import { Http, Response } from '@angular/http';
+import 'rxjs/add/operator/map';
 
 @Injectable()
 export class SearchService {
@@ -627,8 +613,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-edit',
-  templateUrl: 'edit.component.html',
-  styleUrls: ['edit.component.css']
+  templateUrl: './edit.component.html',
+  styleUrls: ['./edit.component.css']
 })
 export class EditComponent implements OnInit, OnDestroy {
   person: Person;
@@ -808,6 +794,31 @@ as your application grows.
 In this section, you'll learn to use http://jasmine.github.io/[Jasmine] for unit testing controllers and https://angular.github.io/protractor/[Protractor] for
 integration testing. Angular's testing documentation lists https://angular.io/docs/ts/latest/guide/testing.html[good reasons] to test, but doesn't currently have many examples.
 
+=== Fix the AppComponent test
+
+If you `ng test`, you'll like received an error:
+
+----
+Chrome 53.0.2785 (Mac OS X 10.11.6) App: Ng2Demo should render title in a h1 tag FAILED
+        'router-outlet' is not a known element:
+----
+
+This happens because the test is unaware of Angular's router. To fix this, import `RouterTestingModule` in `app.component.spec.ts`:
+
+[source,javascript]
+.src/app/app.component.spec.ts
+----
+import { RouterTestingModule } from '@angular/router/testing';
+
+describe('App: Ng2Demo', () => {
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      declarations: [AppComponent],
+      imports: [RouterTestingModule]
+    });
+  });
+----
+
 === Unit test the SearchService
 
 Modify `src/app/shared/search/search.service.spec.ts` and setup the test's infrastructure using https://angular.io/docs/js/latest/api/http/testing/MockBackend-class.html[MockBackend]
@@ -816,13 +827,12 @@ and https://angular.io/docs/ts/latest/api/http/index/BaseRequestOptions-class.ht
 [source,javascript]
 .src/app/shared/search/search.service.spec.ts
 ----
-import { MockBackend } from '@angular/http/testing';
-import { Http, ConnectionBackend, BaseRequestOptions, Response, ResponseOptions } from '@angular/http';
+import { TestBed, inject, tick, fakeAsync } from '@angular/core/testing';
 import { SearchService } from './search.service';
-import { tick, fakeAsync } from '@angular/core/testing/fake_async';
-import { inject, TestBed } from '@angular/core/testing/test_bed';
+import { BaseRequestOptions, Http, ConnectionBackend, Response, ResponseOptions } from '@angular/http';
+import { MockBackend } from '@angular/http/testing';
 
-describe('SearchService', () => {
+describe('Service: Search', () => {
   beforeEach(() => {
 
     TestBed.configureTestingModule({
@@ -1058,11 +1068,11 @@ With mocks in place, you can `TestBed.configureTestingModule()` to setup `Search
 [source,javascript]
 .src/app/search/search.component.spec.ts
 ----
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { MockActivatedRoute, MockRouter } from '../shared/search/mocks/routes';
 import { MockSearchService } from '../shared/search/mocks/search.service';
 import { SearchComponent } from './search.component';
-import { TestBed } from '@angular/core/testing/test_bed';
+import { TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { SearchService } from '../shared/search/search.service';
 
@@ -1120,7 +1130,7 @@ Update the test for `EditComponent`, verifying fetching a single record works. N
 ----
 import { MockSearchService } from '../shared/search/mocks/search.service';
 import { EditComponent } from './edit.component';
-import { TestBed } from '@angular/core/testing/test_bed';
+import { TestBed } from '@angular/core/testing';
 import { SearchService } from '../shared/search/search.service';
 import { MockRouter, MockActivatedRoute } from '../shared/search/mocks/routes';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -1168,7 +1178,7 @@ describe('Component: Edit', () => {
 });
 ----
 
-You should see "Executed 8 of 8 [green]#SUCCESS# (0.238 secs / 0.259 secs)" in the shell window that's running `ng test`. If you don't, try cancelling the command and restarting.
+You should see "Executed 9 of 9 [green]#SUCCESS# (0.238 secs / 0.259 secs)" in the shell window that's running `ng test`. If you don't, try cancelling the command and restarting.
 
 === Integration test the search UI
 
@@ -1190,18 +1200,19 @@ $ ng e2e
 > ng2-demo@0.0.0 pree2e /Users/mraible/dev/ng2-demo
 > webdriver-manager update
 
-Updating selenium standalone to version 2.52.0
-downloading https://selenium-release.storage.googleapis.com/2.52/selenium-server-standalone-2.52.0.jar...
-Updating chromedriver to version 2.21
-downloading https://chromedriver.storage.googleapis.com/2.21/chromedriver_mac32.zip...
-chromedriver_2.21mac32.zip downloaded to /Users/mraible/dev/ng2-demo/node_modules/protractor/selenium/chromedriver_2.21mac32.zip
-selenium-server-standalone-2.52.0.jar downloaded to /Users/mraible/dev/ng2-demo/node_modules/protractor/selenium/selenium-server-standalone-2.52.0.jar
+[13:54:26] I/file_manager - creating folder /Users/mraible/dev/ng2-demo/node_modules/protractor/node_modules/webdriver-manager/selenium
+[13:54:26] I/downloader - selenium standalone: downloading version 2.53.1
+[13:54:26] I/downloader - curl -o /Users/mraible/dev/ng2-demo/node_modules/protractor/node_modules/webdriver-manager/selenium/selenium-server-standalone-2.53.1.jar https://selenium-release.storage.googleapis.com/2.53/selenium-server-standalone-2.53.1.jar
+[13:54:26] I/downloader - chromedriver: downloading version 2.22
+[13:54:26] I/downloader - curl -o /Users/mraible/dev/ng2-demo/node_modules/protractor/node_modules/webdriver-manager/selenium/chromedriver_2.22mac32.zip https://chromedriver.storage.googleapis.com/2.22/chromedriver_mac32.zip
+[13:54:28] I/update - chromedriver: unzipping /Users/mraible/dev/ng2-demo/node_modules/protractor/node_modules/webdriver-manager/selenium/chromedriver_2.22mac32.zip
+[13:54:28] I/update - chromedriver: setting permissions to 0755 for /Users/mraible/dev/ng2-demo/node_modules/protractor/node_modules/webdriver-manager/selenium/chromedriver_2.22
 
 > ng2-demo@0.0.0 e2e /Users/mraible/dev/ng2-demo
-> protractor "config/protractor.conf.js"
+> protractor "./protractor.conf.js"
 
-[00:01:07] I/direct - Using ChromeDriver directly...
-[00:01:07] I/launcher - Running 1 instances of WebDriver
+[13:54:35] I/direct - Using ChromeDriver directly...
+[13:54:35] I/launcher - Running 1 instances of WebDriver
 Spec started
 
   ng2-demo App
@@ -1221,6 +1232,8 @@ Create end-to-end tests in `e2e/search.e2e-spec.ts` to verify the search feature
 [source,javascript]
 .e2e/search.e2e-spec.ts
 ----
+import { browser, element, by } from 'protractor/globals';
+
 describe('Search', () => {
 
   beforeEach(() => {
@@ -1252,6 +1265,8 @@ Create a `e2e/edit.e2e-spec.ts` test to verify the `EditComponent` renders a per
 [source,javascript]
 .e2e/edit.e2e-spec.ts
 ----
+import { browser, element, by } from 'protractor/globals';
+
 describe('Edit', () => {
 
   beforeEach(() => {
