@@ -1,12 +1,11 @@
 /* tslint:disable:no-unused-variable */
 
-import { MockBackend } from '@angular/http/testing';
-import { Http, ConnectionBackend, BaseRequestOptions, Response, ResponseOptions } from '@angular/http';
+import { TestBed, async, inject, tick, fakeAsync } from '@angular/core/testing';
 import { SearchService } from './search.service';
-import { tick, fakeAsync } from '@angular/core/testing/fake_async';
-import { inject, TestBed } from '@angular/core/testing/test_bed';
+import { BaseRequestOptions, Http, ConnectionBackend, Response, ResponseOptions } from '@angular/http';
+import { MockBackend } from '@angular/http/testing';
 
-describe('SearchService', () => {
+describe('Service: Search', () => {
   beforeEach(() => {
 
     TestBed.configureTestingModule({

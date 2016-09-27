@@ -1,6 +1,6 @@
 import { MockSearchService } from '../shared/search/mocks/search.service';
 import { EditComponent } from './edit.component';
-import { TestBed } from '@angular/core/testing/test_bed';
+import { TestBed } from '@angular/core/testing';
 import { SearchService } from '../shared/search/search.service';
 import { MockRouter, MockActivatedRoute } from '../shared/search/mocks/routes';
 import { ActivatedRoute, Router } from '@angular/router';
