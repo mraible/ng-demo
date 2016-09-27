@@ -3,8 +3,8 @@ import { SearchService } from './shared/index';
 
 @Component({
   selector: 'app-root',
-  templateUrl: 'app.component.html',
-  styleUrls: ['app.component.css'],
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css'],
   viewProviders: [SearchService]
 })
 export class AppComponent {

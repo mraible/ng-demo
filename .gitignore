@@ -11,11 +11,15 @@
 # IDEs and editors
 /.idea
 *.iml
+.project
+.classpath
+*.launch
+.settings/
 
 # misc
 /.sass-cache
 /connect.lock
-/coverage/*
+/coverage/
 /libpeerconnection.log
 npm-debug.log
 testem.log
@@ -28,7 +32,3 @@ testem.log
 #System Files
 .DS_Store
 Thumbs.db
-
-*.iws
-
-README.html

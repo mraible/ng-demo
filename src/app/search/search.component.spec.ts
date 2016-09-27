@@ -1,10 +1,10 @@
 /* tslint:disable:no-unused-variable */
 
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { MockActivatedRoute, MockRouter } from '../shared/search/mocks/routes';
 import { MockSearchService } from '../shared/search/mocks/search.service';
 import { SearchComponent } from './search.component';
-import { TestBed } from '@angular/core/testing/test_bed';
+import { TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { SearchService } from '../shared/search/search.service';
 
