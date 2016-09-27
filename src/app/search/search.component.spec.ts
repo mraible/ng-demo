@@ -1,6 +1,6 @@
 /* tslint:disable:no-unused-variable */
 
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { MockActivatedRoute, MockRouter } from '../shared/search/mocks/routes';
 import { MockSearchService } from '../shared/search/mocks/search.service';
 import { SearchComponent } from './search.component';
@@ -23,7 +23,8 @@ describe('Component: Search', () => {
       providers: [
         {provide: SearchService, useValue: mockSearchService},
         {provide: ActivatedRoute, useValue: mockActivatedRoute},
-        {provide: Router, useValue: mockRouter}
+        {provide: Router, useValue: mockRouter},
+        RouterOutlet
       ],
       imports: [FormsModule]
     });
