@@ -14,7 +14,9 @@
 :sourcedir: .
 
 This tutorial shows you how to build a simple search and edit application using https://angular.io[Angular 2] and
-https://github.com/angular/angular-cli[Angular CLI].
+https://github.com/angular/angular-cli[Angular CLI]. 
+
+TIP: If you're reading this tutorial on GitHub, you'll likely appreciate the http://gist.asciidoctor.org/?github-mraible%2Fng2-demo%2F%2FREADME.adoc[DocGist view] a bit more.
 
 .Source Code
 ****
