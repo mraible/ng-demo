@@ -19,8 +19,11 @@ export class SpyObject {
       object = new SpyObject();
     }
 
-    let m = StringMapWrapper.merge(config, overrides);
-    StringMapWrapper.forEach(m, (value, key) => { object.spy(key).andReturn(value); });
+    let m = StringMapWrapper.merge(config, overrides);    
+    for (let key in m) {
+      object.spy(key).andReturn(m[key]);
+    }
+
     return object;
   }
 
