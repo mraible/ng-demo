@@ -1,5 +1,3 @@
-import {StringMapWrapper} from '@angular/core/src/facade/collection';
-
 export interface GuinessCompatibleSpy extends jasmine.Spy {
   /** By chaining the spy with and.returnValue, all calls to the function will return a specific
    * value. */
@@ -19,8 +17,12 @@ export class SpyObject {
       object = new SpyObject();
     }
 
-    let m = StringMapWrapper.merge(config, overrides);
-    StringMapWrapper.forEach(m, (value, key) => { object.spy(key).andReturn(value); });
+    let m = {};
+    Object.keys(config).forEach((key) => m[key] = config[key]);
+    Object.keys(overrides).forEach((key) => m[key] = overrides[key]);
+    for (let key in m) {
+      object.spy(key).andReturn(m[key]);
+    }
     return object;
   }
 
