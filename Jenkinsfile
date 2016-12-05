@@ -30,6 +30,7 @@ node {
     }
 
     stage('deploying') {
+        sh "git remote add heroku https://git.heroku.com/evening-meadow-46789.git"
         sh "git push heroku master"
     }
 }
