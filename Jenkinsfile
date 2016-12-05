@@ -21,7 +21,7 @@ node {
     }
 
     stage('protractor tests') {
-        sh '''npm start &
+        sh '''ng serve &
         ngPid=$!
         sleep 15s
         npm run e2e
