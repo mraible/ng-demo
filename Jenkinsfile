@@ -6,7 +6,6 @@ node {
     stage('check tools') {
         sh "node -v"
         sh "npm -v"
-        sh "export CHROME_BIN=/usr/bin/chromium-browser"
     }
 
     stage('checkout') {
@@ -22,6 +21,8 @@ node {
     }
 
     stage('protractor tests') {
+        sh "export DISPLAY=:99.0"
+        sh "-e /etc/init.d/xvfb start"
         sh '''npm start &
         ngPid=$!
         sleep 15s
@@ -30,7 +31,7 @@ node {
         '''
     }
 
-    //stage('deploying') {
-    //    sh "git push heroku master"
-    //}
+    stage('deploying') {
+        sh "git push heroku master"
+    }
 }
