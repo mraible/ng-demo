@@ -21,8 +21,6 @@ node {
     }
 
     stage('protractor tests') {
-        sh "export DISPLAY=:99.0"
-        sh "-e /etc/init.d/xvfb start"
         sh '''npm start &
         ngPid=$!
         sleep 15s
