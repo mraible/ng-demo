@@ -17,7 +17,7 @@ node {
     }
 
     stage('unit tests') {
-        sh "npm test"
+        sh "ng test --watch false"
     }
 
     stage('protractor tests') {
