@@ -6,6 +6,7 @@ node {
     stage('check tools') {
         sh "node -v"
         sh "npm -v"
+        sh "export CHROME_BIN=/usr/bin/chromium-browser"
     }
 
     stage('checkout') {
@@ -29,7 +30,7 @@ node {
         '''
     }
 
-    stage('deploying') {
-        sh "git push heroku master"
-    }
+    //stage('deploying') {
+    //    sh "git push heroku master"
+    //}
 }
