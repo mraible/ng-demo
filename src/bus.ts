@@ -13,7 +13,7 @@ export class Bus {
     this._name = value;
   }
 
-  toString() : string {
+  toString(): string {
     return `This bus's name is ${this._name}`;
   }
 }

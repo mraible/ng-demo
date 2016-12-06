@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Http, Response } from '@angular/http';
 import 'rxjs/add/operator/map';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class SearchService {
@@ -11,7 +12,7 @@ export class SearchService {
     return this.http.get('app/shared/search/data/people.json').map((res: Response) => res.json());
   }
 
-  search(q: string) {
+  search(q: string): Observable<any> {
     if (!q || q === '*') {
       q = '';
     } else {
