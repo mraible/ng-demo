@@ -10,7 +10,7 @@
     "pree2e": "webdriver-manager update",
     "e2e": "protractor",
     "preinstall": "npm install -g http-server",
-    "postinstall": "ng build -prod && cp -r dist/* public/. && mkdir -p public/app/shared/search/data && cp src/app/shared/search/data/people.json public/app/shared/search/data"
+    "postinstall": "ng build -prod --aot && cp -r dist/* public/. && mkdir -p public/app/shared/search/data && cp src/app/shared/search/data/people.json public/app/shared/search/data"
   },
   "private": true,
   "dependencies": {
