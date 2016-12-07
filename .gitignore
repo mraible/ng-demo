@@ -10,16 +10,17 @@
 
 # IDEs and editors
 /.idea
-*.iml
+/.vscode
 .project
 .classpath
+.c9/
 *.launch
 .settings/
 
 # misc
 /.sass-cache
 /connect.lock
-/coverage/
+/coverage/*
 /libpeerconnection.log
 npm-debug.log
 testem.log
