@@ -4,13 +4,11 @@
   "license": "MIT",
   "angular-cli": {},
   "scripts": {
-    "start": "http-server",
+    "start": "ng serve",
     "lint": "tslint \"src/**/*.ts\"",
     "test": "ng test",
     "pree2e": "webdriver-manager update",
-    "e2e": "protractor",
-    "preinstall": "npm install -g http-server",
-    "postinstall": "ng build -prod --aot && cp -r dist/* public/. && mkdir -p public/app/shared/search/data && cp src/app/shared/search/data/people.json public/app/shared/search/data"
+    "e2e": "protractor"
   },
   "private": true,
   "dependencies": {
