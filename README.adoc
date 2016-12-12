@@ -2,21 +2,39 @@
 
 :author: Matt Raible
 :email:  matt@raibledesigns.com
-:revnumber: 1.1
+:revnumber: 1.2
 :revdate:   {docdate}
 :subject: Angular CLI
 :keywords: Angular CLI, Angular 2, JavaScript, TypeScript, node, npm, Jasmine, Protractor
-:doctype: book
-:toc: macro
 :icons: font
 :lang: en
 :language: javadocript
 :sourcedir: .
+ifndef::env-github[]
+:icons: font
+endif::[]
+ifdef::env-github,env-browser[]
+:toc: preamble
+:toclevels: 2
+endif::[]
+ifdef::env-github[]
+:status:
+:outfilesuffix: .adoc
+:!toc-title:
+:caution-caption: :fire:
+:important-caption: :exclamation:
+:note-caption: :paperclip:
+:tip-caption: :bulb:
+:warning-caption: :warning:
+endif::[]
+:toc:
 
 This tutorial shows you how to build a simple search and edit application using https://angular.io[Angular 2] and
-https://github.com/angular/angular-cli[Angular CLI]. 
+https://github.com/angular/angular-cli[Angular CLI].
 
-TIP: If you're reading this tutorial on GitHub, you'll likely appreciate the http://gist.asciidoctor.org/?github-mraible%2Fng2-demo%2F%2FREADME.adoc[DocGist view] a bit more.
+ifdef::env-github[]
+TIP: It appears you're reading this document on GitHub. If you want a prettier view, install https://chrome.google.com/webstore/detail/asciidoctorjs-live-previe/iaalpfgpbocpdfblpnhhgllgbdbchmia[Asciidoctor.js Live Preview for Chrome], then view the https://raw.githubusercontent.com/mraible/ng2-demo/master/README.adoc[raw document]. Another option is to use the http://gist.asciidoctor.org/?github-mraible/ng2-demo//README.adoc[DocGist view].
+endif::[]
 
 .Source Code
 ****
@@ -97,8 +115,8 @@ You can see the what version of Angular CLI you're using with `ng --version`.
 
 ----
 $ ng --version
-angular-cli: 1.0.0-beta.15
-node: 4.5.0
+angular-cli: 1.0.0-beta.22-1
+node: 6.9.1
 os: darwin x64
 ----
 
@@ -169,6 +187,7 @@ Create `src/app/app.routing.ts` to define your routes.
 ----
 import { Routes, RouterModule } from '@angular/router';
 import { SearchComponent } from './search/index';
+import { ModuleWithProviders } from '@angular/core';
 
 const appRoutes: Routes = [
   { path: 'search', component: SearchComponent },
@@ -414,7 +433,7 @@ import { SearchService } from './shared/index';
 
 @Component({
   ...
-  styleUrls: ['app.component.css'],
+  styleUrls: ['./app.component.css'],
   viewProviders: [SearchService]
 })
 ----
@@ -478,7 +497,7 @@ But wait, we still don't have search functionality! To add a search feature, add
 [source,javascript]
 .src/app/shared/search/search.service.ts
 ----
-search(q: string) {
+search(q: string): Observable<any> {
   if (!q || q === '*') {
     q = '';
   } else {
@@ -976,8 +995,6 @@ In this same directory, create a `helper.ts` class to implement the `SpyObject` 
 [source,javascript]
 .src/app/shared/search/mocks/helper.ts
 ----
-import {StringMapWrapper} from '@angular/core/src/facade/collection';
-
 export interface GuinessCompatibleSpy extends jasmine.Spy {
   /** By chaining the spy with and.returnValue, all calls to the function will return a specific
    * value. */
@@ -997,8 +1014,12 @@ export class SpyObject {
       object = new SpyObject();
     }
 
-    let m = StringMapWrapper.merge(config, overrides);
-    StringMapWrapper.forEach(m, (value, key) => { object.spy(key).andReturn(value); });
+    let m = {};
+    Object.keys(config).forEach((key) => m[key] = config[key]);
+    Object.keys(overrides).forEach((key) => m[key] = overrides[key]);
+    for (let key in m) {
+      object.spy(key).andReturn(m[key]);
+    }
     return object;
   }
 
@@ -1234,7 +1255,7 @@ Create end-to-end tests in `e2e/search.e2e-spec.ts` to verify the search feature
 [source,javascript]
 .e2e/search.e2e-spec.ts
 ----
-import { browser, element, by } from 'protractor/globals';
+import { browser, element, by } from 'protractor';
 
 describe('Search', () => {
 
@@ -1267,7 +1288,7 @@ Create a `e2e/edit.e2e-spec.ts` test to verify the `EditComponent` renders a per
 [source,javascript]
 .e2e/edit.e2e-spec.ts
 ----
-import { browser, element, by } from 'protractor/globals';
+import { browser, element, by } from 'protractor';
 
 describe('Edit', () => {
 
@@ -1329,41 +1350,37 @@ in your root directory and `git push`. This will trigger the first build.
 ----
 language: node_js
 sudo: true
-
 cache:
   directories:
-    - node
-    - node_modules
-
+  - node
+  - node_modules
 dist: trusty
-
 node_js:
-  - '5.6.0'
-
+- 5.6.0
 branches:
   only:
   - master
-
+addons:
+apt:
+  sources:
+  - google-chrome
+  packages:
+  - google-chrome-stable
+  - google-chrome-beta
 before_install:
- - npm install -g angular-cli
- - export CHROME_BIN=/usr/bin/google-chrome
- - export DISPLAY=:99.0
- - sh -e /etc/init.d/xvfb start
- - sudo apt-get update
- - sudo apt-get install -y libappindicator1 fonts-liberation
- - wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
- - sudo dpkg -i google-chrome*.deb
-
+- npm install -g angular-cli
+- export CHROME_BIN=/usr/bin/google-chrome
+- export DISPLAY=:99.0
+- sh -e /etc/init.d/xvfb start
 script:
- - ng test --watch false # http://mseemann.de/frontend/2016/05/31/setup-angular-2-app-part-1.html
- - ng serve &
- - ng e2e
-
+- ng test --watch false
+- ng serve &
+- ng e2e
 notifications:
   webhooks:
-    on_success: change  # options: [always|never|change] default: always
-    on_failure: always  # options: [always|never|change] default: always
-    on_start: false     # default: false
+    on_success: change
+    on_failure: always
+    on_start: falses
 ----
 
 https://travis-ci.org/mraible/ng2-demo/builds/154182594[Here] is a build showing all unit and integration tests passing.
