@@ -1380,7 +1380,7 @@ notifications:
   webhooks:
     on_success: change
     on_failure: always
-    on_start: falses
+    on_start: false
 ----
 
 https://travis-ci.org/mraible/ng2-demo/builds/154182594[Here] is a build showing all unit and integration tests passing.
