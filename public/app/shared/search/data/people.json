@@ -1,0 +1,35 @@
+[
+  {
+    "id": 1,
+    "name": "Peyton Manning",
+    "phone": "(303) 567-8910",
+    "address": {
+      "street": "1234 Main Street",
+      "city": "Greenwood Village",
+      "state": "CO",
+      "zip": "80111"
+    }
+  },
+  {
+    "id": 2,
+    "name": "Demaryius Thomas",
+    "phone": "(720) 213-9876",
+    "address": {
+      "street": "5555 Marion Street",
+      "city": "Denver",
+      "state": "CO",
+      "zip": "80202"
+    }
+  },
+  {
+    "id": 3,
+    "name": "Von Miller",
+    "phone": "(917) 323-2333",
+    "address": {
+      "street": "14 Mountain Way",
+      "city": "Vail",
+      "state": "CO",
+      "zip": "81657"
+    }
+  }
+]
