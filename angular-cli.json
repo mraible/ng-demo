@@ -1,7 +1,7 @@
 {
   "project": {
     "version": "1.0.0-beta.24",
-    "name": "ng2-demo"
+    "name": "ng-demo"
   },
   "apps": [
     {
