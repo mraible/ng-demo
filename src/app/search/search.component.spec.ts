@@ -1,6 +1,5 @@
 /* tslint:disable:no-unused-variable */
-
-import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MockActivatedRoute, MockRouter } from '../shared/search/mocks/routes';
 import { MockSearchService } from '../shared/search/mocks/search.service';
 import { SearchComponent } from './search.component';
@@ -8,7 +7,7 @@ import { TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { SearchService } from '../shared/search/search.service';
 
-describe('Component: Search', () => {
+describe('SearchComponent', () => {
   let mockSearchService: MockSearchService;
   let mockActivatedRoute: MockActivatedRoute;
   let mockRouter: MockRouter;
@@ -26,7 +25,7 @@ describe('Component: Search', () => {
         {provide: Router, useValue: mockRouter}
       ],
       imports: [FormsModule]
-    });
+    }).compileComponents();
   });
 
   it('should search when a term is set and search() is called', () => {

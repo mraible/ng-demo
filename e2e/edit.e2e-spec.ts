@@ -1,4 +1,4 @@
-import { browser, element, by } from 'protractor';
+import { browser, by, element } from 'protractor';
 
 describe('Edit', () => {
 
@@ -19,9 +19,7 @@ describe('Edit', () => {
 
   it('should allow updating a name', function () {
     let save = element(by.id('save'));
-    // send individual characters since sendKeys passes partial values sometimes
-    // https://github.com/angular/protractor/issues/698
-    ' Won!'.split('').forEach((c) => name.sendKeys(c));
+    name.sendKeys(' Won!');
     save.click();
     // verify one element matched this change
     let list = element.all(by.css('app-search table tbody tr'));

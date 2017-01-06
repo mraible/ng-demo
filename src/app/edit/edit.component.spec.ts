@@ -1,3 +1,4 @@
+/* tslint:disable:no-unused-variable */
 import { MockSearchService } from '../shared/search/mocks/search.service';
 import { EditComponent } from './edit.component';
 import { TestBed } from '@angular/core/testing';
@@ -6,7 +7,7 @@ import { MockRouter, MockActivatedRoute } from '../shared/search/mocks/routes';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
-describe('Component: Edit', () => {
+describe('EditComponent', () => {
   let mockSearchService: MockSearchService;
   let mockActivatedRoute: MockActivatedRoute;
   let mockRouter: MockRouter;
@@ -24,7 +25,7 @@ describe('Component: Edit', () => {
         {provide: Router, useValue: mockRouter}
       ],
       imports: [FormsModule]
-    });
+    }).compileComponents();
   });
 
   it('should fetch a single record', () => {
