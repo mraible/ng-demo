@@ -2,7 +2,7 @@
 
 :author: Matt Raible
 :email:  matt@raibledesigns.com
-:revnumber: 1.2
+:revnumber: 1.3
 :revdate:   {docdate}
 :subject: Angular CLI
 :keywords: Angular CLI, Angular 2, JavaScript, TypeScript, node, npm, Jasmine, Protractor
@@ -47,7 +47,7 @@ toc::[]
 
 == What you'll build
 
-You'll build a simple web application with Angular CLI, a new tool for Angular 2 development. You'll create an
+You'll build a simple web application with Angular CLI, a tool for Angular 2 development. You'll create an
 application with search and edit features.
 
 == What you'll need
@@ -82,10 +82,7 @@ installing ng2
   create src/app/app.component.spec.ts
   create src/app/app.component.ts
   create src/app/app.module.ts
-  create src/app/index.ts
-  create src/app/shared/index.ts
   create src/assets/.gitkeep
-  create src/assets/.npmignore
   create src/environments/environment.prod.ts
   create src/environments/environment.ts
   create src/favicon.ico
@@ -95,7 +92,6 @@ installing ng2
   create src/styles.css
   create src/test.ts
   create src/tsconfig.json
-  create src/typings.d.ts
   create angular-cli.json
   create e2e/app.e2e-spec.ts
   create e2e/app.po.ts
@@ -108,22 +104,26 @@ installing ng2
 Successfully initialized git.
 Installing packages for tooling via npm.
 Installed packages for tooling via npm.
-[mraible:~/dev] 1m29s $
+[mraible:~/dev] 1m17s $
 ----
 
 You can see the what version of Angular CLI you're using with `ng --version`.
 
 ----
 $ ng --version
-angular-cli: 1.0.0-beta.22-1
+angular-cli: 1.0.0-beta.24
 node: 6.9.1
 os: darwin x64
+@angular/common: 2.4.1
+@angular/compiler: 2.4.1
+@angular/core: 2.4.1
+@angular/forms: 2.4.1
+@angular/http: 2.4.1
+@angular/platform-browser: 2.4.1
+@angular/platform-browser-dynamic: 2.4.1
+@angular/router: 3.4.1
+@angular/compiler-cli: 2.4.1
 ----
-
-[TIP]
-====
-If you have the `tee` command installed, you can view this project's files using `tree -I "dist|node_modules|typings|tmp" .`.
-====
 
 == Run the application
 
@@ -143,9 +143,8 @@ You can make sure your new project's tests pass, run `ng test`:
 
 ----
 $ ng test
-Built project successfully. Stored in "dist/".
 ...
-Chrome 52.0.2743 (Mac OS X 10.11.6): Executed 3 of 3 SUCCESS (0.039 secs / 0.012 secs)
+Chrome 55.0.2883 (Mac OS X 10.12.2): Executed 3 of 3 SUCCESS (0.257 secs / 0.252 secs)
 ----
 
 == Add a search feature
@@ -166,6 +165,20 @@ installing component
   create src/app/search/search.component.html
   create src/app/search/search.component.spec.ts
   create src/app/search/search.component.ts
+  update src/app/app.module.ts
+----
+
+Open `src/app/search/search.component.html` and replace its default HTML with the following:
+
+[source,html]
+.src/app/search/search.component.html
+----
+<h2>Search</h2>
+<form>
+  <input type="search" name="query" [(ngModel)]="query" (keyup.enter)="search()">
+  <button type="button" (click)="search()">Search</button>
+</form>
+<pre>{{searchResults | json}}</pre>
 ----
 
 .Adding a Search Route
@@ -173,47 +186,29 @@ installing component
 
 [NOTE]
 ====
-In previous versions of CLI, you could generate a route *and* a component. However, since beta 8, route generation has been disabled.
-This will likely be re-enabled in a future release.
+In previous versions of CLI, you could generate a route *and* a component. However, since beta 8, route generation has been disabled. This will hopefully be re-enabled in a future release.
 ====
 
-The https://angular.io/docs/ts/latest/guide/router.html[Router documentation] for Angular 2 provides the information you need to
-setup a route to the `SearchComponent` you just generated. Here's a quick summary:
+The https://angular.io/docs/ts/latest/guide/router.html[Router documentation] for Angular 2 provides the information you need to setup a route to the `SearchComponent` you just generated. Here's a quick summary:
 
-Create `src/app/app.routing.ts` to define your routes.
+In `src/app/app.module.ts`, add an `appRoutes` constant and import it in `@NgModule`:
 
 [source,javascript]
-.src/app/app.routing.ts
+.src/app/app.module.ts
 ----
 import { Routes, RouterModule } from '@angular/router';
-import { SearchComponent } from './search/index';
-import { ModuleWithProviders } from '@angular/core';
 
 const appRoutes: Routes = [
   { path: 'search', component: SearchComponent },
   { path: '', redirectTo: '/search', pathMatch: 'full' }
 ];
 
-export const appRoutingProviders: any[] = [];
-
-export const routing = RouterModule.forRoot(appRoutes);
-----
-
-In `src/app/app.module.ts`, import the two constants you exported and configure them in `@NgModule`:
-
-[source,javascript]
-----
-import { routing, appRoutingProviders } from './app.routing';
-
-import { SearchComponent } from './search/search.component';
-
 @NgModule({
   ...
   imports: [
     ...
-    routing
-  ],
-  providers: [appRoutingProviders],
+    RouterModule.forRoot(appRoutes)
+  ]
   ...
 })
 export class AppModule { }
@@ -231,31 +226,7 @@ In `src/app/app.component.html`, add a `RouterOutlet` to display routes.
 Now that you have routing setup, you can continue writing the search feature.
 ****
 
-To allow navigation to the `SearchComponent`, you can add a link in `src/app/app.component.html`.
-
-[source,html]
-.src/app/app.component.html
-----
-<nav>
-  <a routerLink="/search" routerLinkActive="active">Search</a>
-</nav>
-----
-
-Open `src/app/search/search.component.html` and replace its default HTML with the following:
-
-[source,xml]
-.src/app/search/search.component.html
-----
-<h2>Search</h2>
-<form>
-  <input type="search" name="query" [(ngModel)]="query" (keyup.enter)="search()">
-  <button type="button" (click)="search()">Search</button>
-</form>
-<pre>{{searchResults | json}}</pre>
-----
-
-If you still have `ng serve` running, your browser should refresh automatically. If not, navigate to
-http://localhost:4200, and you should see the search form.
+If you still have `ng serve` running, your browser should refresh automatically. If not, navigate to http://localhost:4200, and you should see the search form.
 
 [[search-component]]
 .Search component
@@ -277,16 +248,19 @@ The next section shows you how to create a use a JSON file and `localStorage` to
 
 === The Backend
 
-To get search results, create a `SearchService` that makes HTTP requests to a JSON file. Start
-by generating a new service.
+To get search results, create a `SearchService` that makes HTTP requests to a JSON file. Start by generating a new service.
 
 ----
-ng g service search
+$ ng g service search
+installing service
+  create src/app/search.service.spec.ts
+  create src/app/search.service.ts
+  WARNING Service is generated but not provided, it must be provided to be used
 ----
 
-Move the generated `search.service.ts` and its test to `app/shared/search`. You will likely need to create this directory.
+Move the generated `search.service.ts` and its test to `app/shared/search`. You will need to create this directory.
 
-Then, create `src/app/shared/search/data/people.json` to hold your data.
+Create `src/app/shared/search/data/people.json` to hold your data.
 
 [source,json]
 .src/app/shared/search/data/people.json
@@ -404,7 +378,7 @@ export class SearchComponent implements OnInit {
   constructor(private searchService: SearchService) {}
 ----
 
-Then implement the `search()` method to call the service's `getAll()` method.
+Then implement a `search()` method to call the service's `getAll()` method.
 
 [source,javascript]
 .src/app/search/search.component.ts
@@ -492,7 +466,7 @@ Now the search results look better.
 .Search results
 image::src/assets/images/search-results.png[Search Results, 800, scaledwidth="100%"]
 
-But wait, we still don't have search functionality! To add a search feature, add a `search()` method to `SearchService`.
+But wait, you still don't have search functionality! To add a search feature, add a `search()` method to `SearchService`.
 
 [source,javascript]
 .src/app/shared/search/search.service.ts
@@ -539,8 +513,13 @@ Modify `search.component.html` to add a click handler for editing a person.
 [source,html]
 .src/app/search/search.component.html
 ----
-<td><a (click)="onSelect(person)">{{person.name}}</a></td>
+<td><a href="" (click)="onSelect(person); false">{{person.name}}</a></td>
 ----
+
+[NOTE]
+====
+The `false` in the `(click)` handler it necessary to keep the browser from following the blank `href`. You can also remove the `href` attribute, but then the cursor doesn't indicate it's a link properly when hovering.
+====
 
 Then add `onSelect(person)` to `search.component.ts`. You'll need to import `Router` and set it as a local variable to make this work.
 
@@ -571,15 +550,14 @@ installing component
   create src/app/edit/edit.component.html
   create src/app/edit/edit.component.spec.ts
   create src/app/edit/edit.component.ts
-  create src/app/edit/index.ts
+  update src/app/app.module.ts
 ----
 
-Add a route for this component in `app.routing.ts`:
+Add a route for this component in `app.module.ts`:
 
 [source,javascript]
-.src/app/app.routing.ts
+.src/app/app.module.ts
 ----
-import { EditComponent } from './edit/index';
 
 const appRoutes: Routes = [
   { path: 'search', component: SearchComponent },
@@ -588,8 +566,7 @@ const appRoutes: Routes = [
 ];
 ----
 
-Update `src/app/edit/edit.component.html` to display an editable form. You might notice I've added `id` attributes to most elements. This is to
-make things easier when writing integration tests with Protractor.
+Update `src/app/edit/edit.component.html` to display an editable form. You might notice I've added `id` attributes to most elements. This is to make things easier when writing integration tests with Protractor.
 
 [source,html]
 .src/app/edit/edit.component.html
@@ -692,8 +669,7 @@ export class EditComponent implements OnInit, OnDestroy {
 }
 ----
 
-Modify `SearchService` to contain functions for finding a person by their id, and saving them. While you're in there, modify the `search()` method to
-be aware of updated objects in `localStorage`.
+Modify `SearchService` to contain functions for finding a person by their id, and saving them. While you're in there, modify the `search()` method to be aware of updated objects in `localStorage`.
 
 [source,javascript]
 .src/app/shared/search/search.service.ts
@@ -806,22 +782,82 @@ export class SearchComponent implements OnInit, OnDestroy {
 
 After making all these changes, you should be able to search/edit/update a person's information. If it works - nice job!
 
+=== Form Validation
+
+One thing you might notice is you can clear any input element in the form and save it. At the very least, the `name` field should be required. Otherwise, there's nothing to click on in the search results.
+
+To make name required, modify `edit.component.html` to add a `required` attribute to the name `<input>`.
+
+[source,html]
+.src/edit/edit.component.html
+----
+<input [(ngModel)]="editName" name="name" id="name" placeholder="name" required/>
+----
+
+You'll also need to wrap everything in a `<form>` element. Add `<form>` after the `<h3>` tag and close it before the last `</div>`. You'll also need to add an `(ngSubmit)` handler to the form and change the save button to be a regular submit button.
+
+[source,html]
+.src/edit/edit.component.html
+----
+<h3>{{editName}}</h3>
+<form (ngSubmit)="save()">
+  ...
+  <button type="submit" id="save">Save</button>
+  <button (click)="cancel()" id="cancel">Cancel</button>
+</form>
+----
+
+After making these changes, any field with a `required` attribute will be required.
+
+[[edit-form-required]]
+.Edit form with validation
+image::src/assets/images/edit-form-validation.png[Edit form with validation, 800, scaledwidth="100%"]
+
+In this screenshot, you might notice the address fields are blank. This is explained by the error in your console.
+
+----
+If ngModel is used within a form tag, either the name attribute must be set or the form control must be defined as 'standalone' in ngModelOptions.
+
+Example 1: <input [(ngModel)]="person.firstName" name="first">
+Example 2: <input [(ngModel)]="person.firstName" [ngModelOptions]="{standalone: true}">
+----
+
+To fix, add a `name` attribute to all the address fields. For example:
+
+[source,html]
+.src/edit/edit.component.html
+----
+<address>
+  <input [(ngModel)]="editAddress.street" name="street" id="street"><br/>
+  <input [(ngModel)]="editAddress.city" name="city" id="city">,
+  <input [(ngModel)]="editAddress.state" name="state" id="state" size="2">
+  <input [(ngModel)]="editAddress.zip" name="zip" id="zip" size="5">
+</address>
+----
+
+Now values should display in all fields and `name` should be required.
+
+[[edit-form-names]]
+.Edit form with names and validation
+image::src/assets/images/edit-form-names.png[Edit form with names and validation, 800, scaledwidth="100%"]
+
+To learn more about forms and validation, see https://angular.io/docs/ts/latest/guide/forms.html[Angular forms documentation].
+
 == Testing
 
 Now that you've built an application, it's important to test it to ensure it works. The best reason for writing tests is
-to automate your testing. Without tests, you'll likely be testing manually. This manual testing will take longer and longer
-as your application grows.
+to automate your testing. Without tests, you'll likely be testing manually. This manual testing will take longer and longer as your application grows.
 
 In this section, you'll learn to use http://jasmine.github.io/[Jasmine] for unit testing controllers and https://angular.github.io/protractor/[Protractor] for
 integration testing. Angular's testing documentation lists https://angular.io/docs/ts/latest/guide/testing.html[good reasons] to test, but doesn't currently have many examples.
 
 === Fix the AppComponent test
 
-If you `ng test`, you'll like received an error:
+If you run `ng test`, you'll likely received an error:
 
 ----
-Chrome 53.0.2785 (Mac OS X 10.11.6) App: Ng2Demo should render title in a h1 tag FAILED
-        'router-outlet' is not a known element:
+Chrome 55.0.2883 (Mac OS X 10.12.2) AppComponent should create the app FAILED
+	'router-outlet' is not a known element:
 ----
 
 This happens because the test is unaware of Angular's router. To fix this, import `RouterTestingModule` in `app.component.spec.ts`:
@@ -837,8 +873,11 @@ describe('App: Ng2Demo', () => {
       declarations: [AppComponent],
       imports: [RouterTestingModule]
     });
+    TestBed.compileComponents();
   });
 ----
+
+You'll also get failures for the components and service you created. These failures will be solves as you complete the section below.
 
 === Unit test the SearchService
 
@@ -853,7 +892,7 @@ import { SearchService } from './search.service';
 import { BaseRequestOptions, Http, ConnectionBackend, Response, ResponseOptions } from '@angular/http';
 import { MockBackend } from '@angular/http/testing';
 
-describe('Service: Search', () => {
+describe('SearchService', () => {
   beforeEach(() => {
 
     TestBed.configureTestingModule({
@@ -875,17 +914,16 @@ describe('Service: Search', () => {
 If you run `ng test`, you will likely see some errors about the test stubs that Angular CLI created for you. You can ignore these for now.
 
 ----
-ERROR in [default] /Users/mraible/ng2-demo/src/app/edit/edit.component.spec.ts:10:20
-Supplied parameters do not match any signature of call target.
+Chrome 55.0.2883 (Mac OS X 10.12.2) EditComponent should create FAILED
+	Can't bind to 'ngModel' since it isn't a known property of 'input'. ("
 
-ERROR in [default] /Users/mraible/ng2-demo/src/app/search/search.component.spec.ts:10:20
-Supplied parameters do not match any signature of call target.
+Chrome 55.0.2883 (Mac OS X 10.12.2) SearchComponent should create FAILED
+	Can't bind to 'ngModel' since it isn't a known property of 'input'. ("<h2>Search</h2>
 ----
 
 Add the first test of `getAll()` to `search.service.spec.ts`. This test shows how `MockBackend` can be used to mock results and set the response.
 
-TIP: When you are testing code that returns either a Promise or an RxJS Observable, you can use the `fakeAsync` helper to test that code as if it were synchronous.
-Promises are be fulfilled and Observables are notified immediately after you call `tick()`.
+TIP: When you are testing code that returns either a Promise or an RxJS Observable, you can use the `fakeAsync` helper to test that code as if it were synchronous. Promises are be fulfilled and Observables are notified immediately after you call `tick()`.
 
 The test below should be on the same level as `beforeEach`.
 
@@ -909,9 +947,10 @@ it('should retrieve all search results',
 );
 ----
 
+TIP: To only run the SearchService test, change the first `describe` in `search.service.spec.ts` to be `fdescribe`. Using an `f` prefix means "only run this test". You can use `x` to exclude tests. These prefixes can be used for both `describe` and `it` blocks.
+
 Notice that tests continually run as you add them when using `ng test`. You can run tests once by using `ng test --watch=false`.
-You will likely see "Executed 5 of 5 [red]#(1 FAILED)#" in your terminal. Add a couple more tests for filtering by search
-term and fetching by id.
+Add a couple more tests for filtering by search term and fetching by id.
 
 [source,javascript]
 .src/app/shared/search/search.service.spec.ts
@@ -951,8 +990,7 @@ it('should fetch by id',
 
 === Unit test the SearchComponent
 
-To unit test the `SearchComponent`, create a `MockSearchProvider` that has http://angular-tips.com/blog/2014/03/introduction-to-unit-test-spies/[spies].
-These allow you to _spy_ on functions to check if they were called.
+To unit test the `SearchComponent`, create a `MockSearchProvider` that has http://angular-tips.com/blog/2014/03/introduction-to-unit-test-spies/[spies]. These allow you to _spy_ on functions to check if they were called.
 
 Create `src/app/shared/search/mocks/search.service.ts` and populate it with spies for each method, as well as methods to set the response and subscribe to results.
 
@@ -1099,7 +1137,7 @@ import { TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { SearchService } from '../shared/search/search.service';
 
-describe('Component: Search', () => {
+describe('SearchComponent', () => {
   let mockSearchService: MockSearchService;
   let mockActivatedRoute: MockActivatedRoute;
   let mockRouter: MockRouter;
@@ -1117,7 +1155,7 @@ describe('Component: Search', () => {
         {provide: Router, useValue: mockRouter}
       ],
       imports: [FormsModule]
-    });
+    }).compileComponents();
   });
 });
 ----
@@ -1143,8 +1181,6 @@ it('should search automatically when a term is on the URL', () => {
 });
 ----
 
-After adding these tests, you should see the first instance of all tests passing (Executed 8 of 8 [green]#SUCCESS#).
-
 Update the test for `EditComponent`, verifying fetching a single record works. Notice how you can access the component directly with
 `fixture.debugElement.componentInstance`, or its rendered version with `fixture.debugElement.nativeElement`.
 
@@ -1159,7 +1195,7 @@ import { MockRouter, MockActivatedRoute } from '../shared/search/mocks/routes';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
-describe('Component: Edit', () => {
+describe('EditComponent', () => {
   let mockSearchService: MockSearchService;
   let mockActivatedRoute: MockActivatedRoute;
   let mockRouter: MockRouter;
@@ -1177,7 +1213,7 @@ describe('Component: Edit', () => {
         {provide: Router, useValue: mockRouter}
       ],
       imports: [FormsModule]
-    });
+    }).compileComponents();
   });
 
   it('should fetch a single record', () => {
@@ -1201,12 +1237,11 @@ describe('Component: Edit', () => {
 });
 ----
 
-You should see "Executed 9 of 9 [green]#SUCCESS# (0.238 secs / 0.259 secs)" in the shell window that's running `ng test`. If you don't, try cancelling the command and restarting.
+You should see "Executed 9 of 9 [green]#SUCCESS# (0.684 secs / 0.598 secs)" in the shell window that's running `ng test`. If you don't, try cancelling the command and restarting.
 
 === Integration test the search UI
 
-To test if the application works end-to-end, you can write tests with http://angular.github.io/protractor[Protractor]. These are also known as integration tests,
-since they test the _integration_ between all layers of your application.
+To test if the application works end-to-end, you can write tests with http://angular.github.io/protractor[Protractor]. These are also known as integration tests, since they test the _integration_ between all layers of your application.
 
 To verify end-to-end tests work in the project before you begin, run the following commands in three different console windows.
 
@@ -1220,30 +1255,28 @@ All tests should pass.
 ----
 $ ng e2e
 
-> ng2-demo@0.0.0 pree2e /Users/mraible/dev/ng2-demo
-> webdriver-manager update
+> ng2-demo@0.0.0 pree2e /Users/mraible/ng2-demo
+> webdriver-manager update --standalone false --gecko false
 
-[13:54:26] I/file_manager - creating folder /Users/mraible/dev/ng2-demo/node_modules/protractor/node_modules/webdriver-manager/selenium
-[13:54:26] I/downloader - selenium standalone: downloading version 2.53.1
-[13:54:26] I/downloader - curl -o /Users/mraible/dev/ng2-demo/node_modules/protractor/node_modules/webdriver-manager/selenium/selenium-server-standalone-2.53.1.jar https://selenium-release.storage.googleapis.com/2.53/selenium-server-standalone-2.53.1.jar
-[13:54:26] I/downloader - chromedriver: downloading version 2.22
-[13:54:26] I/downloader - curl -o /Users/mraible/dev/ng2-demo/node_modules/protractor/node_modules/webdriver-manager/selenium/chromedriver_2.22mac32.zip https://chromedriver.storage.googleapis.com/2.22/chromedriver_mac32.zip
-[13:54:28] I/update - chromedriver: unzipping /Users/mraible/dev/ng2-demo/node_modules/protractor/node_modules/webdriver-manager/selenium/chromedriver_2.22mac32.zip
-[13:54:28] I/update - chromedriver: setting permissions to 0755 for /Users/mraible/dev/ng2-demo/node_modules/protractor/node_modules/webdriver-manager/selenium/chromedriver_2.22
+[16:04:37] I/file_manager - creating folder /Users/mraible/ng2-demo/node_modules/protractor/node_modules/webdriver-manager/selenium
+[16:04:37] I/downloader - chromedriver: downloading version 2.26
+[16:04:37] I/downloader - curl -o /Users/mraible/ng2-demo/node_modules/protractor/node_modules/webdriver-manager/selenium/chromedriver_2.26mac64.zip https://chromedriver.storage.googleapis.com/2.26/chromedriver_mac64.zip
+[16:04:38] I/update - chromedriver: unzipping /Users/mraible/ng2-demo/node_modules/protractor/node_modules/webdriver-manager/selenium/chromedriver_2.26mac64.zip
+[16:04:39] I/update - chromedriver: setting permissions to 0755 for /Users/mraible/ng2-demo/node_modules/protractor/node_modules/webdriver-manager/selenium/chromedriver_2.26
 
-> ng2-demo@0.0.0 e2e /Users/mraible/dev/ng2-demo
+> ng2-demo@0.0.0 e2e /Users/mraible/ng2-demo
 > protractor "./protractor.conf.js"
 
-[13:54:35] I/direct - Using ChromeDriver directly...
-[13:54:35] I/launcher - Running 1 instances of WebDriver
+[16:04:39] I/direct - Using ChromeDriver directly...
+[16:04:39] I/launcher - Running 1 instances of WebDriver
 Spec started
 
   ng2-demo App
     ✓ should display message saying app works
 
-Executed 1 of 1 spec SUCCESS in 0.684 sec.
-[00:01:09] I/launcher - 0 instance(s) of WebDriver still running
-[00:01:09] I/launcher - chrome #01 passed
+Executed 1 of 1 spec SUCCESS in 0.89 sec.
+[16:04:41] I/launcher - 0 instance(s) of WebDriver still running
+[16:04:41] I/launcher - chrome #01 passed
 
 All end-to-end tests pass.
 ----
@@ -1261,7 +1294,6 @@ describe('Search', () => {
 
   beforeEach(() => {
     browser.get('/search');
-    element(by.linkText('Search')).click();
   });
 
   it('should have an input and search button', () => {
@@ -1330,10 +1362,9 @@ image::src/assets/images/protractor-success.png[Protractor success, 800, scaledw
 If you made it this far and have all your specs passing - congratulations! You're well on your way to writing quality
 code with Angular 2 and verifying it works.
 
-You can see the test coverage of your project by opening `coverage/index.html` in your browser.
+You can see the test coverage of your project by running `ng test -cc --w false` and then opening `coverage/index.html` in your browser.
 
-You might notice that the new components and service could use some additional coverage. If you feel the need
-to improve this coverage, please send me a pull request!
+You might notice that the new components and service could use some additional coverage. If you feel the need to improve this coverage, please create a pull request!
 
 [[test-coverage]]
 .Test coverage
@@ -1341,10 +1372,7 @@ image::src/assets/images/test-coverage.png[Test coverage, 800, scaledwidth="100%
 
 == Continuous Integration
 
-At the time of this writing, Angular CLI did not have any continuous integration support. However, it's easy
-to add with https://travis-ci.org/[Travis CI]. If you've checked in your project to GitHub, you can easily use Travis CI.
-Simply login and enable builds for the GitHub repo you created the project in. Then add the following `.travis.yml`
-in your root directory and `git push`. This will trigger the first build.
+At the time of this writing, Angular CLI did not have any continuous integration support. However, it's easy to add with https://travis-ci.org/[Travis CI]. If you've checked in your project to GitHub, you can easily use Travis CI. Simply login and enable builds for the GitHub repo you created the project in. Then add the following `.travis.yml` in your root directory and `git push`. This will trigger the first build.
 
 [source,yaml]
 ----

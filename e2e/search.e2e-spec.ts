@@ -1,10 +1,9 @@
-import { browser, element, by } from 'protractor';
+import { browser, by, element } from 'protractor';
 
 describe('Search', () => {
 
   beforeEach(() => {
     browser.get('/search');
-    element(by.linkText('Search')).click();
   });
 
   it('should have an input and search button', () => {
