@@ -1422,3 +1422,43 @@ A completed project with this code in it is available on GitHub at https://githu
 I hope you've enjoyed this in-depth tutorial on how to get started with Angular and Angular CLI. Angular CLI
 takes much of the pain out of setting up an Angular project and using Typescript. I expect great things from Angular CLI,
 mostly because the Angular setup process can be tedious and CLI greatly simplifies things.
+
+== Bonus: Angular Material
+
+See http://www.mithunvp.com/angular-material-2-angular-cli-webpack/[this blog post] for a good summary of how to integrate Angular Material into and Angular CLI project. Below is a quick summary of the necessary steps:
+
+----
+yarn add @angular/material
+----
+
+NOTE: You can also use `npm install --save @angular/material`, but https://code.facebook.com/posts/1840075619545360[Yarn] is faster.
+
+Add `MaterialModule` as an import in `app.module.ts`:
+
+[source,javascript]
+.src/app.module.ts
+----
+import { MaterialModule } from '@angular/material';
+
+@NgModule({
+  ...
+  imports: [
+    ...
+    MaterialModule.forRoot()
+  ]
+----
+
+Add Material icons and a theme to `src/style.css`:
+
+[source,css]
+----
+@import '~https://fonts.googleapis.com/icon?family=Material+Icons';
+@import '~@angular/material/core/theming/prebuilt/deeppurple-amber.css';
+
+body {
+  margin: 0;
+  font-family: Roboto, sans-serif;
+}
+----
+
+Change HTML to use Material components. For example, change `<h1>` in `app.component.html` to be `<md-toolbar>`.

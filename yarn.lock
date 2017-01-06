@@ -43,6 +43,12 @@
   version "2.4.1"
   resolved "https://registry.yarnpkg.com/@angular/http/-/http-2.4.1.tgz#f06067e370c44d025ed00a03ef704f6c46ea59ac"
 
+"@angular/material@2.0.0-alpha.10":
+  version "2.0.0-alpha.10"
+  resolved "https://registry.yarnpkg.com/@angular/material/-/material-2.0.0-alpha.10.tgz#c9f28b52aa9d0f71670e6ce163e22052ef63fcc2"
+  dependencies:
+    "@types/hammerjs" "^2.0.30"
+
 "@angular/platform-browser-dynamic@^2.3.1":
   version "2.4.1"
   resolved "https://registry.yarnpkg.com/@angular/platform-browser-dynamic/-/platform-browser-dynamic-2.4.1.tgz#5fb72038f76c1e3646cea95f5b4722d67a4419dd"
@@ -69,6 +75,10 @@
     loader-utils "^0.2.16"
     magic-string "^0.16.0"
     source-map "^0.5.6"
+
+"@types/hammerjs@^2.0.30":
+  version "2.0.34"
+  resolved "https://registry.yarnpkg.com/@types/hammerjs/-/hammerjs-2.0.34.tgz#9cbac4f41cb039436141785e1be50b3ab10a04a9"
 
 "@types/jasmine@2.5.38", "@types/jasmine@^2.5.36":
   version "2.5.38"
@@ -146,13 +156,9 @@ alphanum-sort@^1.0.1, alphanum-sort@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/alphanum-sort/-/alphanum-sort-1.0.2.tgz#97a1119649b211ad33691d9f9f486a8ec9fbe0a3"
 
-amdefine@1.0.0:
+amdefine@1.0.0, amdefine@>=0.0.4:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/amdefine/-/amdefine-1.0.0.tgz#fd17474700cb5cc9c2b709f0be9d23ce3c198c33"
-
-amdefine@>=0.0.4:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/amdefine/-/amdefine-1.0.1.tgz#4a5282ac164729e93619bcfd3ad151f817ce91f5"
 
 angular-cli@1.0.0-beta.24:
   version "1.0.0-beta.24"
