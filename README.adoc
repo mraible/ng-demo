@@ -1461,4 +1461,8 @@ body {
 }
 ----
 
-Change HTML to use Material components. For example, change `<h1>` in `app.component.html` to be `<md-toolbar>`.
+Change HTML to use Material components. For example, change `<h1>` in `app.component.html` to be `<md-toolbar>`. After modifying your HTML to match this branch, the edit screen will look as follows.
+
+[[angular-material]]
+.Angular Material
+image::src/assets/images/angular-material.png[Angular Material, 800, scaledwidth="100%"]
