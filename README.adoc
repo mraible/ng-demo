@@ -39,8 +39,7 @@ endif::[]
 .Source Code
 ****
 If you'd like to get right to it, the https://github.com/mraible/ng-demo[source is on GitHub]. To run the app,
-use `ng serve`. To test it, run `ng test`. To run its integration tests, run `ng serve` in one terminal and
-`ng e2e` in another.
+use `ng serve`. To test it, run `ng test`. To run its integration tests, run `ng e2e`.
 ****
 
 toc::[]
@@ -56,7 +55,7 @@ application with search and edit features.
 * A favorite text editor or IDE. I recommend https://www.jetbrains.com/idea/[IntelliJ IDEA] and its
 https://plugins.jetbrains.com/plugin/8395?pr=idea[Angular TypeScript Live Templates plugin].
 * http://nodejs.org/[Node.js] and npm installed. I recommend using https://github.com/creationix/nvm[nvm].
-* https://github.com/angular/angular-cli[Angular CLI] installed. If you don't have Angular CLI installed, install it using `npm install -g angular-cli@latest`.
+* https://github.com/angular/angular-cli[Angular CLI] installed. If you don't have Angular CLI installed, install it using `npm install -g @angular/cli`.
 
 TIP: https://augury.angular.io/[Angular Augury] is a Google Chrome Dev Tools extension for debugging Angular applications.
 I haven't needed it much myself, but I can see how it might come in handy.
@@ -104,25 +103,34 @@ installing ng2
 Successfully initialized git.
 Installing packages for tooling via npm.
 Installed packages for tooling via npm.
-[mraible:~/dev] 1m17s $
+You can `ng set --global packageManager=yarn`.
+Project 'ng-demo' successfully created.
+[mraible:~/dev] 54s $
 ----
 
 You can see the what version of Angular CLI you're using with `ng --version`.
 
 ----
 $ ng --version
-angular-cli: 1.0.0-beta.24
+                             _                           _  _
+  __ _  _ __    __ _  _   _ | |  __ _  _ __         ___ | |(_)
+ / _` || '_ \  / _` || | | || | / _` || '__|_____  / __|| || |
+| (_| || | | || (_| || |_| || || (_| || |  |_____|| (__ | || |
+ \__,_||_| |_| \__, | \__,_||_| \__,_||_|          \___||_||_|
+               |___/
+@angular/cli: 1.0.0-beta.31
 node: 6.9.1
 os: darwin x64
-@angular/common: 2.4.1
-@angular/compiler: 2.4.1
-@angular/core: 2.4.1
-@angular/forms: 2.4.1
-@angular/http: 2.4.1
-@angular/platform-browser: 2.4.1
-@angular/platform-browser-dynamic: 2.4.1
-@angular/router: 3.4.1
-@angular/compiler-cli: 2.4.1
+@angular/common: 2.4.7
+@angular/compiler: 2.4.7
+@angular/core: 2.4.7
+@angular/forms: 2.4.7
+@angular/http: 2.4.7
+@angular/platform-browser: 2.4.7
+@angular/platform-browser-dynamic: 2.4.7
+@angular/router: 3.4.7
+@angular/cli: 1.0.0-beta.31
+@angular/compiler-cli: 2.4.7
 ----
 
 == Run the application
@@ -1243,10 +1251,9 @@ You should see "Executed 9 of 9 [green]#SUCCESS# (0.684 secs / 0.598 secs)" in t
 
 To test if the application works end-to-end, you can write tests with http://angular.github.io/protractor[Protractor]. These are also known as integration tests, since they test the _integration_ between all layers of your application.
 
-To verify end-to-end tests work in the project before you begin, run the following commands in three different console windows.
+To verify end-to-end tests work in the project before you begin, run the following command.
 
 ----
-ng serve
 ng e2e
 ----
 
@@ -1254,29 +1261,29 @@ All tests should pass.
 
 ----
 $ ng e2e
-
-> ng-demo@0.0.0 pree2e /Users/mraible/ng-demo
-> webdriver-manager update --standalone false --gecko false
-
-[16:04:37] I/file_manager - creating folder /Users/mraible/ng-demo/node_modules/protractor/node_modules/webdriver-manager/selenium
-[16:04:37] I/downloader - chromedriver: downloading version 2.26
-[16:04:37] I/downloader - curl -o /Users/mraible/ng-demo/node_modules/protractor/node_modules/webdriver-manager/selenium/chromedriver_2.26mac64.zip https://chromedriver.storage.googleapis.com/2.26/chromedriver_mac64.zip
-[16:04:38] I/update - chromedriver: unzipping /Users/mraible/ng-demo/node_modules/protractor/node_modules/webdriver-manager/selenium/chromedriver_2.26mac64.zip
-[16:04:39] I/update - chromedriver: setting permissions to 0755 for /Users/mraible/ng-demo/node_modules/protractor/node_modules/webdriver-manager/selenium/chromedriver_2.26
-
-> ng-demo@0.0.0 e2e /Users/mraible/ng-demo
-> protractor "./protractor.conf.js"
-
-[16:04:39] I/direct - Using ChromeDriver directly...
-[16:04:39] I/launcher - Running 1 instances of WebDriver
+** NG Live Development Server is running on http://localhost:4200. **
+Hash: edad34f8f601c371580c
+Time: 8528ms
+chunk    {0} polyfills.bundle.js, polyfills.bundle.map (polyfills) 147 kB {4} [initial] [rendered]
+chunk    {1} main.bundle.js, main.bundle.map (main) 15.6 kB {3} [initial] [rendered]
+chunk    {2} styles.bundle.js, styles.bundle.map (styles) 10 kB {4} [initial] [rendered]
+chunk    {3} vendor.bundle.js, vendor.bundle.map (vendor) 2.92 MB [initial] [rendered]
+chunk    {4} inline.bundle.js, inline.bundle.map (inline) 0 bytes [entry] [rendered]
+webpack: Compiled successfully.
+[10:30:43] I/update - chromedriver: file exists /Users/mraible/dev/ng-demo/node_modules/protractor/node_modules/webdriver-manager/selenium/chromedriver_2.27.zip
+[10:30:43] I/update - chromedriver: unzipping chromedriver_2.27.zip
+[10:30:43] I/update - chromedriver: setting permissions to 0755 for /Users/mraible/dev/ng-demo/node_modules/protractor/node_modules/webdriver-manager/selenium/chromedriver_2.27
+[10:30:43] I/update - chromedriver: chromedriver_2.27 up to date
+[10:30:43] I/launcher - Running 1 instances of WebDriver
+[10:30:43] I/direct - Using ChromeDriver directly...
 Spec started
 
   ng-demo App
     ✓ should display message saying app works
 
 Executed 1 of 1 spec SUCCESS in 0.89 sec.
-[16:04:41] I/launcher - 0 instance(s) of WebDriver still running
-[16:04:41] I/launcher - chrome #01 passed
+[10:30:43] I/launcher - 0 instance(s) of WebDriver still running
+[10:30:43] I/launcher - chrome #01 passed
 
 All end-to-end tests pass.
 ----
@@ -1402,7 +1409,6 @@ before_install:
 - sh -e /etc/init.d/xvfb start
 script:
 - ng test --watch false
-- ng serve &
 - ng e2e
 notifications:
   webhooks:

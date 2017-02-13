@@ -6,7 +6,7 @@ cache:
   - node_modules
 dist: trusty
 node_js:
-- 6.9.0
+- 6.9.1
 branches:
   only:
   - master
@@ -24,7 +24,6 @@ before_install:
 - sh -e /etc/init.d/xvfb start
 script:
 - ng test --watch false
-- ng serve &
 - ng e2e
 notifications:
   webhooks:

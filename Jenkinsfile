@@ -21,12 +21,7 @@ node {
     }
 
     stage('protractor tests') {
-        sh '''ng serve &
-        ngPid=$!
-        sleep 15s
-        npm run e2e
-        kill $ngPid
-        '''
+        sh "npm run e2e"
     }
 
     stage('deploying') {
