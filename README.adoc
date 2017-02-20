@@ -2,7 +2,7 @@
 
 :author: Matt Raible
 :email:  matt@raibledesigns.com
-:revnumber: 1.3
+:revnumber: 1.4
 :revdate:   {docdate}
 :subject: Angular CLI
 :keywords: Angular CLI, Angular, Angular 2, JavaScript, TypeScript, node, npm, Jasmine, Protractor
@@ -56,7 +56,7 @@ application with search and edit features.
 * A favorite text editor or IDE. I recommend https://www.jetbrains.com/idea/[IntelliJ IDEA] and its
 https://plugins.jetbrains.com/plugin/8395?pr=idea[Angular TypeScript Live Templates plugin].
 * http://nodejs.org/[Node.js] and npm installed. I recommend using https://github.com/creationix/nvm[nvm].
-* https://github.com/angular/angular-cli[Angular CLI] installed. If you don't have Angular CLI installed, install it using `npm install -g angular-cli@latest`.
+* https://github.com/angular/angular-cli[Angular CLI] installed. If you don't have Angular CLI installed, install it using `npm install -g @angular/cli`.
 
 TIP: https://augury.angular.io/[Angular Augury] is a Google Chrome Dev Tools extension for debugging Angular applications.
 I haven't needed it much myself, but I can see how it might come in handy.
@@ -92,7 +92,7 @@ installing ng2
   create src/styles.css
   create src/test.ts
   create src/tsconfig.json
-  create angular-cli.json
+  create .angular-cli.json
   create e2e/app.e2e-spec.ts
   create e2e/app.po.ts
   create e2e/tsconfig.json
@@ -102,27 +102,29 @@ installing ng2
   create protractor.conf.js
   create tslint.json
 Successfully initialized git.
-Installing packages for tooling via npm.
-Installed packages for tooling via npm.
-[mraible:~/dev] 1m17s $
+Installing packages for tooling via yarn.
+Installed packages for tooling via yarn.
+Project 'ng-demo' successfully created.
+[mraible:~] 46s $
 ----
 
 You can see the what version of Angular CLI you're using with `ng --version`.
 
 ----
 $ ng --version
-angular-cli: 1.0.0-beta.24
-node: 6.9.1
+@angular/cli: 1.0.0-beta.32.3
+node: 6.9.5
 os: darwin x64
-@angular/common: 2.4.1
-@angular/compiler: 2.4.1
-@angular/core: 2.4.1
-@angular/forms: 2.4.1
-@angular/http: 2.4.1
-@angular/platform-browser: 2.4.1
-@angular/platform-browser-dynamic: 2.4.1
-@angular/router: 3.4.1
-@angular/compiler-cli: 2.4.1
+@angular/common: 2.4.8
+@angular/compiler: 2.4.8
+@angular/core: 2.4.8
+@angular/forms: 2.4.8
+@angular/http: 2.4.8
+@angular/platform-browser: 2.4.8
+@angular/platform-browser-dynamic: 2.4.8
+@angular/router: 3.4.8
+@angular/cli: 1.0.0-beta.32.3
+@angular/compiler-cli: 2.4.8
 ----
 
 == Run the application
@@ -149,13 +151,11 @@ Chrome 55.0.2883 (Mac OS X 10.12.2): Executed 3 of 3 SUCCESS (0.257 secs / 0.252
 
 == Add a search feature
 
-To add a search feature, open the project in an IDE or your favorite text editor. For IntelliJ IDEA, use
-File > New Project > Static Web and point to the `ng-demo` directory.
+To add a search feature, open the project in an IDE or your favorite text editor. For IntelliJ IDEA, use File > New Project > Static Web and point to the `ng-demo` directory.
 
 === The Basics
 
-In a terminal window, cd into your project's directory and run the following command. This will create a search
-component.
+In a terminal window, cd into your project's directory and run the following command. This will create a search component.
 
 [source]
 ----
@@ -260,10 +260,10 @@ installing service
 
 Move the generated `search.service.ts` and its test to `app/shared/search`. You will need to create this directory.
 
-Create `src/app/shared/search/data/people.json` to hold your data.
+Create `src/assets/data/people.json` to hold your data.
 
 [source,json]
-.src/app/shared/search/data/people.json
+.src/assets/data/people.json
 ----
 [
   {
@@ -318,7 +318,7 @@ export class SearchService {
   constructor(private http: Http) {}
 
   getAll() {
-    return this.http.get('app/shared/search/data/people.json').map((res: Response) => res.json());
+    return this.http.get('assets/data/people.json').map((res: Response) => res.json());
   }
 }
 
@@ -934,7 +934,7 @@ it('should retrieve all search results',
   inject([SearchService, MockBackend], fakeAsync((searchService: SearchService, mockBackend: MockBackend) => {
     let res: Response;
     mockBackend.connections.subscribe(c => {
-      expect(c.request.url).toBe('app/shared/search/data/people.json');
+      expect(c.request.url).toBe('assets/data/people.json');
       let response = new ResponseOptions({body: '[{"name": "John Elway"}, {"name": "Gary Kubiak"}]'});
       c.mockRespond(new Response(response));
     });
@@ -959,7 +959,7 @@ it('should filter by search term',
   inject([SearchService, MockBackend], fakeAsync((searchService: SearchService, mockBackend: MockBackend) => {
     let res;
     mockBackend.connections.subscribe(c => {
-      expect(c.request.url).toBe('app/shared/search/data/people.json');
+      expect(c.request.url).toBe('assets/data/people.json');
       let response = new ResponseOptions({body: '[{"name": "John Elway"}, {"name": "Gary Kubiak"}]'});
       c.mockRespond(new Response(response));
     });
@@ -975,7 +975,7 @@ it('should fetch by id',
   inject([SearchService, MockBackend], fakeAsync((searchService: SearchService, mockBackend: MockBackend) => {
     let res;
     mockBackend.connections.subscribe(c => {
-      expect(c.request.url).toBe('app/shared/search/data/people.json');
+      expect(c.request.url).toBe('assets/data/people.json');
       let response = new ResponseOptions({body: '[{"id": 1, "name": "John Elway"}, {"id": 2, "name": "Gary Kubiak"}]'});
       c.mockRespond(new Response(response));
     });
