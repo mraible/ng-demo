@@ -7,36 +7,36 @@
     </div>
     <p>
       <md-input-container>
-        <input md-input [(ngModel)]="editName" name="name" id="name" placeholder="Name"/>
+        <input mdInput [(ngModel)]="editName" name="name" id="name" placeholder="Name"/>
       </md-input-container>
     </p>
     <p>
       <md-input-container>
-        <input md-input [(ngModel)]="editPhone" name="phone" id="phone" placeholder="Phone"/>
+        <input mdInput [(ngModel)]="editPhone" name="phone" id="phone" placeholder="Phone"/>
       </md-input-container>
     </p>
     <table>
       <tr>
         <td>
           <md-input-container>
-            <input md-input placeholder="Address" [(ngModel)]="editAddress.street" name="street" id="street">
+            <input mdInput placeholder="Address" [(ngModel)]="editAddress.street" name="street" id="street">
           </md-input-container>
         </td>
         <td>
           <md-input-container>
-            <input md-input placeholder="City" [(ngModel)]="editAddress.city" name="city" id="city">
+            <input mdInput placeholder="City" [(ngModel)]="editAddress.city" name="city" id="city">
           </md-input-container>
         </td>
       </tr>
       <tr>
         <td>
           <md-input-container>
-            <input md-input placeholder="State" #state [(ngModel)]="editAddress.state" name="state" id="state" maxlength="2">
+            <input mdInput placeholder="State" #state [(ngModel)]="editAddress.state" name="state" id="state" maxlength="2">
           </md-input-container>
         </td>
         <td>
           <md-input-container>
-            <input md-input placeholder="Zip" #postalCode maxlength="5" [(ngModel)]="editAddress.zip" name="zip" id="zip">
+            <input mdInput placeholder="Zip" #postalCode maxlength="5" [(ngModel)]="editAddress.zip" name="zip" id="zip">
             <md-hint align="end">{{postalCode.value.length}} / 5</md-hint>
           </md-input-container>
         </td>

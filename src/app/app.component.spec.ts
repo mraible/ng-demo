@@ -1,14 +1,14 @@
 /* tslint:disable:no-unused-variable */
-
 import { TestBed, async } from '@angular/core/testing';
 import { AppComponent } from './app.component';
 import { RouterTestingModule } from '@angular/router/testing';
+import { MaterialModule } from '@angular/material';
 
 describe('AppComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [AppComponent],
-      imports: [RouterTestingModule]
+      imports: [RouterTestingModule, MaterialModule]
     });
     TestBed.compileComponents();
   });
@@ -29,6 +29,6 @@ describe('AppComponent', () => {
     let fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     let compiled = fixture.debugElement.nativeElement;
-    expect(compiled.querySelector('h1').textContent).toContain('app works!');
+    expect(compiled.querySelector('md-toolbar').textContent).toContain('app works!');
   }));
 });

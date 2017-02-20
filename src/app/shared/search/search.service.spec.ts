@@ -3,10 +3,12 @@ import { TestBed, inject, tick, fakeAsync } from '@angular/core/testing';
 import { SearchService } from './search.service';
 import { BaseRequestOptions, Http, ConnectionBackend, Response, ResponseOptions } from '@angular/http';
 import { MockBackend } from '@angular/http/testing';
+import { MaterialModule } from '@angular/material';
 
 describe('SearchService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
+      imports: [MaterialModule],
       providers: [
         {
           provide: Http, useFactory: (backend: ConnectionBackend, defaultOptions: BaseRequestOptions) => {

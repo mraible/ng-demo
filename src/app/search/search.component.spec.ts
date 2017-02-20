@@ -6,6 +6,7 @@ import { SearchComponent } from './search.component';
 import { TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { SearchService } from '../shared/search/search.service';
+import { MaterialModule } from '@angular/material';
 
 describe('SearchComponent', () => {
   let mockSearchService: MockSearchService;
@@ -24,7 +25,7 @@ describe('SearchComponent', () => {
         {provide: ActivatedRoute, useValue: mockActivatedRoute},
         {provide: Router, useValue: mockRouter}
       ],
-      imports: [FormsModule]
+      imports: [FormsModule, MaterialModule]
     }).compileComponents();
   });
 
