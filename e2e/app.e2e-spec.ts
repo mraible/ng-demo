@@ -1,6 +1,6 @@
 import { NgDemoPage } from './app.po';
 
-describe('ng-demo App', function() {
+describe('ng-demo App', () => {
   let page: NgDemoPage;
 
   beforeEach(() => {
