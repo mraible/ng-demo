@@ -674,7 +674,7 @@ Modify `SearchService` to contain functions for finding a person by their id, an
 [source,javascript]
 .src/app/shared/search/search.service.ts
 ----
-search(q: string) {
+search(q: string): Observable<any> {
   if (!q || q === '*') {
     q = '';
   } else {
