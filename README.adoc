@@ -2,10 +2,10 @@
 
 :author: Matt Raible
 :email:  matt@raibledesigns.com
-:revnumber: 1.4
+:revnumber: 1.5
 :revdate:   {docdate}
 :subject: Angular CLI
-:keywords: Angular CLI, Angular, Angular 2, JavaScript, TypeScript, node, npm, Jasmine, Protractor
+:keywords: Angular CLI, Angular, JavaScript, TypeScript, node, npm, Jasmine, Protractor
 :icons: font
 :lang: en
 :language: javadocript
@@ -39,8 +39,7 @@ endif::[]
 .Source Code
 ****
 If you'd like to get right to it, the https://github.com/mraible/ng-demo[source is on GitHub]. To run the app,
-use `ng serve`. To test it, run `ng test`. To run its integration tests, run `ng serve` in one terminal and
-`ng e2e` in another.
+use `ng serve`. To test it, run `ng test`. To run its integration tests, run `ng e2e`.
 ****
 
 toc::[]
@@ -122,19 +121,9 @@ $ ng --version
  / ___ \| | | | (_| | |_| | | (_| | |      | |___| |___ | |
 /_/   \_\_| |_|\__, |\__,_|_|\__,_|_|       \____|_____|___|
                |___/
-@angular/cli: 1.0.0-rc.1
+@angular/cli: 1.0.0
 node: 6.9.5
 os: darwin x64
-@angular/common: 2.4.9
-@angular/compiler: 2.4.9
-@angular/core: 2.4.9
-@angular/forms: 2.4.9
-@angular/http: 2.4.9
-@angular/platform-browser: 2.4.9
-@angular/platform-browser-dynamic: 2.4.9
-@angular/router: 3.4.9
-@angular/cli: 1.0.0-rc.1
-@angular/compiler-cli: 2.4.9
 ----
 
 == Run the application
@@ -156,7 +145,7 @@ You can make sure your new project's tests pass, run `ng test`:
 ----
 $ ng test
 ...
-Chrome 55.0.2883 (Mac OS X 10.12.2): Executed 3 of 3 SUCCESS (0.257 secs / 0.252 secs)
+Chrome 56.0.2924 (Mac OS X 10.12.2): Executed 3 of 3 SUCCESS (0.377 secs / 0.341 secs)
 ----
 
 == Add a search feature
@@ -1043,6 +1032,8 @@ In this same directory, create a `helper.ts` class to implement the `SpyObject` 
 [source,javascript]
 .src/app/shared/search/mocks/helper.ts
 ----
+/// <reference path="../../../../../node_modules/@types/jasmine/index.d.ts"‌​/>
+
 export interface GuinessCompatibleSpy extends jasmine.Spy {
   /** By chaining the spy with and.returnValue, all calls to the function will return a specific
    * value. */
@@ -1253,10 +1244,9 @@ You should see "Executed 9 of 9 [green]#SUCCESS# (0.684 secs / 0.598 secs)" in t
 
 To test if the application works end-to-end, you can write tests with http://angular.github.io/protractor[Protractor]. These are also known as integration tests, since they test the _integration_ between all layers of your application.
 
-To verify end-to-end tests work in the project before you begin, run the following commands in three different console windows.
+To verify end-to-end tests work in the project before you begin, run the following command in a terminal window.
 
 ----
-ng serve
 ng e2e
 ----
 
@@ -1264,31 +1254,29 @@ All tests should pass.
 
 ----
 $ ng e2e
-
-> ng-demo@0.0.0 pree2e /Users/mraible/ng-demo
-> webdriver-manager update --standalone false --gecko false
-
-[16:04:37] I/file_manager - creating folder /Users/mraible/ng-demo/node_modules/protractor/node_modules/webdriver-manager/selenium
-[16:04:37] I/downloader - chromedriver: downloading version 2.26
-[16:04:37] I/downloader - curl -o /Users/mraible/ng-demo/node_modules/protractor/node_modules/webdriver-manager/selenium/chromedriver_2.26mac64.zip https://chromedriver.storage.googleapis.com/2.26/chromedriver_mac64.zip
-[16:04:38] I/update - chromedriver: unzipping /Users/mraible/ng-demo/node_modules/protractor/node_modules/webdriver-manager/selenium/chromedriver_2.26mac64.zip
-[16:04:39] I/update - chromedriver: setting permissions to 0755 for /Users/mraible/ng-demo/node_modules/protractor/node_modules/webdriver-manager/selenium/chromedriver_2.26
-
-> ng-demo@0.0.0 e2e /Users/mraible/ng-demo
-> protractor "./protractor.conf.js"
-
-[16:04:39] I/direct - Using ChromeDriver directly...
-[16:04:39] I/launcher - Running 1 instances of WebDriver
+** NG Live Development Server is running on http://localhost:49152 **
+Hash: 24fc422df67845d66a49
+Time: 15299ms
+chunk    {0} polyfills.bundle.js, polyfills.bundle.js.map (polyfills) 158 kB {4} [initial] [rendered]
+chunk    {1} main.bundle.js, main.bundle.js.map (main) 3.62 kB {3} [initial] [rendered]
+chunk    {2} styles.bundle.js, styles.bundle.js.map (styles) 9.77 kB {4} [initial] [rendered]
+chunk    {3} vendor.bundle.js, vendor.bundle.js.map (vendor) 2.37 MB [initial] [rendered]
+chunk    {4} inline.bundle.js, inline.bundle.js.map (inline) 0 bytes [entry] [rendered]
+webpack: Compiled successfully.
+[11:34:42] I/file_manager - creating folder /Users/mraible/ng-demo/node_modules/webdriver-manager/selenium
+[11:34:43] I/downloader - curl -o /Users/mraible/ng-demo/node_modules/webdriver-manager/selenium/chromedriver_2.28.zip https://chromedriver.storage.googleapis.com/2.28/chromedriver_mac64.zip
+[11:34:44] I/update - chromedriver: unzipping chromedriver_2.28.zip
+[11:34:45] I/update - chromedriver: setting permissions to 0755 for /Users/mraible/ng-demo/node_modules/webdriver-manager/selenium/chromedriver_2.28
+[11:34:45] I/launcher - Running 1 instances of WebDriver
+[11:34:45] I/direct - Using ChromeDriver directly...
 Spec started
 
   ng-demo App
     ✓ should display message saying app works
 
-Executed 1 of 1 spec SUCCESS in 0.89 sec.
-[16:04:41] I/launcher - 0 instance(s) of WebDriver still running
-[16:04:41] I/launcher - chrome #01 passed
-
-All end-to-end tests pass.
+Executed 1 of 1 spec SUCCESS in 1 sec.
+[11:34:49] I/launcher - 0 instance(s) of WebDriver still running
+[11:34:49] I/launcher - chrome #01 passed
 ----
 
 === Testing the search feature
@@ -1394,7 +1382,7 @@ cache:
   - node_modules
 dist: trusty
 node_js:
-- 5.6.0
+- 6.9.5
 branches:
   only:
   - master
