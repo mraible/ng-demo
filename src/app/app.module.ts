@@ -7,26 +7,33 @@ import { AppComponent } from './app.component';
 import { SearchComponent } from './search/search.component';
 import { EditComponent } from './edit/edit.component';
 import { Routes, RouterModule } from '@angular/router';
+import { OAuthModule } from 'angular-oauth2-oidc';
+import { HomeComponent } from './home/home.component';
+import { AuthGuard } from './shared/auth/auth.guard.service';
 
 const appRoutes: Routes = [
-  { path: 'search', component: SearchComponent },
-  { path: 'edit/:id', component: EditComponent },
-  { path: '', redirectTo: '/search', pathMatch: 'full' }
+  { path: 'search', component: SearchComponent, canActivate: [AuthGuard] },
+  { path: 'edit/:id', component: EditComponent, canActivate: [AuthGuard]},
+  { path: 'home', component: HomeComponent},
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
+  { path: '**', redirectTo: 'home' }
 ];
 
 @NgModule({
   declarations: [
     AppComponent,
     SearchComponent,
-    EditComponent
+    EditComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
     HttpModule,
-    RouterModule.forRoot(appRoutes)
+    RouterModule.forRoot(appRoutes),
+    OAuthModule.forRoot()
   ],
-  providers: [],
+  providers: [AuthGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
