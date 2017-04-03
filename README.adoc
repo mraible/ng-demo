@@ -2,7 +2,7 @@
 
 :author: Matt Raible
 :email:  matt@raibledesigns.com
-:revnumber: 1.5
+:revnumber: 1.6
 :revdate:   {docdate}
 :subject: Angular CLI
 :keywords: Angular CLI, Angular, JavaScript, TypeScript, node, npm, Jasmine, Protractor
@@ -1421,13 +1421,13 @@ I hope you've enjoyed this in-depth tutorial on how to get started with Angular 
 takes much of the pain out of setting up an Angular project and using Typescript. I expect great things from Angular CLI,
 mostly because the Angular setup process can be tedious and CLI greatly simplifies things.
 
-== Bonus: Angular Material, Bootstrap 4, and Stormpath
+== Bonus: Angular Material, Bootstrap 4, and Okta
 
-If you'd like to see how to integrate https://material.angular.io/[Angular Material], https://v4-alpha.getbootstrap.com/[Bootstrap 4], or https://stormpath.com[Stormpath], this section is for you!
+If you'd like to see how to integrate https://material.angular.io/[Angular Material], https://v4-alpha.getbootstrap.com/[Bootstrap 4], or https://developer.okta.com[Authentication with Okta], this section is for you!
 
 I've created branches to show how to integrate each of these libraries. Click on the links below to see each branch's documentation.
 
 * https://github.com/mraible/ng-demo/tree/angular-material#bonus-angular-material[Angular Material]
 * https://github.com/mraible/ng-demo/tree/bootstrap4#bonus-bootstrap[Bootstrap 4]
-* https://github.com/mraible/ng-demo/tree/stormpath#bonus-stormpath[Stormpath]
+* https://github.com/mraible/ng-demo/tree/okta#bonus-okta[Authentication with Okta]
 
