@@ -470,6 +470,8 @@ But wait, you still don't have search functionality! To add a search feature, ad
 [source,javascript]
 .src/app/shared/search/search.service.ts
 ----
+import { Observable } from 'rxjs';
+
 search(q: string): Observable<any> {
   if (!q || q === '*') {
     q = '';
