@@ -1527,7 +1527,7 @@ import { MaterialModule } from '@angular/material';
   ...
   imports: [
     ...
-    MaterialModule.forRoot()
+    MaterialModule
   ]
 ----
 
@@ -1544,7 +1544,7 @@ body {
 }
 ----
 
-Change HTML to use Material components. For example, change `<h1>` in `app.component.html` to be `<md-toolbar>`. After modifying your HTML to match this branch, the edit screen will look as follows.
+Change HTML to use Material components. For example, change `<h1>` in `app.component.html` to be `<md-toolbar>`. After modifying your HTML to match the HTML files in this branch, the edit screen will look as follows.
 
 [[angular-material]]
 .Angular Material
