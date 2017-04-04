@@ -16,7 +16,6 @@ apt:
   - google-chrome
   packages:
   - google-chrome-stable
-  - google-chrome-beta
 before_install:
 - npm install -g @angular/cli
 - export CHROME_BIN=/usr/bin/google-chrome
