@@ -1478,15 +1478,15 @@ NOTE: You might need to use an app name other than `ng-demo`.
 
 https://signup.heroku.com/[Create a Heroku account] and https://devcenter.heroku.com/articles/heroku-cli[install the heroku CLI]. Then run the following commands to build and deploy your application.
 
-. Run `heroku create`
+. Run `heroku create`s
 . Change `package.json` to have a different `start` script.
 
-   "start": "http-server-spa public index.html 8080",
+   "start": "http-server-spa dist index.html $PORT",
 
 . Add `preinstall` and `postinstall` scripts to `package.json`:
 
   "preinstall": "npm install -g http-server-spa",
-  "postinstall": "ng build -prod --aot && cp -r dist/* public/."
+  "postinstall": "ng build -prod --aot"
 
 . Run `git push heroku master`
 . View the application in your browser with `heroku open`
