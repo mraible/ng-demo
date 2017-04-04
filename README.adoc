@@ -470,6 +470,8 @@ But wait, you still don't have search functionality! To add a search feature, ad
 [source,javascript]
 .src/app/shared/search/search.service.ts
 ----
+import { Observable } from 'rxjs';
+
 search(q: string): Observable<any> {
   if (!q || q === '*') {
     q = '';
@@ -1370,7 +1372,14 @@ image::src/assets/images/test-coverage.png[Test coverage, 800, scaledwidth="100%
 
 == Continuous Integration
 
-At the time of this writing, Angular CLI did not have any continuous integration support. However, it's easy to add with https://travis-ci.org/[Travis CI]. If you've checked in your project to GitHub, you can easily use Travis CI. Simply login and enable builds for the GitHub repo you created the project in. Then add the following `.travis.yml` in your root directory and `git push`. This will trigger the first build.
+At the time of this writing, Angular CLI did not have any continuous integration support. This section shows you how to setup continuous integration with https://travis-ci.org/[Travis CI] and https://jenkins.io/2.0/[Jenkins].
+
+=== Travis CI
+
+If you've checked in your project to GitHub, you can  use Travis CI.
+
+. Login to https://travis-ci.org/[Travis CI] and enable builds for the GitHub repo you published the project to.
+. Add the following `.travis.yml` in your root directory and `git commit/push` it. This will trigger the first build.
 
 [source,yaml]
 ----
@@ -1410,9 +1419,47 @@ notifications:
 
 https://travis-ci.org/mraible/ng-demo/builds/154182594[Here] is a build showing all unit and integration tests passing.
 
-== ☁ Deployment
+=== Jenkins
 
-It's easy to deploy an Angular app to http://run.pivotal.io[Cloud Foundry] and https://heroku.com[Heroku].
+If you've checked your project into source control, you can use Jenkins to automate testing.
+
+. Create a `Jenkinsfile` in the root directory and commit to master.
+
+----
+node {
+    def nodeHome = tool name: 'node-6.9.5', type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'
+    env.PATH = "${nodeHome}/bin:${env.PATH}"
+
+    stage('check tools') {
+        sh "node -v"
+        sh "npm -v"
+    }
+
+    stage('checkout') {
+        checkout scm
+    }
+
+    stage('npm install') {
+        sh "npm install"
+    }
+
+    stage('unit tests') {
+        sh "ng test --watch false"
+    }
+
+    stage('protractor tests') {
+        sh "npm run e2e"
+    }
+}
+----
+
+[start=2]
+. Download https://jenkins.io/2.0/[Jenkins 2] and install it on your local hard drive. Start it using `java -jar jenkins.war`.
+. Login to Jenkins and create a new project with an SCM Pipeline. Point it at your project's repository. Run a build.
+
+== Deployment
+
+This section shows you how to deploy an Angular app to http://run.pivotal.io[Cloud Foundry] and https://heroku.com[Heroku].
 
 === Cloud Foundry
 
