@@ -1400,7 +1400,6 @@ before_install:
 - sh -e /etc/init.d/xvfb start
 script:
 - ng test --watch false
-- ng serve &
 - ng e2e
 notifications:
   webhooks:
@@ -1410,6 +1409,45 @@ notifications:
 ----
 
 https://travis-ci.org/mraible/ng-demo/builds/154182594[Here] is a build showing all unit and integration tests passing.
+
+== ☁ Deployment
+
+It's easy to deploy an Angular app to http://run.pivotal.io[Cloud Foundry] and https://heroku.com[Heroku].
+
+=== Cloud Foundry
+
+https://account.run.pivotal.io/z/uaa/sign-up[Create a Pivotal account] and https://docs.run.pivotal.io/cf-cli/install-go-cli.html[install the cf CLI]. Then run the following commands to build and deploy your application.
+
+[source,bash]
+----
+ng build --prod --aot
+cd dist && touch Staticfile
+cf push ng-demo
+----
+
+NOTE: You might need to use an app name other than `ng-demo`.
+
+=== Heroku
+
+https://signup.heroku.com/[Create a Heroku account] and https://devcenter.heroku.com/articles/heroku-cli[install the heroku CLI]. Then run the following commands to build and deploy your application.
+
+. Run `heroku create`
+. Change `package.json` to have a different `start` script.
+
+   "start": "http-server-spa public index.html 8080",
+
+. Add `preinstall` and `postinstall` scripts to `package.json`:
+
+  "preinstall": "npm install -g http-server-spa",
+  "postinstall": "ng build -prod --aot && cp -r dist/* public/."
+
+. Run `git push heroku master`
+. View the application in your browser with `heroku open`
+
+////
+CAUTION: This might fail because of https://devcenter.heroku.com/articles/nodejs-support#devdependencies[devDependencies]
+Move angular-cli to dependencies or run heroku config:set NPM_CONFIG_PRODUCTION=false
+////
 
 == Source code
 
