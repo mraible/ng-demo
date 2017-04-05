@@ -357,6 +357,8 @@ To make these classes available for consumption by your components, edit `src/ap
 export * from './search/search.service';
 ----
 
+NOTE: If you're wondering why you should use `index.ts`, see http://stackoverflow.com/questions/37564906/what-are-all-the-index-ts-used-for[this Stack Overflow question].
+
 In `search.component.ts`, add imports for these classes.
 
 [source,javascript]
