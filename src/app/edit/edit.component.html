@@ -1,6 +1,6 @@
 <div *ngIf="person">
   <h3>{{editName}}</h3>
-  <form (ngSubmit)="save()">
+  <form #editForm="ngForm" (ngSubmit)="save()">
     <div>
       <label>Id:</label>
       {{person.id}}
@@ -22,7 +22,7 @@
         <input [(ngModel)]="editAddress.zip" name="zip" id="zip" size="5">
       </address>
     </fieldset>
-    <button type="submit" id="save">Save</button>
+    <button type="submit" [disabled]="!editForm.form.valid" id="save">Save</button>
     <button (click)="cancel()" id="cancel">Cancel</button>
   </form>
 </div>

@@ -844,6 +844,11 @@ Now values should display in all fields and `name` should be required.
 .Edit form with names and validation
 image::src/assets/images/edit-form-names.png[Edit form with names and validation, 800, scaledwidth="100%"]
 
+With Angular 2, this is all you'll need to do. However, with Angular 4+, you need to a little more work to stop the form from submitting.
+
+* Add `#editForm="ngForm"` to the `<form>` tag.
+* Add `[disabled]="!editForm.form.valid"` to the *Save* button.
+
 To learn more about forms and validation, see https://angular.io/docs/ts/latest/guide/forms.html[Angular forms documentation].
 
 == Testing
