@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { OAuthService } from 'angular-oauth2-oidc';
+import { Router } from '@angular/router';
 declare let OktaAuth: any;
 
 @Component({
@@ -42,7 +43,7 @@ export class HomeComponent {
   userName;
   password;
 
-  constructor(private oauthService: OAuthService) {
+  constructor(private oauthService: OAuthService, private router: Router) {
   }
 
   login() {
@@ -83,9 +84,7 @@ export class HomeComponent {
           })
             .then((tokens) => {
               this.oauthService.processIdToken(tokens[0].idToken, tokens[1].accessToken);
-              // todo: figure out how to re-invoke the call to givenName
-              // by the template w/o reloading the page
-              location.reload();
+              this.router.navigate(['/search']);
             })
             .catch(error => console.error(error));
         } else {
