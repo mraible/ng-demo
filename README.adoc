@@ -856,6 +856,13 @@ To learn more about forms and validation, see https://angular.io/docs/ts/latest/
 Now that you've built an application, it's important to test it to ensure it works. The best reason for writing tests is
 to automate your testing. Without tests, you'll likely be testing manually. This manual testing will take longer and longer as your application grows.
 
+TIP: If you didn't complete the previous section, you can clone the ng-demo repository and checkout the `test-start` branch.
+
+----
+git clone https://github.com/mraible/ng-demo.git
+cd ng-demo && git checkout test-start
+----
+
 In this section, you'll learn to use http://jasmine.github.io/[Jasmine] for unit testing controllers and https://angular.github.io/protractor/[Protractor] for
 integration testing. Angular's testing documentation lists https://angular.io/docs/ts/latest/guide/testing.html[good reasons] to test, but doesn't currently have many examples.
 
