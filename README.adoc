@@ -795,7 +795,7 @@ You'll also need to wrap everything in a `<form>` element. Add `<form>` after th
 .src/edit/edit.component.html
 ----
 <h3>{{editName}}</h3>
-<form (ngSubmit)="save()">
+<form (ngSubmit)="save()" ngNativeValidate>
   ...
   <button type="submit" id="save">Save</button>
   <button (click)="cancel()" id="cancel">Cancel</button>
@@ -1532,4 +1532,3 @@ I've created branches to show how to integrate each of these libraries. Click on
 * https://github.com/mraible/ng-demo/tree/angular-material#bonus-angular-material[Angular Material]
 * https://github.com/mraible/ng-demo/tree/bootstrap4#bonus-bootstrap[Bootstrap 4]
 * https://github.com/mraible/ng-demo/tree/okta#bonus-okta[Authentication with Okta]
-
