@@ -1383,33 +1383,40 @@ If you've checked in your project to GitHub, you can  use Travis CI.
 
 [source,yaml]
 ----
+os:
+  - linux
+services:
+  - docker
 language: node_js
-sudo: true
-cache:
-  directories:
-  - node
-  - node_modules
-dist: trusty
 node_js:
-- 6.9.5
+  - "6.10.0"
+addons:
+  apt:
+    sources:
+    - google-chrome
+    packages:
+    - google-chrome-stable
+cache:
+  yarn: true
+  directories:
+    - $HOME/.yarn-cache
+    - node_modules
 branches:
   only:
   - master
-addons:
-apt:
-  sources:
-  - google-chrome
-  packages:
-  - google-chrome-stable
-  - google-chrome-beta
 before_install:
-- npm install -g angular-cli
-- export CHROME_BIN=/usr/bin/google-chrome
-- export DISPLAY=:99.0
-- sh -e /etc/init.d/xvfb start
+  - export CHROME_BIN=/usr/bin/google-chrome
+  - export DISPLAY=:99.0
+  - sh -e /etc/init.d/xvfb start
+  # Repo for Yarn
+  - curl -o- -L https://yarnpkg.com/install.sh | bash
+  - export PATH=$HOME/.yarn/bin:$PATH
+  - yarn global add @angular/cli
+install:
+  - yarn install
 script:
-- ng test --watch false
-- ng e2e
+  - ng test --watch false
+  - ng e2e
 notifications:
   webhooks:
     on_success: change
@@ -1417,7 +1424,7 @@ notifications:
     on_start: false
 ----
 
-https://travis-ci.org/mraible/ng-demo/builds/154182594[Here] is a build showing all unit and integration tests passing.
+https://travis-ci.org/mraible/ng-demo/builds/218757078s[Here] is a build showing all unit and integration tests passing.
 
 === Jenkins
 
@@ -1467,7 +1474,7 @@ https://account.run.pivotal.io/z/uaa/sign-up[Create a Pivotal account] and https
 
 [source,bash]
 ----
-ng build --prod --aot
+ng build -prod --aot
 cd dist && touch Staticfile
 cf push ng-demo
 ----
@@ -1478,15 +1485,15 @@ NOTE: You might need to use an app name other than `ng-demo`.
 
 https://signup.heroku.com/[Create a Heroku account] and https://devcenter.heroku.com/articles/heroku-cli[install the heroku CLI]. Then run the following commands to build and deploy your application.
 
-. Run `heroku create`
+. Run `heroku create`s
 . Change `package.json` to have a different `start` script.
 
-   "start": "http-server-spa public index.html 8080",
+   "start": "http-server-spa dist index.html $PORT",
 
 . Add `preinstall` and `postinstall` scripts to `package.json`:
 
   "preinstall": "npm install -g http-server-spa",
-  "postinstall": "ng build -prod --aot && cp -r dist/* public/."
+  "postinstall": "ng build -prod --aot"
 
 . Run `git push heroku master`
 . View the application in your browser with `heroku open`

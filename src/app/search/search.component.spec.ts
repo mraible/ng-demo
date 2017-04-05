@@ -29,15 +29,15 @@ describe('SearchComponent', () => {
   });
 
   it('should search when a term is set and search() is called', () => {
-    let fixture = TestBed.createComponent(SearchComponent);
-    let searchComponent = fixture.debugElement.componentInstance;
+    const fixture = TestBed.createComponent(SearchComponent);
+    const searchComponent = fixture.debugElement.componentInstance;
     searchComponent.query = 'M';
     searchComponent.search();
     expect(mockSearchService.searchSpy).toHaveBeenCalledWith('M');
   });
 
   it('should search automatically when a term is on the URL', () => {
-    let fixture = TestBed.createComponent(SearchComponent);
+    const fixture = TestBed.createComponent(SearchComponent);
     fixture.detectChanges();
     expect(mockSearchService.searchSpy).toHaveBeenCalledWith('peyton');
   });

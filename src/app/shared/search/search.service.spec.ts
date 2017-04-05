@@ -25,7 +25,7 @@ describe('SearchService', () => {
       let res: Response;
       mockBackend.connections.subscribe(c => {
         expect(c.request.url).toBe('assets/data/people.json');
-        let response = new ResponseOptions({body: '[{"name": "John Elway"}, {"name": "Gary Kubiak"}]'});
+        const response = new ResponseOptions({body: '[{"name": "John Elway"}, {"name": "Gary Kubiak"}]'});
         c.mockRespond(new Response(response));
       });
       searchService.getAll().subscribe((response) => {
@@ -41,7 +41,7 @@ describe('SearchService', () => {
       let res;
       mockBackend.connections.subscribe(c => {
         expect(c.request.url).toBe('assets/data/people.json');
-        let response = new ResponseOptions({body: '[{"name": "John Elway"}, {"name": "Gary Kubiak"}]'});
+        const response = new ResponseOptions({body: '[{"name": "John Elway"}, {"name": "Gary Kubiak"}]'});
         c.mockRespond(new Response(response));
       });
       searchService.search('john').subscribe((response) => {
@@ -57,7 +57,7 @@ describe('SearchService', () => {
       let res;
       mockBackend.connections.subscribe(c => {
         expect(c.request.url).toBe('assets/data/people.json');
-        let response = new ResponseOptions({body: '[{"id": 1, "name": "John Elway"}, {"id": 2, "name": "Gary Kubiak"}]'});
+        const response = new ResponseOptions({body: '[{"id": 1, "name": "John Elway"}, {"id": 2, "name": "Gary Kubiak"}]'});
         c.mockRespond(new Response(response));
       });
       searchService.search('2').subscribe((response) => {
