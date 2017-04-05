@@ -4,13 +4,13 @@
   "license": "MIT",
   "scripts": {
     "ng": "ng",
-    "start": "http-server-spa public index.html 8080",
+    "start": "http-server-spa dist index.html $PORT",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
     "preinstall": "npm install -g http-server-spa",
-    "postinstall": "ng build -prod --aot && cp -r dist/* public/."
+    "postinstall": "ng build -prod --aot"
   },
   "private": true,
   "dependencies": {
