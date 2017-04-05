@@ -14,8 +14,6 @@ addons:
 cache:
   yarn: true
   directories:
-    - $HOME/.m2
-    - $HOME/.gradle
     - $HOME/.yarn-cache
     - node_modules
 branches:
