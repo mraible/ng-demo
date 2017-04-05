@@ -1424,7 +1424,7 @@ notifications:
     on_start: false
 ----
 
-https://travis-ci.org/mraible/ng-demo/builds/154182594[Here] is a build showing all unit and integration tests passing.
+https://travis-ci.org/mraible/ng-demo/builds/218757078s[Here] is a build showing all unit and integration tests passing.
 
 === Jenkins
 
