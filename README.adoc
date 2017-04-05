@@ -1508,7 +1508,7 @@ mostly because the Angular setup process can be tedious and CLI greatly simplifi
 
 == Bonus: Bootstrap
 
-See http://stackoverflow.com/a/41234801/65681[this Stack Overflow answer] for a good summary of how to integrate Bootstrap 4 into and Angular CLI project. Below is a quick summary of the necessary steps:
+See http://stackoverflow.com/a/41234801/65681[this Stack Overflow answer] for a good summary of how to integrate Bootstrap 4 into an Angular CLI project. Below is a quick summary of the necessary steps:
 
 ----
 yarn add bootstrap@4.0.0-alpha.6
