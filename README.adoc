@@ -1474,7 +1474,7 @@ https://account.run.pivotal.io/z/uaa/sign-up[Create a Pivotal account] and https
 
 [source,bash]
 ----
-ng build --prod --aot
+ng build -prod --aot
 cd dist && touch Staticfile
 cf push ng-demo
 ----
