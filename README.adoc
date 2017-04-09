@@ -1537,12 +1537,47 @@ I hope you've enjoyed this in-depth tutorial on how to get started with Angular 
 takes much of the pain out of setting up an Angular project and using Typescript. I expect great things from Angular CLI,
 mostly because the Angular setup process can be tedious and CLI greatly simplifies things.
 
-== Bonus: Angular Material, Bootstrap 4, and Okta
+== Bonus: Bootstrap
 
-If you'd like to see how to integrate https://material.angular.io/[Angular Material], https://v4-alpha.getbootstrap.com/[Bootstrap 4], or https://developer.okta.com[Authentication with Okta], this section is for you!
+See http://stackoverflow.com/a/41234801/65681[this Stack Overflow answer] for a good summary of how to integrate Bootstrap 4 into an Angular CLI project. Below is a quick summary of the necessary steps:
 
-I've created branches to show how to integrate each of these libraries. Click on the links below to see each branch's documentation.
+----
+yarn add bootstrap@4.0.0-alpha.6
+----
 
-* https://github.com/mraible/ng-demo/tree/angular-material#bonus-angular-material[Angular Material]
-* https://github.com/mraible/ng-demo/tree/bootstrap4#bonus-bootstrap[Bootstrap 4]
-* https://github.com/mraible/ng-demo/tree/okta#bonus-okta[Authentication with Okta]
+NOTE: You can also use `npm install --save bootstrap@4.0.0-alpha.6`, but https://code.facebook.com/posts/1840075619545360[Yarn] is faster.
+
+----
+yarn add @ng-bootstrap/ng-bootstrap
+----
+
+Add `NgbModule` as an import in `app.module.ts`:
+
+[source,javascript]
+.src/app/app.module.ts
+----
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+
+@NgModule({
+  ...
+  imports: [
+    ...
+    NgbModule.forRoot()
+  ]
+----
+
+Change HTML to use Bootstrap classes. For example, change the `<h1>` in `app.component.html` to be the following:
+
+[source,html]
+.src/app/app.component.html
+----
+<nav class="navbar navbar-light bg-faded">
+  <a class="navbar-brand" href="#">{{title}}</a>
+</nav>
+----
+
+After modifying your HTML to match this branch, the edit screen will look as follows.
+
+[[bootstrap4]]
+.Bootstrap 4
+image::src/assets/images/bootstrap4.png[Bootstrap 4, 800, scaledwidth="100%"]
