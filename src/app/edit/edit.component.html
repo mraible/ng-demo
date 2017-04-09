@@ -1,6 +1,6 @@
 <div *ngIf="person">
   <h3>{{editName}}</h3>
-  <form (ngSubmit)="save()">
+  <form #editForm="ngForm" (ngSubmit)="save()" ngNativeValidate>
     <div>
       <label>Id:</label>
       {{person.id}}
