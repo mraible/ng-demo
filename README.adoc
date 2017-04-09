@@ -1539,7 +1539,7 @@ mostly because the Angular setup process can be tedious and CLI greatly simplifi
 
 == Bonus: Angular Material, Bootstrap 4, and Okta
 
-If you'd like to see how to integrate https://material.angular.io/[Angular Material], https://v4-alpha.getbootstrap.com/[Bootstrap 4], or https://developer.okta.com[Authentication with Okta], this section is for you!
+If you'd like to see how to integrate https://material.angular.io/[Angular Material], https://v4-alpha.getbootstrap.com/[Bootstrap 4], or http://developer.okta.com[authentication with Okta], this section is for you!
 
 I've created branches to show how to integrate each of these libraries. Click on the links below to see each branch's documentation.
 
