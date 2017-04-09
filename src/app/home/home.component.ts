@@ -40,7 +40,7 @@ declare let OktaAuth: any;
 </div>`
 })
 export class HomeComponent {
-  userName;
+  username;
   password;
 
   constructor(private oauthService: OAuthService, private router: Router) {
@@ -63,17 +63,15 @@ export class HomeComponent {
   }
 
   loginWithPassword() {
-    const noonce = this.oauthService.createAndSaveNonce().then(nonce => {
-      console.log('nonce', nonce);
+    this.oauthService.createAndSaveNonce().then(nonce => {
       const authClient = new OktaAuth({
         url: 'https://dev-158606.oktapreview.com'
       });
       authClient.signIn({
-        username: this.userName,
+        username: this.username,
         password: this.password
       }).then((response) => {
         if (response.status === 'SUCCESS') {
-          console.log('success', response);
           authClient.token.getWithoutPrompt({
             clientId: 'RqjWvpvWO77qMGgDfukY',
             responseType: ['id_token', 'token'],
@@ -84,7 +82,7 @@ export class HomeComponent {
           })
             .then((tokens) => {
               this.oauthService.processIdToken(tokens[0].idToken, tokens[1].accessToken);
-              this.router.navigate(['/search']);
+              this.router.navigate(['/home']);
             })
             .catch(error => console.error(error));
         } else {

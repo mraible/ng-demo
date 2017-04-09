@@ -1571,10 +1571,10 @@ import { OAuthService } from 'angular-oauth2-oidc';
 
   constructor(private oauthService: OAuthService) {
     this.oauthService.redirectUri = window.location.origin;
-    this.oauthService.clientId = '[client id]';
+    this.oauthService.clientId = '[client-id]';
     this.oauthService.scope = 'openid profile email';
     this.oauthService.oidc = true;
-    this.oauthService.issuer = 'https://dev-[dev id].oktapreview.com';
+    this.oauthService.issuer = 'https://dev-[dev-id].oktapreview.com';
 
     this.oauthService.loadDiscoveryDocument().then(() => {
       this.oauthService.tryLogin({});
@@ -1681,20 +1681,6 @@ const appRoutes: Routes = [
 export class AppModule { }
 ----
 
-////
-These components use Bootstrap CSS classes by default. Add a reference to Bootstrap's CSS in the `<head>` of `index.html`.
-
-
-[source,html]
-.src/index.html
-----
-<head>
-  ...
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-</head>
-----
-////
-
 After making these changes, you should be able to run `ng serve` and see a login button.
 
 [[okta-login-button]]
@@ -1713,4 +1699,128 @@ After logging in, you'll be able to click *Search* and view people's information
 .View after login
 image::src/assets/images/okta-post-login.png[View after login, 800, scaledwidth="100%"]
 
-If it works - congrats! If it doesn’t, please post a question to Stack Overflow with an http://stackoverflow.com/questions/tagged/okta[okta tag], or hit me up on Twitter https://twitter.com/mraible[@mraible].
+If it works - great! If it doesn’t, please post a question to Stack Overflow with an http://stackoverflow.com/questions/tagged/okta[okta tag], or hit me up on Twitter https://twitter.com/mraible[@mraible].
+
+=== Authentication with Okta Auth SDK
+
+If you want to build your own login form and embed it in your app, you can use the https://github.com/okta/okta-auth-js[Okta Auth SDK]. The Okta Auth SDK builds on top of our http://developer.okta.com/docs/api/resources/authn.html[Authentication API] and http://developer.okta.com/docs/api/resources/oidc.html[OAuth 2.0 API] to enable you to create a fully branded sign-in experience using JavaScript.
+
+Install it using npm:
+
+[source,bash]
+----
+npm install @okta/okta-auth-js --save
+----
+
+The components in this section use Bootstrap CSS classes. Add a reference to Bootstrap's CSS in the `<head>` of `index.html`.
+
+[source,html]
+.src/index.html
+----
+<head>
+  ...
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+</head>
+----
+
+Change `HomeComponent` to declare `OktaAuth` and modify its `template` so it has a button to login, as well as a sign-in form.
+
+[source,ts]
+.src/app/home/home.component.html
+----
+declare let OktaAuth: any;
+
+@Component({
+  template: `<div *ngIf="givenName">
+<h2>Welcome, {{givenName}}!</h2>
+<button (click)="logout()" class="btn btn-default">Logout</button>
+<p><a routerLink="/search" routerLinkActive="active">Search</a></p>
+</div>
+
+<div class="panel panel-default" *ngIf="!givenName">
+    <div class="panel-body">
+        <p>Login with Authorization Server</p>
+        <button class="btn btn-default" (click)="login()">Login</button>
+    </div>
+</div>
+
+<div class="panel panel-default" *ngIf="!givenName">
+    <div class="panel-body">
+        <p>Login with Username/Password</p>
+
+        <p style="color:red; font-weight:bold" *ngIf="loginFailed">
+            Login wasn't successful.
+        </p>
+
+        <div class="form-group">
+            <label>Username</label>
+            <input class="form-control" [(ngModel)]="username">
+        </div>
+        <div class="form-group">
+            <label>Password</label>
+            <input class="form-control" type="password" [(ngModel)]="password">
+        </div>
+        <div class="form-group">
+            <button class="btn btn-default" (click)="loginWithPassword()">Login</button>
+        </div>
+    </div>
+</div>`
+})
+----
+
+After making these changes, the `HomeComponent` should render as follows.
+
+[[login-form]]
+.Custom sign-in form
+image::src/assets/images/sign-in-form.png[Custom login form, 800, scaledwidth="100%"]
+
+Add local variables for username and password fields, then implement a `loginWithPassword` method in `HomeComponent`. This method uses the `OktaAuth` library to get a session token and exchange it for ID and access tokens.
+
+[source,ts]
+.src/app/home/home.component.ts
+----
+username;
+password;
+
+loginWithPassword() {
+  this.oauthService.createAndSaveNonce().then(nonce => {
+    const authClient = new OktaAuth({
+      url: 'https://dev-[dev-id].oktapreview.com'
+    });
+    authClient.signIn({
+      username: this.username,
+      password: this.password
+    }).then((response) => {
+      if (response.status === 'SUCCESS') {
+        console.log('success', response);
+        authClient.token.getWithoutPrompt({
+          clientId: '[client-id]',
+          responseType: ['id_token', 'token'],
+          scopes: ['openid', 'profile', 'email'],
+          sessionToken: response.sessionToken,
+          nonce: nonce,
+          redirectUri: window.location.origin
+        })
+          .then((tokens) => {
+            this.oauthService.processIdToken(tokens[0].idToken, tokens[1].accessToken); <1>
+            this.router.navigate(['/home']);
+          })
+          .catch(error => console.error(error));
+      } else {
+        throw new Error('We cannot handle the ' + response.status + ' status');
+      }
+    }).fail(function (err) {
+      console.error(err);
+    });
+  });
+}
+----
+<1> Process and store the `idToken` and `accessToken` so they can be retrieved using `OAuthService.getAccessToken()` and `OAuthService.getIdToken()`.
+
+You should be able to sign in using the form, using one of your app's registered users. After logging in, you'll be able to click *Search* and view people's information.
+
+[[sign-in-success]]
+.View after sign-in
+image::src/assets/images/sign-in-form-success.png[View after sign-in, 800, scaledwidth="100%"]
+
+If everything works - congrats! If you encountered issues, please post a question to Stack Overflow with an http://stackoverflow.com/questions/tagged/okta[okta tag], or hit me up on Twitter https://twitter.com/mraible[@mraible].
