@@ -31,7 +31,7 @@ describe('EditComponent', () => {
   it('should fetch a single record', () => {
     const fixture = TestBed.createComponent(EditComponent);
 
-    let person = {name: 'Emmanuel Sanders', address: {city: 'Denver'}};
+    const person = {name: 'Emmanuel Sanders', address: {city: 'Denver'}};
     mockSearchService.setResponse(person);
 
     fixture.detectChanges();
@@ -39,11 +39,11 @@ describe('EditComponent', () => {
     expect(mockSearchService.getByIdSpy).toHaveBeenCalledWith(1);
 
     // verify data was set on component when initialized
-    let editComponent = fixture.debugElement.componentInstance;
+    const editComponent = fixture.debugElement.componentInstance;
     expect(editComponent.editAddress.city).toBe('Denver');
 
     // verify HTML renders as expected
-    let compiled = fixture.debugElement.nativeElement;
+    const compiled = fixture.debugElement.nativeElement;
     expect(compiled.querySelector('h3').innerHTML).toBe('Emmanuel Sanders');
   });
 });

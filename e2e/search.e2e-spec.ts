@@ -12,11 +12,11 @@ describe('Search', () => {
   });
 
   it('should allow searching', () => {
-    let searchButton = element(by.css('button'));
-    let searchBox = element(by.css('input'));
+    const searchButton = element(by.css('button'));
+    const searchBox = element(by.css('input'));
     searchBox.sendKeys('M');
     searchButton.click().then(() => {
-      let list = element.all(by.css('app-search table tbody tr'));
+      const list = element.all(by.css('app-search table tbody tr'));
       expect(list.count()).toBe(3);
     });
   });
