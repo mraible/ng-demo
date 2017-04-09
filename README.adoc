@@ -1548,7 +1548,7 @@ OpenID Connect is built on top of the OAuth 2.0 protocol. It allows clients to v
 Login to your Okta account, or create one if you don’t have one. Navigate to *Admin > Add Applications* and click on the *Create New App* button. Select *Single Page App (SPA)* for the Platform and *OpenID Connect* for the sign on method. Click the *Create* button and give your application a name. On the next screen, add `http://localhost:4200` as a Redirect URI and click *Finish*. You should see settings like the following.
 
 .OIDC App Settings
-image::http://developer.okta.com/assets/img/blog/angular-sign-in-widget/oidc-settings.png[OIDC App Settings, 800, scaledwidth="100%"]
+image::src/assets/images/oidc-settings.png[OIDC App Settings, 800, scaledwidth="100%"]
 
 Click on the *People* tab and the *Assign to People* button. Assign yourself as a user, or someone else that you know the credentials for.
 
