@@ -899,7 +899,9 @@ describe('AppComponent', () => {
   }));
 ----
 
-You'll also get failures for the components and service you created. These failures will be solves as you complete the section below.
+You'll also get failures for the components and service you created. These failures will be solved as you complete the section below.
+
+TIP: You can use `x` and `f` prefixes Jasmine's `describe` and `it` functions to _exclude_ only run only a particular test.
 
 === Unit test the SearchService
 
@@ -918,19 +920,18 @@ describe('SearchService', () => {
   beforeEach(() => {
 
     TestBed.configureTestingModule({
-      providers: [
+      providers: [SearchService,
         {
           provide: Http, useFactory: (backend: ConnectionBackend, defaultOptions: BaseRequestOptions) => {
           return new Http(backend, defaultOptions);
         }, deps: [MockBackend, BaseRequestOptions]
         },
-        {provide: SearchService, useClass: SearchService},
         {provide: MockBackend, useClass: MockBackend},
         {provide: BaseRequestOptions, useClass: BaseRequestOptions}
       ]
     });
   });
-});
+  ...
 ----
 
 If you run `ng test`, you will likely see some errors about the test stubs that Angular CLI created for you. You can ignore these for now.
@@ -957,7 +958,7 @@ it('should retrieve all search results',
     let res: Response;
     mockBackend.connections.subscribe(c => {
       expect(c.request.url).toBe('assets/data/people.json');
-      let response = new ResponseOptions({body: '[{"name": "John Elway"}, {"name": "Gary Kubiak"}]'});
+      const response = new ResponseOptions({body: '[{"name": "John Elway"}, {"name": "Gary Kubiak"}]'});
       c.mockRespond(new Response(response));
     });
     searchService.getAll().subscribe((response) => {
@@ -969,9 +970,7 @@ it('should retrieve all search results',
 );
 ----
 
-TIP: To only run the SearchService test, change the first `describe` in `search.service.spec.ts` to be `fdescribe`. Using an `f` prefix means "only run this test". You can use `x` to exclude tests. These prefixes can be used for both `describe` and `it` blocks.
-
-Notice that tests continually run as you add them when using `ng test`. You can run tests once by using `ng test --watch=false`.
+Notice that tests continually run as you add them when using `ng test`. You can run tests once by using `ng test --watch=false` or `ng test -sr`.
 Add a couple more tests for filtering by search term and fetching by id.
 
 [source,javascript]
@@ -982,7 +981,7 @@ it('should filter by search term',
     let res;
     mockBackend.connections.subscribe(c => {
       expect(c.request.url).toBe('assets/data/people.json');
-      let response = new ResponseOptions({body: '[{"name": "John Elway"}, {"name": "Gary Kubiak"}]'});
+      const response = new ResponseOptions({body: '[{"name": "John Elway"}, {"name": "Gary Kubiak"}]'});
       c.mockRespond(new Response(response));
     });
     searchService.search('john').subscribe((response) => {
@@ -998,7 +997,7 @@ it('should fetch by id',
     let res;
     mockBackend.connections.subscribe(c => {
       expect(c.request.url).toBe('assets/data/people.json');
-      let response = new ResponseOptions({body: '[{"id": 1, "name": "John Elway"}, {"id": 2, "name": "Gary Kubiak"}]'});
+      const response = new ResponseOptions({body: '[{"id": 1, "name": "John Elway"}, {"id": 2, "name": "Gary Kubiak"}]'});
       c.mockRespond(new Response(response));
     });
     searchService.search('2').subscribe((response) => {
@@ -1115,7 +1114,7 @@ export class SpyObject {
 
   /** @internal */
   _createGuinnessCompatibleSpy(name): GuinessCompatibleSpy {
-    let newSpy: GuinessCompatibleSpy = <any>jasmine.createSpy(name);
+    const newSpy: GuinessCompatibleSpy = <any>jasmine.createSpy(name);
     newSpy.andCallFake = <any>newSpy.and.callFake;
     newSpy.andReturn = <any>newSpy.and.returnValue;
     newSpy.reset = <any>newSpy.calls.reset;
@@ -1153,15 +1152,17 @@ With mocks in place, you can `TestBed.configureTestingModule()` to setup `Search
 [source,javascript]
 .src/app/search/search.component.spec.ts
 ----
-import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
-import { MockActivatedRoute, MockRouter } from '../shared/search/mocks/routes';
-import { MockSearchService } from '../shared/search/mocks/search.service';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SearchComponent } from './search.component';
-import { TestBed } from '@angular/core/testing';
-import { FormsModule } from '@angular/forms';
+import { MockSearchService } from '../shared/search/mocks/search.service';
+import { MockActivatedRoute, MockRouter } from '../shared/search/mocks/routes';
 import { SearchService } from '../shared/search/search.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 
 describe('SearchComponent', () => {
+  let component: SearchComponent;
+  let fixture: ComponentFixture<SearchComponent>;
   let mockSearchService: MockSearchService;
   let mockActivatedRoute: MockActivatedRoute;
   let mockRouter: MockRouter;
@@ -1181,6 +1182,12 @@ describe('SearchComponent', () => {
       imports: [FormsModule]
     }).compileComponents();
   });
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(SearchComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
 });
 ----
 
@@ -1191,15 +1198,13 @@ called when a term is passed in as a route parameter.
 .src/app/search/search.component.spec.ts
 ----
 it('should search when a term is set and search() is called', () => {
-  let fixture = TestBed.createComponent(SearchComponent);
-  let searchComponent = fixture.debugElement.componentInstance;
-  searchComponent.query = 'M';
-  searchComponent.search();
+  component = fixture.debugElement.componentInstance;
+  component.query = 'M';
+  component.search();
   expect(mockSearchService.searchSpy).toHaveBeenCalledWith('M');
 });
 
 it('should search automatically when a term is on the URL', () => {
-  let fixture = TestBed.createComponent(SearchComponent);
   fixture.detectChanges();
   expect(mockSearchService.searchSpy).toHaveBeenCalledWith('peyton');
 });
@@ -1243,7 +1248,7 @@ describe('EditComponent', () => {
   it('should fetch a single record', () => {
     const fixture = TestBed.createComponent(EditComponent);
 
-    let person = {name: 'Emmanuel Sanders', address: {city: 'Denver'}};
+    const person = {name: 'Emmanuel Sanders', address: {city: 'Denver'}};
     mockSearchService.setResponse(person);
 
     fixture.detectChanges();
@@ -1251,11 +1256,11 @@ describe('EditComponent', () => {
     expect(mockSearchService.getByIdSpy).toHaveBeenCalledWith(1);
 
     // verify data was set on component when initialized
-    let editComponent = fixture.debugElement.componentInstance;
+    const editComponent = fixture.debugElement.componentInstance;
     expect(editComponent.editAddress.city).toBe('Denver');
 
     // verify HTML renders as expected
-    let compiled = fixture.debugElement.nativeElement;
+    const compiled = fixture.debugElement.nativeElement;
     expect(compiled.querySelector('h3').innerHTML).toBe('Emmanuel Sanders');
   });
 });
@@ -1323,8 +1328,8 @@ describe('Search', () => {
   });
 
   it('should allow searching', () => {
-    let searchButton = element(by.css('button'));
-    let searchBox = element(by.css('input'));
+    const searchButton = element(by.css('button'));
+    const searchBox = element(by.css('input'));
     searchBox.sendKeys('M');
     searchButton.click().then(() => {
       let list = element.all(by.css('app-search table tbody tr'));
@@ -1349,9 +1354,9 @@ describe('Edit', () => {
     browser.get('/edit/1');
   });
 
-  let name = element(by.id('name'));
-  let street = element(by.id('street'));
-  let city = element(by.id('city'));
+  const name = element(by.id('name'));
+  const street = element(by.id('street'));
+  const city = element(by.id('city'));
 
   it('should allow viewing a person', () => {
     expect(element(by.css('h3')).getText()).toEqual('Peyton Manning');
@@ -1361,13 +1366,11 @@ describe('Edit', () => {
   });
 
   it('should allow updating a name', function () {
-    let save = element(by.id('save'));
-    // send individual characters since sendKeys passes partial values sometimes
-    // https://github.com/angular/protractor/issues/698
-    ' Won!'.split('').forEach((c) => name.sendKeys(c));
+    const save = element(by.id('save'));
+    name.sendKeys(' Won!');
     save.click();
     // verify one element matched this change
-    let list = element.all(by.css('app-search table tbody tr'));
+    const list = element.all(by.css('app-search table tbody tr'));
     expect(list.count()).toBe(1);
   });
 });
@@ -1383,7 +1386,7 @@ image::src/assets/images/protractor-success.png[Protractor success, 800, scaledw
 If you made it this far and have all your specs passing - congratulations! You're well on your way to writing quality
 code with Angular and verifying it works.
 
-You can see the test coverage of your project by running `ng test -cc --w false` and then opening `coverage/index.html` in your browser.
+You can see the test coverage of your project by running `ng test -cc -sr` and then opening `coverage/index.html` in your browser.
 
 You might notice that the new components and service could use some additional coverage. If you feel the need to improve this coverage, please create a pull request!
 
