@@ -1699,11 +1699,11 @@ After logging in, you'll be able to click *Search* and view people's information
 .View after login
 image::src/assets/images/okta-post-login.png[View after login, 800, scaledwidth="100%"]
 
-If it works - great! If it doesn’t, please post a question to Stack Overflow with an http://stackoverflow.com/questions/tagged/okta[okta tag], or hit me up on Twitter https://twitter.com/mraible[@mraible].
+If it works - great! If you want to build your own login form in your app, continue reading to learn how to use the https://github.com/okta/okta-auth-js[Okta Auth SDK] with `OAuthService`.
 
 === Authentication with Okta Auth SDK
 
-If you want to build your own login form and embed it in your app, you can use the https://github.com/okta/okta-auth-js[Okta Auth SDK]. The Okta Auth SDK builds on top of our http://developer.okta.com/docs/api/resources/authn.html[Authentication API] and http://developer.okta.com/docs/api/resources/oidc.html[OAuth 2.0 API] to enable you to create a fully branded sign-in experience using JavaScript.
+The Okta Auth SDK builds on top of Otka's http://developer.okta.com/docs/api/resources/authn.html[Authentication API] and http://developer.okta.com/docs/api/resources/oidc.html[OAuth 2.0 API] to enable you to create a fully branded sign-in experience using JavaScript.
 
 Install it using npm:
 
@@ -1774,7 +1774,7 @@ After making these changes, the `HomeComponent` should render as follows.
 .Custom sign-in form
 image::src/assets/images/sign-in-form.png[Custom login form, 800, scaledwidth="100%"]
 
-Add local variables for username and password fields, then implement a `loginWithPassword` method in `HomeComponent`. This method uses the `OktaAuth` library to get a session token and exchange it for ID and access tokens.
+Add local variables for the username and password fields, then implement a `loginWithPassword()` method in `HomeComponent`. This method uses the `OktaAuth` library to get a session token and exchange it for ID and access tokens.
 
 [source,ts]
 .src/app/home/home.component.ts
@@ -1815,7 +1815,7 @@ loginWithPassword() {
   });
 }
 ----
-<1> Process and store the `idToken` and `accessToken` so they can be retrieved using `OAuthService.getAccessToken()` and `OAuthService.getIdToken()`.
+<1> Process and store the `idToken` and `accessToken` so they can be retrieved using `OAuthService.getIdToken()` and `OAuthService.getAccessToken()`.
 
 You should be able to sign in using the form, using one of your app's registered users. After logging in, you'll be able to click *Search* and view people's information.
 
