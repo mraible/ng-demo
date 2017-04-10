@@ -27,7 +27,7 @@ declare let OktaAuth: any;
 
         <div class="form-group">
             <label>Username</label>
-            <input class="form-control" [(ngModel)]="userName">
+            <input class="form-control" [(ngModel)]="username">
         </div>
         <div class="form-group">
             <label>Password</label>
