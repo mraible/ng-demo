@@ -480,7 +480,7 @@ search(q: string): Observable<any> {
   } else {
     q = q.toLowerCase();
   }
-  return this.getAll().map(data => data.filter(item => JSON.stringify(item).toLowerCase().includes(query)));
+  return this.getAll().map(data => data.filter(item => JSON.stringify(item).toLowerCase().includes(q)));
 }
 ----
 
