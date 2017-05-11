@@ -242,8 +242,8 @@ If you want to add CSS for this components, open `src/app/search/search.componen
 }
 ----
 
-This section has shown you how to generate a new component to a basic Angular application with Angular CLI.
-The next section shows you how to create a use a JSON file and `localStorage` to create a fake API.
+This section has shown you how to generate a new component and add it to a basic Angular application with Angular CLI.
+The next section shows you how to create and use a JSON file and `localStorage` to create a fake API.
 
 === The Backend
 
