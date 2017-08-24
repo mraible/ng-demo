@@ -1780,14 +1780,14 @@ loginWithPassword() {
     const authClient = new OktaAuth({
       url: 'https://dev-[dev-id].oktapreview.com'
     });
-    authClient.signIn({
+    return authClient.signIn({
       username: this.username,
       password: this.password
     }).then((response) => {
       if (response.status === 'SUCCESS') {
         console.log('success', response);
-        authClient.token.getWithoutPrompt({
-          clientId: '[client-id]',
+        return authClient.token.getWithoutPrompt({
+          clientId: this.oauthService.clientId,
           responseType: ['id_token', 'token'],
           scopes: ['openid', 'profile', 'email'],
           sessionToken: response.sessionToken,
@@ -1797,8 +1797,7 @@ loginWithPassword() {
           .then((tokens) => {
             this.oauthService.processIdToken(tokens[0].idToken, tokens[1].accessToken); <1>
             this.router.navigate(['/home']);
-          })
-          .catch(error => console.error(error));
+          });
       } else {
         throw new Error('We cannot handle the ' + response.status + ' status');
       }

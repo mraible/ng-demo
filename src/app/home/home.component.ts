@@ -67,13 +67,13 @@ export class HomeComponent {
       const authClient = new OktaAuth({
         url: 'https://dev-158606.oktapreview.com'
       });
-      authClient.signIn({
+      return authClient.signIn({
         username: this.username,
         password: this.password
       }).then((response) => {
         if (response.status === 'SUCCESS') {
-          authClient.token.getWithoutPrompt({
-            clientId: 'RqjWvpvWO77qMGgDfukY',
+          return authClient.token.getWithoutPrompt({
+            clientId: this.oauthService.clientId,
             responseType: ['id_token', 'token'],
             scopes: ['openid', 'profile', 'email'],
             sessionToken: response.sessionToken,
@@ -83,8 +83,7 @@ export class HomeComponent {
             .then((tokens) => {
               this.oauthService.processIdToken(tokens[0].idToken, tokens[1].accessToken);
               this.router.navigate(['/home']);
-            })
-            .catch(error => console.error(error));
+            });
         } else {
           throw new Error('We cannot handle the ' + response.status + ' status');
         }

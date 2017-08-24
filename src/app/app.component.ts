@@ -13,7 +13,7 @@ export class AppComponent {
     // URL of the SPA to redirect the user to after login
     this.oauthService.redirectUri = window.location.origin;
     // The SPA's id. The SPA is registerd with this id at the auth-server
-    this.oauthService.clientId = 'RqjWvpvWO77qMGgDfukY';
+    this.oauthService.clientId = 'MjlYvTtFW26gOoOAHKOz';
     this.oauthService.scope = 'openid profile email';
     // set to true, to receive an id_token via OpenID Connect (OIDC) in addition to the
     // OAuth2-based access_token
