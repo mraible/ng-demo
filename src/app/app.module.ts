@@ -7,6 +7,7 @@ import { AppComponent } from './app.component';
 import { SearchComponent } from './search/search.component';
 import { EditComponent } from './edit/edit.component';
 import { Routes, RouterModule } from '@angular/router';
+import { SearchService } from './shared';
 import { OAuthModule } from 'angular-oauth2-oidc';
 import { HomeComponent } from './home/home.component';
 import { AuthGuard } from './shared/auth/auth.guard.service';
@@ -33,7 +34,7 @@ const appRoutes: Routes = [
     RouterModule.forRoot(appRoutes),
     OAuthModule.forRoot()
   ],
-  providers: [AuthGuard],
+  providers: [AuthGuard, SearchService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
