@@ -6,7 +6,8 @@ import { SearchComponent } from './search.component';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { SearchService } from '../shared/search/search.service';
-import { MaterialModule } from '@angular/material';
+import { MdIconModule, MdInputModule } from '@angular/material';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('SearchComponent', () => {
   let component: SearchComponent;
@@ -27,7 +28,7 @@ describe('SearchComponent', () => {
         {provide: ActivatedRoute, useValue: mockActivatedRoute},
         {provide: Router, useValue: mockRouter}
       ],
-      imports: [FormsModule, MaterialModule]
+      imports: [FormsModule, BrowserAnimationsModule, MdInputModule, MdIconModule]
     }).compileComponents();
   });
 

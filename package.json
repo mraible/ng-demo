@@ -4,20 +4,24 @@
   "license": "MIT",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "http-server-spa dist index.html $PORT",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "preinstall": "npm install -g http-server-spa",
+    "postinstall": "ng build -prod --aot"
   },
   "private": true,
   "dependencies": {
     "@angular/animations": "^4.2.4",
+    "@angular/cdk": "^2.0.0-beta.8",
     "@angular/common": "^4.2.4",
     "@angular/compiler": "^4.2.4",
     "@angular/core": "^4.2.4",
     "@angular/forms": "^4.2.4",
     "@angular/http": "^4.2.4",
+    "@angular/material": "^2.0.0-beta.8",
     "@angular/platform-browser": "^4.2.4",
     "@angular/platform-browser-dynamic": "^4.2.4",
     "@angular/router": "^4.2.4",
