@@ -121,8 +121,8 @@ $ ng --version
  / ___ \| | | | (_| | |_| | | (_| | |      | |___| |___ | |
 /_/   \_\_| |_|\__, |\__,_|_|\__,_|_|       \____|_____|___|
                |___/
-@angular/cli: 1.0.0
-node: 6.9.5
+@angular/cli: 1.3.2
+node: 8.4.0
 os: darwin x64
 ----
 
@@ -145,7 +145,7 @@ You can make sure your new project's tests pass, run `ng test`:
 ----
 $ ng test
 ...
-Chrome 56.0.2924 (Mac OS X 10.12.2): Executed 3 of 3 SUCCESS (0.377 secs / 0.341 secs)
+Chrome 60.0.3112 (Mac OS X 10.12.6): Executed 3 of 3 SUCCESS (0.239 secs / 0.213 secs)
 ----
 
 == Add a search feature
@@ -182,11 +182,6 @@ Open `src/app/search/search.component.html` and replace its default HTML with th
 
 .Adding a Search Route
 ****
-
-[NOTE]
-====
-In previous versions of CLI, you could generate a route *and* a component. However, since beta 8, route generation has been disabled. This will hopefully be re-enabled in a future release.
-====
 
 The https://angular.io/docs/ts/latest/guide/router.html[Router documentation] for Angular provides the information you need to setup a route to the `SearchComponent` you just generated. Here's a quick summary:
 
@@ -398,7 +393,7 @@ At this point, you'll likely see the following message in your browser's console
 ORIGINAL EXCEPTION: No provider for SearchService!
 ----
 
-To fix the "No provider" error from above, update `app.component.ts` to import the `SearchService`
+To fix the "No provider" error from above, update `app.module.ts` to import the `SearchService`
 and add the service to the list of providers.
 
 [source,javascript]
@@ -624,7 +619,7 @@ export class EditComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.sub = this.route.params.subscribe(params => {
-      let id = + params['id']; // (+) converts string 'id' to a number
+      const id = + params['id']; // (+) converts string 'id' to a number
       this.service.get(id).subscribe(person => {
         if (person) {
           this.editName = person.name;
@@ -676,7 +671,7 @@ search(q: string): Observable<any> {
     q = q.toLowerCase();
   }
   return this.getAll().map(data => {
-    let results: any = [];
+    const results: any = [];
     data.map(item => {
       // check for item in localStorage
       if (localStorage['person' + item.id]) {
@@ -877,7 +872,7 @@ integration testing. Angular's testing documentation lists https://angular.io/do
 If you run `ng test`, you'll likely received an error:
 
 ----
-Chrome 55.0.2883 (Mac OS X 10.12.2) AppComponent should create the app FAILED
+Chrome 60.0.3112 (Mac OS X 10.12.6) AppComponent should create the app FAILED
 	'router-outlet' is not a known element:
 ----
 
@@ -937,10 +932,10 @@ describe('SearchService', () => {
 If you run `ng test`, you will likely see some errors about the test stubs that Angular CLI created for you. You can ignore these for now.
 
 ----
-Chrome 55.0.2883 (Mac OS X 10.12.2) EditComponent should create FAILED
+Chrome 60.0.3112 (Mac OS X 10.12.6) EditComponent should create FAILED
 	Can't bind to 'ngModel' since it isn't a known property of 'input'. ("
 
-Chrome 55.0.2883 (Mac OS X 10.12.2) SearchComponent should create FAILED
+Chrome 60.0.3112 (Mac OS X 10.12.6) SearchComponent should create FAILED
 	Can't bind to 'ngModel' since it isn't a known property of 'input'. ("<h2>Search</h2>
 ----
 
@@ -1282,29 +1277,30 @@ All tests should pass.
 
 ----
 $ ng e2e
-** NG Live Development Server is running on http://localhost:49152 **
-Hash: 24fc422df67845d66a49
-Time: 15299ms
-chunk    {0} polyfills.bundle.js, polyfills.bundle.js.map (polyfills) 158 kB {4} [initial] [rendered]
-chunk    {1} main.bundle.js, main.bundle.js.map (main) 3.62 kB {3} [initial] [rendered]
-chunk    {2} styles.bundle.js, styles.bundle.js.map (styles) 9.77 kB {4} [initial] [rendered]
-chunk    {3} vendor.bundle.js, vendor.bundle.js.map (vendor) 2.37 MB [initial] [rendered]
-chunk    {4} inline.bundle.js, inline.bundle.js.map (inline) 0 bytes [entry] [rendered]
+** NG Live Development Server is listening on localhost:49154, open your browser on http://localhost:49154 **
+Date: 2017-08-24T17:49:19.352Z
+Hash: 60bb215c5c77c41f7689
+Time: 6442ms
+chunk {inline} inline.bundle.js, inline.bundle.js.map (inline) 5.83 kB [entry] [rendered]
+chunk {main} main.bundle.js, main.bundle.js.map (main) 2.28 MB {inline} [initial] [rendered]
+chunk {polyfills} polyfills.bundle.js, polyfills.bundle.js.map (polyfills) 209 kB {inline} [initial] [rendered]
+chunk {styles} styles.bundle.js, styles.bundle.js.map (styles) 11.3 kB {inline} [initial] [rendered]
+(node:12099) [DEP0022] DeprecationWarning: os.tmpDir() is deprecated. Use os.tmpdir() instead.
+
 webpack: Compiled successfully.
-[11:34:42] I/file_manager - creating folder /Users/mraible/ng-demo/node_modules/webdriver-manager/selenium
-[11:34:43] I/downloader - curl -o /Users/mraible/ng-demo/node_modules/webdriver-manager/selenium/chromedriver_2.28.zip https://chromedriver.storage.googleapis.com/2.28/chromedriver_mac64.zip
-[11:34:44] I/update - chromedriver: unzipping chromedriver_2.28.zip
-[11:34:45] I/update - chromedriver: setting permissions to 0755 for /Users/mraible/ng-demo/node_modules/webdriver-manager/selenium/chromedriver_2.28
-[11:34:45] I/launcher - Running 1 instances of WebDriver
-[11:34:45] I/direct - Using ChromeDriver directly...
-Spec started
+[11:49:19] I/file_manager - creating folder /Users/mraible/ng-demo/node_modules/webdriver-manager/selenium
+[11:49:21] I/update - chromedriver: unzipping chromedriver_2.31.zip
+[11:49:21] I/update - chromedriver: setting permissions to 0755 for /Users/mraible/ng-demo/node_modules/webdriver-manager/selenium/chromedriver_2.31
+[11:49:21] I/launcher - Running 1 instances of WebDriver
+[11:49:21] I/direct - Using ChromeDriver directly...
+Jasmine started
 
   ng-demo App
-    ✓ should display message saying app works
+    ✓ should display welcome message
 
-Executed 1 of 1 spec SUCCESS in 1 sec.
-[11:34:49] I/launcher - 0 instance(s) of WebDriver still running
-[11:34:49] I/launcher - chrome #01 passed
+Executed 1 of 1 spec SUCCESS in 0.572 sec.
+[11:49:24] I/launcher - 0 instance(s) of WebDriver still running
+[11:49:24] I/launcher - chrome #01 passed
 ----
 
 === Testing the search feature
@@ -1448,7 +1444,7 @@ notifications:
     on_start: false
 ----
 
-https://travis-ci.org/mraible/ng-demo/builds/218757078s[Here] is a build showing all unit and integration tests passing.
+https://travis-ci.org/mraible/ng-demo/builds/268073398[Here] is a build showing all unit and integration tests passing.
 
 === Jenkins
 
@@ -1500,6 +1496,8 @@ https://account.run.pivotal.io/z/uaa/sign-up[Create a Pivotal account] and https
 ----
 ng build -prod --aot
 cd dist && touch Staticfile
+# enable pushstate so no 404s on refresh
+echo 'pushstate: enabled' > Staticfile
 cf push ng-demo
 ----
 
@@ -1522,26 +1520,23 @@ https://signup.heroku.com/[Create a Heroku account] and https://devcenter.heroku
 . Run `git push heroku master`
 . View the application in your browser with `heroku open`
 
-////
-CAUTION: This might fail because of https://devcenter.heroku.com/articles/nodejs-support#devdependencies[devDependencies]
-Move angular-cli to dependencies or run heroku config:set NPM_CONFIG_PRODUCTION=false
-////
-
 == Source code
 
 A completed project with this code in it is available on GitHub at https://github.com/mraible/ng-demo.
 
 == Summary
 
-I hope you've enjoyed this in-depth tutorial on how to get started with Angular and Angular CLI. Angular CLI
-takes much of the pain out of setting up an Angular project and using Typescript. I expect great things from Angular CLI,
-mostly because the Angular setup process can be tedious and CLI greatly simplifies things.
+I hope you've enjoyed this in-depth tutorial on how to get started with Angular and Angular CLI. Angular CLI takes much
+of the pain out of setting up an Angular project and using Typescript. I expect great things from Angular CLI, mostly
+because the Angular setup process can be tedious and CLI greatly simplifies things.
 
 == Bonus: Angular Material, Bootstrap 4, and Okta
 
-If you'd like to see how to integrate https://material.angular.io/[Angular Material], https://v4-alpha.getbootstrap.com/[Bootstrap 4], or http://developer.okta.com[authentication with Okta], this section is for you!
+If you'd like to see how to integrate https://material.angular.io/[Angular Material], https://getbootstrap.com[Bootstrap 4],
+or http://developer.okta.com[authentication with Okta], this section is for you!
 
-I've created branches to show how to integrate each of these libraries. Click on the links below to see each branch's documentation.
+I've created branches to show how to integrate each of these libraries. Click on the links below to see each branch's
+documentation.
 
 * https://github.com/mraible/ng-demo/tree/angular-material#bonus-angular-material[Angular Material]
 * https://github.com/mraible/ng-demo/tree/bootstrap4#bonus-bootstrap[Bootstrap 4]
