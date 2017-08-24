@@ -27,6 +27,6 @@ describe('AppComponent', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.debugElement.nativeElement;
-    expect(compiled.querySelector('.navbar-brand').textContent).toContain('app works!');
+    expect(compiled.querySelector('.navbar-brand').textContent).toContain('Welcome to app!');
   }));
 });
