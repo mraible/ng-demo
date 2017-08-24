@@ -8,6 +8,7 @@ import { SearchComponent } from './search/search.component';
 import { EditComponent } from './edit/edit.component';
 import { Routes, RouterModule } from '@angular/router';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { SearchService } from './shared';
 
 const appRoutes: Routes = [
   { path: 'search', component: SearchComponent },
@@ -28,7 +29,7 @@ const appRoutes: Routes = [
     RouterModule.forRoot(appRoutes),
     NgbModule.forRoot(),
   ],
-  providers: [],
+  providers: [SearchService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
