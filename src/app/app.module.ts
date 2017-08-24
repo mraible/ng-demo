@@ -7,6 +7,7 @@ import { AppComponent } from './app.component';
 import { SearchComponent } from './search/search.component';
 import { EditComponent } from './edit/edit.component';
 import { Routes, RouterModule } from '@angular/router';
+import { SearchService } from './shared/search/search.service';
 
 const appRoutes: Routes = [
   { path: 'search', component: SearchComponent },
@@ -26,7 +27,7 @@ const appRoutes: Routes = [
     HttpModule,
     RouterModule.forRoot(appRoutes)
   ],
-  providers: [],
+  providers: [SearchService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
