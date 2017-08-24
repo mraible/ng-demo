@@ -1535,13 +1535,7 @@ because the Angular setup process can be tedious and CLI greatly simplifies thin
 See http://stackoverflow.com/a/41234801/65681[this Stack Overflow answer] for a good summary of how to integrate Bootstrap 4 into an Angular CLI project. Below is a quick summary of the necessary steps:
 
 ----
-yarn add bootstrap@4.0.0-alpha.6
-----
-
-NOTE: You can also use `npm install --save bootstrap@4.0.0-alpha.6`, but https://code.facebook.com/posts/1840075619545360[Yarn] is faster.
-
-----
-yarn add @ng-bootstrap/ng-bootstrap
+yarn add bootstrap@4.0.0-beta @ng-bootstrap/ng-bootstrap
 ----
 
 Add `NgbModule` as an import in `app.module.ts`:
@@ -1559,13 +1553,21 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
   ]
 ----
 
+Modify `src/styles.css` to add a reference to Bootstrap's CSS file:
+
+[source,json]
+.src/styles.css
+----
+~bootstrap/dist/css/bootstrap.css
+----
+
 Change HTML to use Bootstrap classes. For example, change the `<h1>` in `app.component.html` to be the following:
 
 [source,html]
 .src/app/app.component.html
 ----
-<nav class="navbar navbar-light bg-faded">
-  <a class="navbar-brand" href="#">{{title}}</a>
+<nav class="navbar navbar-light bg-secondary">
+  <a class="navbar-brand text-light" href="#">Welcome to {{title}}!</a>
 </nav>
 ----
 
