@@ -8,5 +8,5 @@ import { SearchService } from './shared/index';
   viewProviders: [SearchService]
 })
 export class AppComponent {
-  title = 'app works!';
+  title = 'app';
 }
