@@ -397,14 +397,14 @@ To fix the "No provider" error from above, update `app.module.ts` to import the 
 and add the service to the list of providers.
 
 [source,javascript]
-.src/app/app.component.ts
+.src/app/app.module.ts
 ----
-import { SearchService } from './shared/index';
+import { SearchService } from './shared';
 
-@Component({
+@NgModule({
   ...
-  styleUrls: ['./app.component.css'],
-  viewProviders: [SearchService]
+  providers: [SearchService],
+  bootstrap: [AppComponent]
 })
 ----
 

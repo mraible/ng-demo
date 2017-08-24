@@ -7,7 +7,7 @@ import { AppComponent } from './app.component';
 import { SearchComponent } from './search/search.component';
 import { EditComponent } from './edit/edit.component';
 import { Routes, RouterModule } from '@angular/router';
-import { SearchService } from './shared/search/search.service';
+import { SearchService } from './shared';
 
 const appRoutes: Routes = [
   { path: 'search', component: SearchComponent },
