@@ -19,7 +19,7 @@ export class SearchService {
       q = q.toLowerCase();
     }
     return this.getAll().map(data => {
-      let results: any = [];
+      const results: any = [];
       data.map(item => {
         // check for item in localStorage
         if (localStorage['person' + item.id]) {

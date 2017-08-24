@@ -1,9 +1,10 @@
 <h2>Search</h2>
-
-<md-input-container>
-  <input mdInput type="search" name="query" placeholder="Search" [(ngModel)]="query" (keyup.enter)="search()">
-</md-input-container>
-<button md-mini-fab (click)="search()"><md-icon>search</md-icon></button>
+<form>
+  <md-input-container>
+    <input mdInput type="search" name="query" placeholder="Search" [(ngModel)]="query" (keyup.enter)="search()">
+  </md-input-container>
+  <button md-mini-fab (click)="search()"><md-icon>search</md-icon></button>
+</form>
 
 <md-list *ngIf="searchResults" flex>
   <md-list-item *ngFor="let person of searchResults; let i=index">

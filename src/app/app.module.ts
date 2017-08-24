@@ -7,12 +7,14 @@ import { AppComponent } from './app.component';
 import { SearchComponent } from './search/search.component';
 import { EditComponent } from './edit/edit.component';
 import { Routes, RouterModule } from '@angular/router';
-import { MaterialModule } from '@angular/material';
+import { SearchService } from './shared';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MdButtonModule, MdIconModule, MdInputModule, MdListModule, MdToolbarModule } from '@angular/material';
 
 const appRoutes: Routes = [
-  { path: 'search', component: SearchComponent },
-  { path: 'edit/:id', component: EditComponent },
-  { path: '', redirectTo: '/search', pathMatch: 'full' }
+  {path: 'search', component: SearchComponent},
+  {path: 'edit/:id', component: EditComponent},
+  {path: '', redirectTo: '/search', pathMatch: 'full'}
 ];
 
 @NgModule({
@@ -26,9 +28,15 @@ const appRoutes: Routes = [
     FormsModule,
     HttpModule,
     RouterModule.forRoot(appRoutes),
-    MaterialModule
+    BrowserAnimationsModule,
+    MdButtonModule,
+    MdIconModule,
+    MdInputModule,
+    MdListModule,
+    MdToolbarModule
   ],
-  providers: [],
+  providers: [SearchService],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+}
