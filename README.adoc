@@ -1,4 +1,4 @@
-= Angular and Angular CLI Demo
+= Angular and Angular CLI Tutorial
 
 :author: Matt Raible
 :email:  matt@raibledesigns.com
