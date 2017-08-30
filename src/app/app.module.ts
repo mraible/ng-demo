@@ -11,6 +11,7 @@ import { SearchService } from './shared';
 import { OAuthModule } from 'angular-oauth2-oidc';
 import { HomeComponent } from './home/home.component';
 import { AuthGuard } from './shared/auth/auth.guard.service';
+import { OktaAuthWrapper } from './shared/auth/okta.auth.wrapper';
 
 const appRoutes: Routes = [
   { path: 'search', component: SearchComponent, canActivate: [AuthGuard] },
@@ -34,7 +35,11 @@ const appRoutes: Routes = [
     RouterModule.forRoot(appRoutes),
     OAuthModule.forRoot()
   ],
-  providers: [AuthGuard, SearchService],
+  providers: [
+    AuthGuard,
+    SearchService,
+    OktaAuthWrapper
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

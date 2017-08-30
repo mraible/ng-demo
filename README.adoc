@@ -1558,7 +1558,7 @@ Modify `app.component.ts` to import `OAuthService` and configure your app to use
 [source,js]
 .src/app/app.component.ts
 ----
-import { OAuthService } from 'angular-oauth2-oidc';
+import { OAuthService, JwksValidationHandler } from 'angular-oauth2-oidc';
 
 ...
 
@@ -1566,9 +1566,10 @@ import { OAuthService } from 'angular-oauth2-oidc';
     this.oauthService.redirectUri = window.location.origin;
     this.oauthService.clientId = '[client-id]';
     this.oauthService.scope = 'openid profile email';
-    this.oauthService.oidc = true;
-    this.oauthService.issuer = 'https://dev-[dev-id].oktapreview.com';
+    this.oauthService.issuer = 'https://dev-158606.oktapreview.com';
+    this.oauthService.tokenValidationHandler = new JwksValidationHandler();
 
+    // Load Discovery Document and then try to login the user
     this.oauthService.loadDiscoveryDocument().then(() => {
       this.oauthService.tryLogin({});
     });
@@ -1595,6 +1596,7 @@ import { OAuthService } from 'angular-oauth2-oidc';
 </div>`
 })
 export class HomeComponent {
+
   constructor(private oauthService: OAuthService) {
   }
 
@@ -1611,7 +1613,7 @@ export class HomeComponent {
     if (!claims) {
       return null;
     }
-    return claims.name;
+    return claims['name'];
   }
 
 }
@@ -1668,7 +1670,10 @@ const appRoutes: Routes = [
     ...
     OAuthModule.forRoot()
   ],
-  providers: [AuthGuard],
+  providers: [
+    AuthGuard,
+    SearchService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
@@ -1716,13 +1721,66 @@ The components in this section use Bootstrap CSS classes. Add a reference to Boo
 </head>
 ----
 
-Change `HomeComponent` to declare `OktaAuth` and modify its `template` so it has a button to login, as well as a sign-in form.
+Create `src/app/shared/auth/okta.auth.wrapper.ts` to wrap the Okta Auth SDK and integrate it with `OAuthService`. This `login()` method uses `OktaAuth` to get a session token and exchange it for ID and access tokens.
+
+[source,ts]
+.src/app/shared/auth/okta.auth.wrapper.ts
+----
+import { OAuthService } from 'angular-oauth2-oidc';
+import { Injectable } from '@angular/core';
+
+declare const OktaAuth: any;
+
+@Injectable()
+export class OktaAuthWrapper {
+
+  private authClient: any;
+
+  constructor(private oauthService: OAuthService) {
+    this.authClient = new OktaAuth({
+      url: this.oauthService.issuer
+    });
+  }
+
+  login(username: string, password: string): Promise<any> {
+    return this.oauthService.createAndSaveNonce().then(nonce => {
+      return this.authClient.signIn({
+        username: username,
+        password: password
+      }).then((response) => {
+        if (response.status === 'SUCCESS') {
+          return this.authClient.token.getWithoutPrompt({
+            clientId: this.oauthService.clientId,
+            responseType: ['id_token', 'token'],
+            scopes: ['openid', 'profile', 'email'],
+            sessionToken: response.sessionToken,
+            nonce: nonce,
+            redirectUri: window.location.origin
+          })
+            .then((tokens) => {
+              const idToken = tokens[0].idToken;
+              const accessToken = tokens[1].accessToken;
+              const keyValuePair = `#id_token=${encodeURIComponent(idToken)}&access_token=${encodeURIComponent(accessToken)}`;
+              return this.oauthService.tryLogin({ <1>
+                customHashFragment: keyValuePair,
+                disableOAuth2StateCheck: true
+              });
+            });
+        } else {
+          return Promise.reject('We cannot handle the ' + response.status + ' status');
+        }
+      });
+    });
+  }
+}
+----
+<1> Process and store the `idToken` and `accessToken` so they can be retrieved using `OAuthService.getIdToken()` and `OAuthService.getAccessToken()`.
+
+Change `HomeComponent` to modify its `template` so it has a button to login, as well as a sign-in form.
 
 [source,ts]
 .src/app/home/home.component.html
 ----
-declare let OktaAuth: any;
-
 @Component({
   template: `<div *ngIf="givenName">
 <h2>Welcome, {{givenName}}!</h2>
@@ -1767,7 +1825,7 @@ After making these changes, the `HomeComponent` should render as follows.
 .Custom sign-in form
 image::src/assets/images/sign-in-form.png[Custom login form, 800, scaledwidth="100%"]
 
-Add local variables for the username and password fields, then implement a `loginWithPassword()` method in `HomeComponent`. This method uses the `OktaAuth` library to get a session token and exchange it for ID and access tokens.
+Add local variables for the username and password fields, import `OktaAuthWrapper`, and implement a `loginWithPassword()` method in `HomeComponent`.
 
 [source,ts]
 .src/app/home/home.component.ts
@@ -1775,39 +1833,16 @@ Add local variables for the username and password fields, then implement a `logi
 username;
 password;
 
+constructor(private oauthService: OAuthService,
+            private oktaAuthWrapper: OktaAuthWrapper) {
+}
+
 loginWithPassword() {
-  this.oauthService.createAndSaveNonce().then(nonce => {
-    const authClient = new OktaAuth({
-      url: 'https://dev-[dev-id].oktapreview.com'
-    });
-    return authClient.signIn({
-      username: this.username,
-      password: this.password
-    }).then((response) => {
-      if (response.status === 'SUCCESS') {
-        console.log('success', response);
-        return authClient.token.getWithoutPrompt({
-          clientId: this.oauthService.clientId,
-          responseType: ['id_token', 'token'],
-          scopes: ['openid', 'profile', 'email'],
-          sessionToken: response.sessionToken,
-          nonce: nonce,
-          redirectUri: window.location.origin
-        })
-          .then((tokens) => {
-            this.oauthService.processIdToken(tokens[0].idToken, tokens[1].accessToken); <1>
-            this.router.navigate(['/home']);
-          });
-      } else {
-        throw new Error('We cannot handle the ' + response.status + ' status');
-      }
-    }).fail(function (err) {
-      console.error(err);
-    });
-  });
+  this.oktaAuthWrapper.login(this.username, this.password)
+    .then(_ => console.debug('logged in'))
+    .catch(err => console.error('error logging in', err));
 }
 ----
-<1> Process and store the `idToken` and `accessToken` so they can be retrieved using `OAuthService.getIdToken()` and `OAuthService.getAccessToken()`.
 
 You should be able to sign in using the form, using one of your app's registered users. After logging in, you'll be able to click *Search* and view people's information.
 

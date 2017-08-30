@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { OAuthService } from 'angular-oauth2-oidc';
 import { Router } from '@angular/router';
-declare let OktaAuth: any;
+import { OktaAuthWrapper } from '../shared/auth/okta.auth.wrapper';
 
 @Component({
   template: `<div *ngIf="givenName">
@@ -43,7 +43,7 @@ export class HomeComponent {
   username;
   password;
 
-  constructor(private oauthService: OAuthService, private router: Router) {
+  constructor(private oauthService: OAuthService, private oktaAuthWrapper: OktaAuthWrapper) {
   }
 
   login() {
@@ -59,37 +59,12 @@ export class HomeComponent {
     if (!claims) {
       return null;
     }
-    return claims.name;
+    return claims['name'];
   }
 
   loginWithPassword() {
-    this.oauthService.createAndSaveNonce().then(nonce => {
-      const authClient = new OktaAuth({
-        url: 'https://dev-158606.oktapreview.com'
-      });
-      return authClient.signIn({
-        username: this.username,
-        password: this.password
-      }).then((response) => {
-        if (response.status === 'SUCCESS') {
-          return authClient.token.getWithoutPrompt({
-            clientId: this.oauthService.clientId,
-            responseType: ['id_token', 'token'],
-            scopes: ['openid', 'profile', 'email'],
-            sessionToken: response.sessionToken,
-            nonce: nonce,
-            redirectUri: window.location.origin
-          })
-            .then((tokens) => {
-              this.oauthService.processIdToken(tokens[0].idToken, tokens[1].accessToken);
-              this.router.navigate(['/home']);
-            });
-        } else {
-          throw new Error('We cannot handle the ' + response.status + ' status');
-        }
-      }).fail(function (err) {
-        console.error(err);
-      });
-    });
+    this.oktaAuthWrapper.login(this.username, this.password)
+      .then(_ => console.debug('logged in'))
+      .catch(err => console.error('error logging in', err));
   }
 }
