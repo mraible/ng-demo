@@ -1571,7 +1571,7 @@ import { OAuthService, JwksValidationHandler } from 'angular-oauth2-oidc';
 
     // Load Discovery Document and then try to login the user
     this.oauthService.loadDiscoveryDocument().then(() => {
-      this.oauthService.tryLogin({});
+      this.oauthService.tryLogin();
     });
   }
 ...
