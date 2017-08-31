@@ -1733,6 +1733,15 @@ Install it using npm:
 npm install @okta/okta-auth-js --save
 ----
 
+Add a reference to this library’s main JavaScript file in `.angular-cli.json`:
+
+[source,json]
+----
+"scripts": [
+  "../node_modules/@okta/okta-auth-js/dist/okta-auth-js.min.js"
+],
+----
+
 The components in this section use Bootstrap CSS classes. Install Bootstrap 4.
 
 [source,bash]
