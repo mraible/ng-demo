@@ -7,13 +7,12 @@ import { MockBackend } from '@angular/http/testing';
 describe('SearchService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [
+      providers: [SearchService,
         {
           provide: Http, useFactory: (backend: ConnectionBackend, defaultOptions: BaseRequestOptions) => {
           return new Http(backend, defaultOptions);
         }, deps: [MockBackend, BaseRequestOptions]
         },
-        {provide: SearchService, useClass: SearchService},
         {provide: MockBackend, useClass: MockBackend},
         {provide: BaseRequestOptions, useClass: BaseRequestOptions}
       ]
