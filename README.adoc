@@ -1548,7 +1548,7 @@ To integrate http://developer.okta.com[Okta] for user authentication, you'll fir
 
 === Create an OpenID Connect App in Okta
 
-OpenID Connect is built on top of the OAuth 2.0 protocol. It allows clients to verify the identity of the user and, as well as to obtain their basic profile information. To learn more, see http://openid.net/connect/[http://openid.net/connect/].
+OpenID Connect is built on top of the OAuth 2.0 protocol. It allows clients to verify the identity of the user and, as well as to obtain their basic profile information. To learn more, see http://openid.net/connect/[http://openid.net/connect].
 
 Login to your Okta account, or create one if you don’t have one. Navigate to *Admin > Add Applications* and click on the *Create New App* button. Select *Single Page App (SPA)* for the Platform and *OpenID Connect* for the sign on method. Click the *Create* button and give your application a name. On the next screen, add `http://localhost:4200` as a Redirect URI and click *Finish*. You should see settings like the following.
 
@@ -1578,7 +1578,7 @@ import { OAuthService, JwksValidationHandler } from 'angular-oauth2-oidc';
     this.oauthService.redirectUri = window.location.origin;
     this.oauthService.clientId = '[client-id]';
     this.oauthService.scope = 'openid profile email';
-    this.oauthService.issuer = 'https://dev-158606.oktapreview.com';
+    this.oauthService.issuer = 'https://dev-[dev-id].oktapreview.com';
     this.oauthService.tokenValidationHandler = new JwksValidationHandler();
 
     // Load Discovery Document and then try to login the user
@@ -1597,15 +1597,16 @@ import { Component } from '@angular/core';
 import { OAuthService } from 'angular-oauth2-oidc';
 
 @Component({
-  template: `<div *ngIf="givenName">
-<h2>Welcome, {{givenName}}!</h2>
-<button (click)="logout()">Logout</button>
-<p><a routerLink="/search" routerLinkActive="active">Search</a></p>
-</div>
+  template: `
+    <div *ngIf="givenName">
+      <h2>Welcome, {{givenName}}!</h2>
+      <button (click)="logout()">Logout</button>
+      <p><a routerLink="/search" routerLinkActive="active">Search</a></p>
+    </div>
 
-<div *ngIf="!givenName">
-    <button (click)="login()">Login</button>
-</div>`
+    <div *ngIf="!givenName">
+      <button (click)="login()">Login</button>
+    </div>`
 })
 export class HomeComponent {
 
@@ -1656,6 +1657,14 @@ export class AuthGuard implements CanActivate {
 }
 ----
 
+Export `AuthGuard` in `src/shared/index.ts`:
+
+[source,ts]
+.src/app/shared/index.ts
+----
+export * from './auth/auth.guard.service';
+----
+
 Import the `OAuthModule` in `app.module.ts`, configure the new `HomeComponent`, and lock the `/search` and `/edit` routes down with the `AuthGuard`.
 
 [source,ts]
@@ -1663,14 +1672,14 @@ Import the `OAuthModule` in `app.module.ts`, configure the new `HomeComponent`, 
 ----
 import { OAuthModule } from 'angular-oauth2-oidc';
 import { HomeComponent } from './home/home.component';
-import { AuthGuard } from './shared/auth/auth.guard.service';
+import { SearchService, AuthGuard } from './shared';
 
 const appRoutes: Routes = [
-  { path: 'search', component: SearchComponent, canActivate: [AuthGuard] },
-  { path: 'edit/:id', component: EditComponent, canActivate: [AuthGuard]},
-  { path: 'home', component: HomeComponent},
-  { path: '', redirectTo: 'home', pathMatch: 'full' },
-  { path: '**', redirectTo: 'home' }
+  {path: 'search', component: SearchComponent, canActivate: [AuthGuard]},
+  {path: 'edit/:id', component: EditComponent, canActivate: [AuthGuard]},
+  {path: 'home', component: HomeComponent},
+  {path: '', redirectTo: 'home', pathMatch: 'full'},
+  {path: '**', redirectTo: 'home'}
 ];
 
 @NgModule({
@@ -1713,7 +1722,9 @@ If it works - great! If you want to build your own login form in your app, conti
 
 === Authentication with Okta Auth SDK
 
-The Okta Auth SDK builds on top of Otka's http://developer.okta.com/docs/api/resources/authn.html[Authentication API] and http://developer.okta.com/docs/api/resources/oidc.html[OAuth 2.0 API] to enable you to create a fully branded sign-in experience using JavaScript.
+The Okta Auth SDK builds on top of Otka's http://developer.okta.com/docs/api/resources/authn.html[Authentication API] and
+http://developer.okta.com/docs/api/resources/oidc.html[OAuth 2.0 API] to enable you to create a fully branded sign-in
+experience using JavaScript.
 
 Install it using npm:
 
@@ -1722,15 +1733,32 @@ Install it using npm:
 npm install @okta/okta-auth-js --save
 ----
 
-The components in this section use Bootstrap CSS classes. Add a reference to Bootstrap's CSS in the `<head>` of `index.html`.
+The components in this section use Bootstrap CSS classes. Install Bootstrap 4.
+
+[source,bash]
+----
+yarn add bootstrap@4.0.0-beta
+----
+
+Modify `src/styles.css` to add a reference to Bootstrap’s CSS file.
+
+[source,css]
+.src/styles.css
+----
+@import "~bootstrap/dist/css/bootstrap.css";
+----
+
+Update `src/app/app.component.html` to use Bootstrap classes for its navbar and grid system.
 
 [source,html]
-.src/index.html
+.src/app/app.component.html
 ----
-<head>
-  ...
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-</head>
+<nav class="navbar navbar-light bg-secondary">
+  <a class="navbar-brand text-light" href="#">Welcome to {{title}}!</a>
+</nav>
+<div class="container-fluid">
+  <router-outlet></router-outlet>
+</div>
 ----
 
 Create `src/app/shared/auth/okta.auth.wrapper.ts` to wrap the Okta Auth SDK and integrate it with `OAuthService`. This `login()` method uses `OktaAuth` to get a session token and exchange it for ID and access tokens.
@@ -1788,46 +1816,72 @@ export class OktaAuthWrapper {
 ----
 <1> Process and store the `idToken` and `accessToken` so they can be retrieved using `OAuthService.getIdToken()` and `OAuthService.getAccessToken()`.
 
+Export `OktaAuthWrapper` in `src/shared/index.ts`:
+
+[source,ts]
+.src/app/shared/index.ts
+----
+export * from './auth/okta.auth.wrapper';
+----
+
+Add `OktaAuthWrapper` as a provider in `app.module.ts`.
+
+[source,ts]
+.src/app/app.module.ts
+----
+import { SearchService, AuthGuard, OktaAuthWrapper } from './shared';
+
+@NgModule({
+  ...
+  providers: [
+    ...
+    OktaAuthWrapper
+  ],
+  bootstrap: [AppComponent]
+})
+----
+
 Change `HomeComponent` to modify its `template` so it has a button to login, as well as a sign-in form.
 
 [source,ts]
 .src/app/home/home.component.html
 ----
 @Component({
-  template: `<div *ngIf="givenName">
-<h2>Welcome, {{givenName}}!</h2>
-<button (click)="logout()" class="btn btn-default">Logout</button>
-<p><a routerLink="/search" routerLinkActive="active">Search</a></p>
-</div>
-
-<div class="panel panel-default" *ngIf="!givenName">
-    <div class="panel-body">
-        <p>Login with Authorization Server</p>
-        <button class="btn btn-default" (click)="login()">Login</button>
+  template: `
+    <div *ngIf="givenName" class="col-12 mt-2">
+      <button (click)="logout()" class="btn btn-sm btn-outline-primary float-right">Logout</button>
+      <h2>Welcome, {{givenName}}!</h2>
+      <p><a routerLink="/search" routerLinkActive="active">Search</a></p>
     </div>
-</div>
 
-<div class="panel panel-default" *ngIf="!givenName">
-    <div class="panel-body">
-        <p>Login with Username/Password</p>
+    <div class="card mt-2" *ngIf="!givenName">
+      <div class="card-body">
+        <h4 class="card-title">Login with Authorization Server</h4>
+        <button class="btn btn-primary" (click)="login()">Login</button>
+      </div>
+    </div>
 
-        <p style="color:red; font-weight:bold" *ngIf="loginFailed">
-            Login wasn't successful.
+    <div class="card mt-2" *ngIf="!givenName">
+      <div class="card-body">
+        <h4 class="card-title">Login with Username/Password</h4>
+
+        <p class="alert alert-error" *ngIf="loginFailed">
+          Login wasn't successful.
         </p>
 
         <div class="form-group">
-            <label>Username</label>
-            <input class="form-control" [(ngModel)]="username">
+          <label>Username</label>
+          <input class="form-control" [(ngModel)]="username">
         </div>
         <div class="form-group">
-            <label>Password</label>
-            <input class="form-control" type="password" [(ngModel)]="password">
+          <label>Password</label>
+          <input class="form-control" type="password" [(ngModel)]="password">
         </div>
         <div class="form-group">
-            <button class="btn btn-default" (click)="loginWithPassword()">Login</button>
+          <button class="btn btn-primary" (click)="loginWithPassword()">Login</button>
         </div>
-    </div>
-</div>`
+      </div>
+    </div>`
 })
 ----
 
@@ -1842,6 +1896,9 @@ Add local variables for the username and password fields, import `OktaAuthWrappe
 [source,ts]
 .src/app/home/home.component.ts
 ----
+import { OktaAuthWrapper } from '../shared';
+...
+
 username;
 password;
 

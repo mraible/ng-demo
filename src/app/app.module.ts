@@ -4,20 +4,18 @@ import { FormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
 import { SearchComponent } from './search/search.component';
 import { Routes, RouterModule } from '@angular/router';
-import { SearchService } from './shared';
+import { SearchService, AuthGuard, OktaAuthWrapper } from './shared';
 import { HttpModule } from '@angular/http';
 import { EditComponent } from './edit/edit.component';
 import { OAuthModule } from 'angular-oauth2-oidc';
 import { HomeComponent } from './home/home.component';
-import { AuthGuard } from './shared/auth/auth.guard.service';
-import { OktaAuthWrapper } from './shared/auth/okta.auth.wrapper';
 
 const appRoutes: Routes = [
-  { path: 'search', component: SearchComponent, canActivate: [AuthGuard] },
-  { path: 'edit/:id', component: EditComponent, canActivate: [AuthGuard]},
-  { path: 'home', component: HomeComponent},
-  { path: '', redirectTo: 'home', pathMatch: 'full' },
-  { path: '**', redirectTo: 'home' }
+  {path: 'search', component: SearchComponent, canActivate: [AuthGuard]},
+  {path: 'edit/:id', component: EditComponent, canActivate: [AuthGuard]},
+  {path: 'home', component: HomeComponent},
+  {path: '', redirectTo: 'home', pathMatch: 'full'},
+  {path: '**', redirectTo: 'home'}
 ];
 
 @NgModule({
