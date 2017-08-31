@@ -1,13 +1,12 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { HttpModule } from '@angular/http';
-
 import { AppComponent } from './app.component';
 import { SearchComponent } from './search/search.component';
-import { EditComponent } from './edit/edit.component';
 import { Routes, RouterModule } from '@angular/router';
 import { SearchService } from './shared';
+import { HttpModule } from '@angular/http';
+import { EditComponent } from './edit/edit.component';
 import { OAuthModule } from 'angular-oauth2-oidc';
 import { HomeComponent } from './home/home.component';
 import { AuthGuard } from './shared/auth/auth.guard.service';
@@ -30,9 +29,9 @@ const appRoutes: Routes = [
   ],
   imports: [
     BrowserModule,
+    RouterModule.forRoot(appRoutes),
     FormsModule,
     HttpModule,
-    RouterModule.forRoot(appRoutes),
     OAuthModule.forRoot()
   ],
   providers: [
@@ -42,4 +41,5 @@ const appRoutes: Routes = [
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+}
