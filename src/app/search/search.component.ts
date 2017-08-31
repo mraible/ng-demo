@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Person, SearchService } from '../shared/index';
+import { Person, SearchService } from '../shared';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 
@@ -22,21 +22,19 @@ export class SearchComponent implements OnInit, OnDestroy {
     });
   }
 
-  search(): void {
-    this.searchService.search(this.query).subscribe(
-      data => { this.searchResults = data; },
-      error => console.log(error)
-    );
-  }
-
-  onSelect(person: Person) {
-    this.router.navigate(['/edit', person.id]);
-  }
-
   ngOnInit() {
   }
 
   ngOnDestroy() {
     this.sub.unsubscribe();
+  }
+
+  search(): void {
+    this.searchService.search(this.query).subscribe(
+      data => {
+        this.searchResults = data;
+      },
+      error => console.log(error)
+    );
   }
 }
