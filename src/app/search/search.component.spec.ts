@@ -3,7 +3,7 @@ import { SearchComponent } from './search.component';
 import { MockSearchService } from '../shared/search/mocks/search.service';
 import { MockActivatedRoute, MockRouter } from '../shared/search/mocks/routes';
 import { SearchService } from '../shared/search/search.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 
@@ -23,8 +23,7 @@ describe('SearchComponent', () => {
       declarations: [SearchComponent],
       providers: [
         {provide: SearchService, useValue: mockSearchService},
-        {provide: ActivatedRoute, useValue: mockActivatedRoute},
-        {provide: Router, useValue: mockRouter}
+        {provide: ActivatedRoute, useValue: mockActivatedRoute}
       ],
       imports: [FormsModule, RouterTestingModule]
     }).compileComponents();
