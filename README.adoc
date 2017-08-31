@@ -1770,7 +1770,8 @@ Update `src/app/app.component.html` to use Bootstrap classes for its navbar and 
 </div>
 ----
 
-Create `src/app/shared/auth/okta.auth.wrapper.ts` to wrap the Okta Auth SDK and integrate it with `OAuthService`. This `login()` method uses `OktaAuth` to get a session token and exchange it for ID and access tokens.
+Create `src/app/shared/auth/okta.auth.wrapper.ts` to wrap the Okta Auth SDK and integrate it with `OAuthService`. Its
+`login()` method uses `OktaAuth` to get a session token and exchange it for ID and access tokens.
 
 [source,ts]
 .src/app/shared/auth/okta.auth.wrapper.ts
