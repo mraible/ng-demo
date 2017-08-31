@@ -1,13 +1,26 @@
 import { TestBed, async } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 
 import { AppComponent } from './app.component';
-import { RouterTestingModule } from '@angular/router/testing';
+import { OAuthService, UrlHelperService } from 'angular-oauth2-oidc';
+import { BaseRequestOptions, ConnectionBackend, Http } from '@angular/http';
+import { MockBackend } from '@angular/http/testing';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [AppComponent],
-      imports: [RouterTestingModule]
+      declarations: [
+        AppComponent
+      ],
+      imports: [RouterTestingModule],
+      providers: [OAuthService, UrlHelperService, {
+        provide: Http, useFactory: (backend: ConnectionBackend, defaultOptions: BaseRequestOptions) => {
+          return new Http(backend, defaultOptions);
+        }, deps: [MockBackend, BaseRequestOptions]
+      },
+        {provide: MockBackend, useClass: MockBackend},
+        {provide: BaseRequestOptions, useClass: BaseRequestOptions}
+      ]
     }).compileComponents();
   }));
 

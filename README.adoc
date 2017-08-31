@@ -2,7 +2,7 @@
 
 :author: Matt Raible
 :email:  matt@raibledesigns.com
-:revnumber: 1.6
+:revnumber: 1.7
 :revdate:   {docdate}
 :subject: Angular CLI
 :keywords: Angular CLI, Angular, JavaScript, TypeScript, node, npm, Jasmine, Protractor
@@ -208,11 +208,12 @@ const appRoutes: Routes = [
 export class AppModule { }
 ----
 
-In `src/app/app.component.html`, add a `RouterOutlet` to display routes.
+In `src/app/app.component.html`, adjust the placeholder content and add a `<router-outlet>` tag to display routes.
 
 [source,html]
 .src/app/app.component.html
 ----
+<h1>Welcome to {{title}}!</h1>
 <!-- Routed views go here -->
 <router-outlet></router-outlet>
 ----
@@ -220,7 +221,31 @@ In `src/app/app.component.html`, add a `RouterOutlet` to display routes.
 Now that you have routing setup, you can continue writing the search feature.
 ****
 
-If you still have `ng serve` running, your browser should refresh automatically. If not, navigate to http://localhost:4200, and you should see the search form.
+If you still have `ng serve` running, your browser should refresh automatically. If not, navigate to http://localhost:4200. You will likely see a blank screen. Open your JavaScript console and you'll see the problem.
+
+[[ngmodel-error]]
+.ngModel error
+image::src/assets/images/ngmodel-error.png[ngModel error, 800, scaledwidth="100%"]
+
+To solve this, open `src/app/app.module.ts` and add `FormsModule` as an import in `@NgModule`:
+
+[source,javascript]
+.src/app/app.module.ts
+----
+import { FormsModule } from '@angular/forms';
+
+@NgModule({
+  ...
+  imports: [
+    ...
+    FormsModule
+  ]
+  ...
+})
+export class AppModule { }
+----
+
+Now you should see the search form.
 
 [[search-component]]
 .Search component
@@ -252,7 +277,12 @@ installing service
   WARNING Service is generated but not provided, it must be provided to be used
 ----
 
-Move the generated `search.service.ts` and its test to `app/shared/search`. You will need to create this directory.
+Move the generated `search.service.ts` and its test to `src/app/shared/search`. You will need to create this directory.
+
+----
+$ mkdir -p src/app/shared/search
+$ mv src/app/search.service.* src/app/shared/search/.
+----
 
 Create `src/assets/data/people.json` to hold your data.
 
@@ -345,7 +375,7 @@ export class Person {
 }
 ----
 
-To make these classes available for consumption by your components, edit `src/app/shared/index.ts` and add the following:
+To make these classes available for consumption by your components, create `src/app/shared/index.ts` and add the following:
 
 [source,javascript]
 ----
@@ -359,7 +389,7 @@ In `search.component.ts`, add imports for these classes.
 [source,javascript]
 .src/app/search/search.component.ts
 ----
-import { Person, SearchService } from '../shared/index';
+import { Person, SearchService } from '../shared';
 ----
 
 You can now add `query` and `searchResults` variables. While you're there, modify the constructor to inject the `SearchService`.
@@ -394,15 +424,21 @@ ORIGINAL EXCEPTION: No provider for SearchService!
 ----
 
 To fix the "No provider" error from above, update `app.module.ts` to import the `SearchService`
-and add the service to the list of providers.
+and add the service to the list of providers. Because `SearchService` depends on `Http`, you'll
+need to import `HttpModule` as well.
 
 [source,javascript]
 .src/app/app.module.ts
 ----
 import { SearchService } from './shared';
+import { HttpModule } from '@angular/http';
 
 @NgModule({
   ...
+  imports: [
+    ...
+    HttpModule
+  ],
   providers: [SearchService],
   bootstrap: [AppComponent]
 })
@@ -434,7 +470,7 @@ a `<table>`.
 </table>
 ----
 
-Then add some additional CSS to improve its table layout.
+Then add some additional CSS to `search.component.css` to improve its table layout.
 
 [source,css]
 .src/app/search/search.component.css
@@ -498,36 +534,12 @@ This section showed you how to fetch and display search results. The next sectio
 
 == Add an edit feature
 
-Modify `search.component.html` to add a click handler for editing a person.
+Modify `search.component.html` to add a link for editing a person.
 
 [source,html]
 .src/app/search/search.component.html
 ----
-<td><a href="" (click)="onSelect(person); false">{{person.name}}</a></td>
-----
-
-[NOTE]
-====
-The `false` in the `(click)` handler it necessary to keep the browser from following the blank `href`. You can also remove the `href` attribute, but then the cursor doesn't indicate it's a link properly when hovering.
-====
-
-Then add `onSelect(person)` to `search.component.ts`. You'll need to import `Router` and set it as a local variable to make this work.
-
-[source,javascript]
-----
-import { Router } from '@angular/router';
-...
-export class SearchComponent implements OnInit {
-  ...
-
-  constructor(private searchService: SearchService, private router: Router) { }
-
-  ...
-
-  onSelect(person: Person) {
-    this.router.navigate(['/edit', person.id]);
-  }
-}
+<td><a [routerLink]="['/edit', person.id]">{{person.name}}</a></td>
 ----
 
 Run the following command to generate an `EditComponent`.
@@ -743,16 +755,17 @@ Since the `SearchComponent` doesn't execute a search automatically when you exec
 import { Router, ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 ...
-  sub: Subscription;
 
-  constructor(private searchService: SearchService, private router: Router, private route: ActivatedRoute) {
-    this.sub = this.route.params.subscribe(params => {
-      if (params['term']) {
-        this.query = decodeURIComponent(params['term']);
-        this.search();
-      }
-    });
-  }
+sub: Subscription;
+
+constructor(private searchService: SearchService, private router: Router, private route: ActivatedRoute) {
+  this.sub = this.route.params.subscribe(params => {
+    if (params['term']) {
+      this.query = decodeURIComponent(params['term']);
+      this.search();
+    }
+  });
+}
 ----
 
 You'll want to implement `OnDestroy` and define the `ngOnDestroy` method to clean up this subscription.
@@ -779,7 +792,7 @@ One thing you might notice is you can clear any input element in the form and sa
 To make name required, modify `edit.component.html` to add a `required` attribute to the name `<input>`.
 
 [source,html]
-.src/edit/edit.component.html
+.src/app/edit/edit.component.html
 ----
 <input [(ngModel)]="editName" name="name" id="name" placeholder="name" required/>
 ----
@@ -787,7 +800,7 @@ To make name required, modify `edit.component.html` to add a `required` attribut
 You'll also need to wrap everything in a `<form>` element. Add `<form>` after the `<h3>` tag and close it before the last `</div>`. You'll also need to add an `(ngSubmit)` handler to the form and change the save button to be a regular submit button.
 
 [source,html]
-.src/edit/edit.component.html
+.src/app/edit/edit.component.html
 ----
 <h3>{{editName}}</h3>
 <form (ngSubmit)="save()" ngNativeValidate>
@@ -815,7 +828,7 @@ Example 2: <input [(ngModel)]="person.firstName" [ngModelOptions]="{standalone: 
 To fix, add a `name` attribute to all the address fields. For example:
 
 [source,html]
-.src/edit/edit.component.html
+.src/app/edit/edit.component.html
 ----
 <address>
   <input [(ngModel)]="editAddress.street" name="street" id="street"><br/>
@@ -831,11 +844,9 @@ Now values should display in all fields and `name` should be required.
 .Edit form with names and validation
 image::src/assets/images/edit-form-names.png[Edit form with names and validation, 800, scaledwidth="100%"]
 
-With Angular 2, this is all you'll need to do. However, with Angular 4+, you need to a little more work to stop the form from submitting.
+If you want to provide your own validation messages instead of relying on the browser's, complete the following steps:
 
-* To display HTML5 validation messages, add the `ngNativeValidate` directive to the `<form>` tag.
-* If you want to provide your own validation messages:
-** Add `#editForm="ngForm"` to the `<form>` element.
+* Remove `ngNativeValidate` and add `#editForm="ngForm"` to the `<form>` element.
 ** Add `#name="ngModel"` to the `<input id="name">` element.
 ** Add `[disabled]="!editForm.form.valid"` to the *Save* button.
 ** Add the following under the `name` field to display a validation error.
@@ -847,7 +858,7 @@ With Angular 2, this is all you'll need to do. However, with Angular 4+, you nee
 </div>
 ----
 
-To learn more about forms and validation, see https://angular.io/docs/ts/latest/guide/forms.html[Angular forms documentation].
+To learn more about forms and validation, see https://angular.io/guide/forms[Angular forms documentation].
 
 == Testing
 
@@ -932,8 +943,8 @@ describe('SearchService', () => {
 If you run `ng test`, you will likely see some errors about the test stubs that Angular CLI created for you. You can ignore these for now.
 
 ----
-Chrome 60.0.3112 (Mac OS X 10.12.6) EditComponent should create FAILED
-	Can't bind to 'ngModel' since it isn't a known property of 'input'. ("
+Chrome 60.0.3112 (Mac OS X 10.12.6) EditComponent should be created FAILED
+	There is no directive with "exportAs" set to "ngForm" ("<div *ngIf="person">
 
 Chrome 60.0.3112 (Mac OS X 10.12.6) SearchComponent should create FAILED
 	Can't bind to 'ngModel' since it isn't a known property of 'input'. ("<h2>Search</h2>
@@ -1070,10 +1081,10 @@ export class SpyObject {
       object = new SpyObject();
     }
 
-    let m = {};
+    const m = {};
     Object.keys(config).forEach((key) => m[key] = config[key]);
     Object.keys(overrides).forEach((key) => m[key] = overrides[key]);
-    for (let key in m) {
+    for (const key in m) {
       object.spy(key).andReturn(m[key]);
     }
     return object;
@@ -1081,7 +1092,7 @@ export class SpyObject {
 
   constructor(type = null) {
     if (type) {
-      for (let prop in type.prototype) {
+      for (const prop in type.prototype) {
         let m = null;
         try {
           m = type.prototype[prop];
@@ -1154,6 +1165,7 @@ import { MockActivatedRoute, MockRouter } from '../shared/search/mocks/routes';
 import { SearchService } from '../shared/search/search.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('SearchComponent', () => {
   let component: SearchComponent;
@@ -1174,7 +1186,7 @@ describe('SearchComponent', () => {
         {provide: ActivatedRoute, useValue: mockActivatedRoute},
         {provide: Router, useValue: mockRouter}
       ],
-      imports: [FormsModule]
+      imports: [FormsModule, RouterTestingModule]
     }).compileComponents();
   });
 
@@ -1261,7 +1273,7 @@ describe('EditComponent', () => {
 });
 ----
 
-You should see "Executed 9 of 9 [green]#SUCCESS# (0.684 secs / 0.598 secs)" in the shell window that's running `ng test`. If you don't, try cancelling the command and restarting.
+You should see "Executed 9 of 9 [green]#SUCCESS# (0.501 secs / 0.494 secs)" in the shell window that's running `ng test`. If you don't, try cancelling the command and restarting.
 
 === Integration test the search UI
 
@@ -1278,29 +1290,29 @@ All tests should pass.
 ----
 $ ng e2e
 ** NG Live Development Server is listening on localhost:49154, open your browser on http://localhost:49154 **
-Date: 2017-08-24T17:49:19.352Z
-Hash: 60bb215c5c77c41f7689
-Time: 6442ms
+Date: 2017-08-31T17:03:08.568Z
+Hash: f7c4c12fb89e1559bd8b
+Time: 7927ms
 chunk {inline} inline.bundle.js, inline.bundle.js.map (inline) 5.83 kB [entry] [rendered]
-chunk {main} main.bundle.js, main.bundle.js.map (main) 2.28 MB {inline} [initial] [rendered]
+chunk {main} main.bundle.js, main.bundle.js.map (main) 2.92 MB {inline} [initial] [rendered]
 chunk {polyfills} polyfills.bundle.js, polyfills.bundle.js.map (polyfills) 209 kB {inline} [initial] [rendered]
 chunk {styles} styles.bundle.js, styles.bundle.js.map (styles) 11.3 kB {inline} [initial] [rendered]
-(node:12099) [DEP0022] DeprecationWarning: os.tmpDir() is deprecated. Use os.tmpdir() instead.
+(node:11443) [DEP0022] DeprecationWarning: os.tmpDir() is deprecated. Use os.tmpdir() instead.
 
 webpack: Compiled successfully.
-[11:49:19] I/file_manager - creating folder /Users/mraible/ng-demo/node_modules/webdriver-manager/selenium
-[11:49:21] I/update - chromedriver: unzipping chromedriver_2.31.zip
-[11:49:21] I/update - chromedriver: setting permissions to 0755 for /Users/mraible/ng-demo/node_modules/webdriver-manager/selenium/chromedriver_2.31
-[11:49:21] I/launcher - Running 1 instances of WebDriver
-[11:49:21] I/direct - Using ChromeDriver directly...
+[11:03:08] I/file_manager - creating folder /Users/mraible/dev/ng-demo/node_modules/webdriver-manager/selenium
+[11:03:12] I/update - chromedriver: unzipping chromedriver_2.32.zip
+[11:03:12] I/update - chromedriver: setting permissions to 0755 for /Users/mraible/dev/ng-demo/node_modules/webdriver-manager/selenium/chromedriver_2.32
+[11:03:12] I/launcher - Running 1 instances of WebDriver
+[11:03:12] I/direct - Using ChromeDriver directly...
 Jasmine started
 
   ng-demo App
     ✓ should display welcome message
 
-Executed 1 of 1 spec SUCCESS in 0.572 sec.
-[11:49:24] I/launcher - 0 instance(s) of WebDriver still running
-[11:49:24] I/launcher - chrome #01 passed
+Executed 1 of 1 spec SUCCESS in 0.892 sec.
+[11:03:15] I/launcher - 0 instance(s) of WebDriver still running
+[11:03:15] I/launcher - chrome #01 passed
 ----
 
 === Testing the search feature
@@ -1310,7 +1322,7 @@ Create end-to-end tests in `e2e/search.e2e-spec.ts` to verify the search feature
 [source,javascript]
 .e2e/search.e2e-spec.ts
 ----
-import { browser, element, by } from 'protractor';
+import { browser, by, element } from 'protractor';
 
 describe('Search', () => {
 
@@ -1328,7 +1340,7 @@ describe('Search', () => {
     const searchBox = element(by.css('input'));
     searchBox.sendKeys('M');
     searchButton.click().then(() => {
-      let list = element.all(by.css('app-search table tbody tr'));
+      const list = element.all(by.css('app-search table tbody tr'));
       expect(list.count()).toBe(3);
     });
   });
@@ -1342,7 +1354,7 @@ Create a `e2e/edit.e2e-spec.ts` test to verify the `EditComponent` renders a per
 [source,javascript]
 .e2e/edit.e2e-spec.ts
 ----
-import { browser, element, by } from 'protractor';
+import { browser, by, element } from 'protractor';
 
 describe('Edit', () => {
 
@@ -1396,7 +1408,7 @@ At the time of this writing, Angular CLI did not have any continuous integration
 
 === Travis CI
 
-If you've checked in your project to GitHub, you can  use Travis CI.
+If you've checked in your project to GitHub, you can use Travis CI.
 
 . Login to https://travis-ci.org/[Travis CI] and enable builds for the GitHub repo you published the project to.
 . Add the following `.travis.yml` in your root directory and `git commit/push` it. This will trigger the first build.
@@ -1409,7 +1421,7 @@ services:
   - docker
 language: node_js
 node_js:
-  - "6.10.0"
+  - "8.4.0"
 addons:
   apt:
     sources:
@@ -1454,7 +1466,7 @@ If you've checked your project into source control, you can use Jenkins to autom
 
 ----
 node {
-    def nodeHome = tool name: 'node-6.9.5', type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'
+    def nodeHome = tool name: 'node-8.4.0', type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'
     env.PATH = "${nodeHome}/bin:${env.PATH}"
 
     stage('check tools') {
@@ -1507,7 +1519,7 @@ NOTE: You might need to use an app name other than `ng-demo`.
 
 https://signup.heroku.com/[Create a Heroku account] and https://devcenter.heroku.com/articles/heroku-cli[install the heroku CLI]. Then run the following commands to build and deploy your application.
 
-. Run `heroku create`s
+. Run `heroku create`
 . Change `package.json` to have a different `start` script.
 
    "start": "http-server-spa dist index.html $PORT",
@@ -1536,7 +1548,7 @@ To integrate http://developer.okta.com[Okta] for user authentication, you'll fir
 
 === Create an OpenID Connect App in Okta
 
-OpenID Connect is built on top of the OAuth 2.0 protocol. It allows clients to verify the identity of the user and, as well as to obtain their basic profile information. To learn more, see http://openid.net/connect/[http://openid.net/connect/].
+OpenID Connect is built on top of the OAuth 2.0 protocol. It allows clients to verify the identity of the user and, as well as to obtain their basic profile information. To learn more, see http://openid.net/connect/[http://openid.net/connect].
 
 Login to your Okta account, or create one if you don’t have one. Navigate to *Admin > Add Applications* and click on the *Create New App* button. Select *Single Page App (SPA)* for the Platform and *OpenID Connect* for the sign on method. Click the *Create* button and give your application a name. On the next screen, add `http://localhost:4200` as a Redirect URI and click *Finish*. You should see settings like the following.
 
@@ -1558,7 +1570,7 @@ Modify `app.component.ts` to import `OAuthService` and configure your app to use
 [source,js]
 .src/app/app.component.ts
 ----
-import { OAuthService } from 'angular-oauth2-oidc';
+import { OAuthService, JwksValidationHandler } from 'angular-oauth2-oidc';
 
 ...
 
@@ -1566,11 +1578,12 @@ import { OAuthService } from 'angular-oauth2-oidc';
     this.oauthService.redirectUri = window.location.origin;
     this.oauthService.clientId = '[client-id]';
     this.oauthService.scope = 'openid profile email';
-    this.oauthService.oidc = true;
     this.oauthService.issuer = 'https://dev-[dev-id].oktapreview.com';
+    this.oauthService.tokenValidationHandler = new JwksValidationHandler();
 
+    // Load Discovery Document and then try to login the user
     this.oauthService.loadDiscoveryDocument().then(() => {
-      this.oauthService.tryLogin({});
+      this.oauthService.tryLogin();
     });
   }
 ...
@@ -1584,17 +1597,19 @@ import { Component } from '@angular/core';
 import { OAuthService } from 'angular-oauth2-oidc';
 
 @Component({
-  template: `<div *ngIf="givenName">
-<h2>Welcome, {{givenName}}!</h2>
-<button (click)="logout()">Logout</button>
-<p><a routerLink="/search" routerLinkActive="active">Search</a></p>
-</div>
+  template: `
+    <div *ngIf="givenName">
+      <h2>Welcome, {{givenName}}!</h2>
+      <button (click)="logout()">Logout</button>
+      <p><a routerLink="/search" routerLinkActive="active">Search</a></p>
+    </div>
 
-<div *ngIf="!givenName">
-    <button (click)="login()">Login</button>
-</div>`
+    <div *ngIf="!givenName">
+      <button (click)="login()">Login</button>
+    </div>`
 })
 export class HomeComponent {
+
   constructor(private oauthService: OAuthService) {
   }
 
@@ -1611,7 +1626,7 @@ export class HomeComponent {
     if (!claims) {
       return null;
     }
-    return claims.name;
+    return claims['name'];
   }
 
 }
@@ -1642,6 +1657,14 @@ export class AuthGuard implements CanActivate {
 }
 ----
 
+Export `AuthGuard` in `src/shared/index.ts`:
+
+[source,ts]
+.src/app/shared/index.ts
+----
+export * from './auth/auth.guard.service';
+----
+
 Import the `OAuthModule` in `app.module.ts`, configure the new `HomeComponent`, and lock the `/search` and `/edit` routes down with the `AuthGuard`.
 
 [source,ts]
@@ -1649,14 +1672,14 @@ Import the `OAuthModule` in `app.module.ts`, configure the new `HomeComponent`, 
 ----
 import { OAuthModule } from 'angular-oauth2-oidc';
 import { HomeComponent } from './home/home.component';
-import { AuthGuard } from './shared/auth/auth.guard.service';
+import { SearchService, AuthGuard } from './shared';
 
 const appRoutes: Routes = [
-  { path: 'search', component: SearchComponent, canActivate: [AuthGuard] },
-  { path: 'edit/:id', component: EditComponent, canActivate: [AuthGuard]},
-  { path: 'home', component: HomeComponent},
-  { path: '', redirectTo: 'home', pathMatch: 'full' },
-  { path: '**', redirectTo: 'home' }
+  {path: 'search', component: SearchComponent, canActivate: [AuthGuard]},
+  {path: 'edit/:id', component: EditComponent, canActivate: [AuthGuard]},
+  {path: 'home', component: HomeComponent},
+  {path: '', redirectTo: 'home', pathMatch: 'full'},
+  {path: '**', redirectTo: 'home'}
 ];
 
 @NgModule({
@@ -1668,7 +1691,10 @@ const appRoutes: Routes = [
     ...
     OAuthModule.forRoot()
   ],
-  providers: [AuthGuard],
+  providers: [
+    AuthGuard,
+    SearchService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
@@ -1696,7 +1722,9 @@ If it works - great! If you want to build your own login form in your app, conti
 
 === Authentication with Okta Auth SDK
 
-The Okta Auth SDK builds on top of Otka's http://developer.okta.com/docs/api/resources/authn.html[Authentication API] and http://developer.okta.com/docs/api/resources/oidc.html[OAuth 2.0 API] to enable you to create a fully branded sign-in experience using JavaScript.
+The Okta Auth SDK builds on top of Otka's http://developer.okta.com/docs/api/resources/authn.html[Authentication API] and
+http://developer.okta.com/docs/api/resources/oidc.html[OAuth 2.0 API] to enable you to create a fully branded sign-in
+experience using JavaScript.
 
 Install it using npm:
 
@@ -1705,59 +1733,155 @@ Install it using npm:
 npm install @okta/okta-auth-js --save
 ----
 
-The components in this section use Bootstrap CSS classes. Add a reference to Bootstrap's CSS in the `<head>` of `index.html`.
+The components in this section use Bootstrap CSS classes. Install Bootstrap 4.
+
+[source,bash]
+----
+yarn add bootstrap@4.0.0-beta
+----
+
+Modify `src/styles.css` to add a reference to Bootstrap’s CSS file.
+
+[source,css]
+.src/styles.css
+----
+@import "~bootstrap/dist/css/bootstrap.css";
+----
+
+Update `src/app/app.component.html` to use Bootstrap classes for its navbar and grid system.
 
 [source,html]
-.src/index.html
+.src/app/app.component.html
 ----
-<head>
-  ...
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-</head>
+<nav class="navbar navbar-light bg-secondary">
+  <a class="navbar-brand text-light" href="#">Welcome to {{title}}!</a>
+</nav>
+<div class="container-fluid">
+  <router-outlet></router-outlet>
+</div>
 ----
 
-Change `HomeComponent` to declare `OktaAuth` and modify its `template` so it has a button to login, as well as a sign-in form.
+Create `src/app/shared/auth/okta.auth.wrapper.ts` to wrap the Okta Auth SDK and integrate it with `OAuthService`. This `login()` method uses `OktaAuth` to get a session token and exchange it for ID and access tokens.
+
+[source,ts]
+.src/app/shared/auth/okta.auth.wrapper.ts
+----
+import { OAuthService } from 'angular-oauth2-oidc';
+import { Injectable } from '@angular/core';
+
+declare const OktaAuth: any;
+
+@Injectable()
+export class OktaAuthWrapper {
+
+  private authClient: any;
+
+  constructor(private oauthService: OAuthService) {
+    this.authClient = new OktaAuth({
+      url: this.oauthService.issuer
+    });
+  }
+
+  login(username: string, password: string): Promise<any> {
+    return this.oauthService.createAndSaveNonce().then(nonce => {
+      return this.authClient.signIn({
+        username: username,
+        password: password
+      }).then((response) => {
+        if (response.status === 'SUCCESS') {
+          return this.authClient.token.getWithoutPrompt({
+            clientId: this.oauthService.clientId,
+            responseType: ['id_token', 'token'],
+            scopes: ['openid', 'profile', 'email'],
+            sessionToken: response.sessionToken,
+            nonce: nonce,
+            redirectUri: window.location.origin
+          })
+            .then((tokens) => {
+              const idToken = tokens[0].idToken;
+              const accessToken = tokens[1].accessToken;
+              const keyValuePair = `#id_token=${encodeURIComponent(idToken)}&access_token=${encodeURIComponent(accessToken)}`;
+              return this.oauthService.tryLogin({ <1>
+                customHashFragment: keyValuePair,
+                disableOAuth2StateCheck: true
+              });
+            });
+        } else {
+          return Promise.reject('We cannot handle the ' + response.status + ' status');
+        }
+      });
+    });
+  }
+}
+----
+<1> Process and store the `idToken` and `accessToken` so they can be retrieved using `OAuthService.getIdToken()` and `OAuthService.getAccessToken()`.
+
+Export `OktaAuthWrapper` in `src/shared/index.ts`:
+
+[source,ts]
+.src/app/shared/index.ts
+----
+export * from './auth/okta.auth.wrapper';
+----
+
+Add `OktaAuthWrapper` as a provider in `app.module.ts`.
+
+[source,ts]
+.src/app/app.module.ts
+----
+import { SearchService, AuthGuard, OktaAuthWrapper } from './shared';
+
+@NgModule({
+  ...
+  providers: [
+    ...
+    OktaAuthWrapper
+  ],
+  bootstrap: [AppComponent]
+})
+----
+
+Change `HomeComponent` to modify its `template` so it has a button to login, as well as a sign-in form.
 
 [source,ts]
 .src/app/home/home.component.html
 ----
-declare let OktaAuth: any;
-
 @Component({
-  template: `<div *ngIf="givenName">
-<h2>Welcome, {{givenName}}!</h2>
-<button (click)="logout()" class="btn btn-default">Logout</button>
-<p><a routerLink="/search" routerLinkActive="active">Search</a></p>
-</div>
-
-<div class="panel panel-default" *ngIf="!givenName">
-    <div class="panel-body">
-        <p>Login with Authorization Server</p>
-        <button class="btn btn-default" (click)="login()">Login</button>
+  template: `
+    <div *ngIf="givenName" class="col-12 mt-2">
+      <button (click)="logout()" class="btn btn-sm btn-outline-primary float-right">Logout</button>
+      <h2>Welcome, {{givenName}}!</h2>
+      <p><a routerLink="/search" routerLinkActive="active">Search</a></p>
     </div>
-</div>
 
-<div class="panel panel-default" *ngIf="!givenName">
-    <div class="panel-body">
-        <p>Login with Username/Password</p>
+    <div class="card mt-2" *ngIf="!givenName">
+      <div class="card-body">
+        <h4 class="card-title">Login with Authorization Server</h4>
+        <button class="btn btn-primary" (click)="login()">Login</button>
+      </div>
+    </div>
 
-        <p style="color:red; font-weight:bold" *ngIf="loginFailed">
-            Login wasn't successful.
+    <div class="card mt-2" *ngIf="!givenName">
+      <div class="card-body">
+        <h4 class="card-title">Login with Username/Password</h4>
+
+        <p class="alert alert-error" *ngIf="loginFailed">
+          Login wasn't successful.
         </p>
 
         <div class="form-group">
-            <label>Username</label>
-            <input class="form-control" [(ngModel)]="username">
+          <label>Username</label>
+          <input class="form-control" [(ngModel)]="username">
         </div>
         <div class="form-group">
-            <label>Password</label>
-            <input class="form-control" type="password" [(ngModel)]="password">
+          <label>Password</label>
+          <input class="form-control" type="password" [(ngModel)]="password">
         </div>
         <div class="form-group">
-            <button class="btn btn-default" (click)="loginWithPassword()">Login</button>
+          <button class="btn btn-primary" (click)="loginWithPassword()">Login</button>
         </div>
-    </div>
-</div>`
+      </div>
+    </div>`
 })
 ----
 
@@ -1767,47 +1891,27 @@ After making these changes, the `HomeComponent` should render as follows.
 .Custom sign-in form
 image::src/assets/images/sign-in-form.png[Custom login form, 800, scaledwidth="100%"]
 
-Add local variables for the username and password fields, then implement a `loginWithPassword()` method in `HomeComponent`. This method uses the `OktaAuth` library to get a session token and exchange it for ID and access tokens.
+Add local variables for the username and password fields, import `OktaAuthWrapper`, and implement a `loginWithPassword()` method in `HomeComponent`.
 
 [source,ts]
 .src/app/home/home.component.ts
 ----
+import { OktaAuthWrapper } from '../shared';
+...
+
 username;
 password;
 
+constructor(private oauthService: OAuthService,
+            private oktaAuthWrapper: OktaAuthWrapper) {
+}
+
 loginWithPassword() {
-  this.oauthService.createAndSaveNonce().then(nonce => {
-    const authClient = new OktaAuth({
-      url: 'https://dev-[dev-id].oktapreview.com'
-    });
-    return authClient.signIn({
-      username: this.username,
-      password: this.password
-    }).then((response) => {
-      if (response.status === 'SUCCESS') {
-        console.log('success', response);
-        return authClient.token.getWithoutPrompt({
-          clientId: this.oauthService.clientId,
-          responseType: ['id_token', 'token'],
-          scopes: ['openid', 'profile', 'email'],
-          sessionToken: response.sessionToken,
-          nonce: nonce,
-          redirectUri: window.location.origin
-        })
-          .then((tokens) => {
-            this.oauthService.processIdToken(tokens[0].idToken, tokens[1].accessToken); <1>
-            this.router.navigate(['/home']);
-          });
-      } else {
-        throw new Error('We cannot handle the ' + response.status + ' status');
-      }
-    }).fail(function (err) {
-      console.error(err);
-    });
-  });
+  this.oktaAuthWrapper.login(this.username, this.password)
+    .then(_ => console.debug('logged in'))
+    .catch(err => console.error('error logging in', err));
 }
 ----
-<1> Process and store the `idToken` and `accessToken` so they can be retrieved using `OAuthService.getIdToken()` and `OAuthService.getAccessToken()`.
 
 You should be able to sign in using the form, using one of your app's registered users. After logging in, you'll be able to click *Search* and view people's information.
 

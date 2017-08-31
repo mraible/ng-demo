@@ -1,49 +1,49 @@
 import { Component } from '@angular/core';
 import { OAuthService } from 'angular-oauth2-oidc';
-import { Router } from '@angular/router';
-declare let OktaAuth: any;
+import { OktaAuthWrapper } from '../shared';
 
 @Component({
-  template: `<div *ngIf="givenName">
-<h2>Welcome, {{givenName}}!</h2>
-<button (click)="logout()" class="btn btn-default">Logout</button>
-<p><a routerLink="/search" routerLinkActive="active">Search</a></p>
-</div>
-
-<div class="panel panel-default" *ngIf="!givenName">
-    <div class="panel-body">
-        <p>Login with Authorization Server</p>
-        <button class="btn btn-default" (click)="login()">Login</button>
+  template: `
+    <div *ngIf="givenName" class="col-12 mt-2">
+      <button (click)="logout()" class="btn btn-sm btn-outline-primary float-right">Logout</button>
+      <h2>Welcome, {{givenName}}!</h2>
+      <p><a routerLink="/search" routerLinkActive="active">Search</a></p>
     </div>
-</div>
 
-<div class="panel panel-default" *ngIf="!givenName">
-    <div class="panel-body">
-        <p>Login with Username/Password</p>
+    <div class="card mt-2" *ngIf="!givenName">
+      <div class="card-body">
+        <h4 class="card-title">Login with Authorization Server</h4>
+        <button class="btn btn-primary" (click)="login()">Login</button>
+      </div>
+    </div>
 
-        <p style="color:red; font-weight:bold" *ngIf="loginFailed">
-            Login wasn't successful.
+    <div class="card mt-2" *ngIf="!givenName">
+      <div class="card-body">
+        <h4 class="card-title">Login with Username/Password</h4>
+
+        <p class="alert alert-error" *ngIf="loginFailed">
+          Login wasn't successful.
         </p>
 
         <div class="form-group">
-            <label>Username</label>
-            <input class="form-control" [(ngModel)]="username">
+          <label>Username</label>
+          <input class="form-control" [(ngModel)]="username">
         </div>
         <div class="form-group">
-            <label>Password</label>
-            <input class="form-control" type="password" [(ngModel)]="password">
+          <label>Password</label>
+          <input class="form-control" type="password" [(ngModel)]="password">
         </div>
         <div class="form-group">
-            <button class="btn btn-default" (click)="loginWithPassword()">Login</button>
-        </div>        
-    </div>
-</div>`
+          <button class="btn btn-primary" (click)="loginWithPassword()">Login</button>
+        </div>
+      </div>
+    </div>`
 })
 export class HomeComponent {
   username;
   password;
 
-  constructor(private oauthService: OAuthService, private router: Router) {
+  constructor(private oauthService: OAuthService, private oktaAuthWrapper: OktaAuthWrapper) {
   }
 
   login() {
@@ -59,37 +59,12 @@ export class HomeComponent {
     if (!claims) {
       return null;
     }
-    return claims.name;
+    return claims['name'];
   }
 
   loginWithPassword() {
-    this.oauthService.createAndSaveNonce().then(nonce => {
-      const authClient = new OktaAuth({
-        url: 'https://dev-158606.oktapreview.com'
-      });
-      return authClient.signIn({
-        username: this.username,
-        password: this.password
-      }).then((response) => {
-        if (response.status === 'SUCCESS') {
-          return authClient.token.getWithoutPrompt({
-            clientId: this.oauthService.clientId,
-            responseType: ['id_token', 'token'],
-            scopes: ['openid', 'profile', 'email'],
-            sessionToken: response.sessionToken,
-            nonce: nonce,
-            redirectUri: window.location.origin
-          })
-            .then((tokens) => {
-              this.oauthService.processIdToken(tokens[0].idToken, tokens[1].accessToken);
-              this.router.navigate(['/home']);
-            });
-        } else {
-          throw new Error('We cannot handle the ' + response.status + ' status');
-        }
-      }).fail(function (err) {
-        console.error(err);
-      });
-    });
+    this.oktaAuthWrapper.login(this.username, this.password)
+      .then(_ => console.debug('logged in'))
+      .catch(err => console.error('error logging in', err));
   }
 }
