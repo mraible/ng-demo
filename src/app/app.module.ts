@@ -1,13 +1,12 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { HttpModule } from '@angular/http';
-
 import { AppComponent } from './app.component';
 import { SearchComponent } from './search/search.component';
-import { EditComponent } from './edit/edit.component';
 import { Routes, RouterModule } from '@angular/router';
 import { SearchService } from './shared';
+import { HttpModule } from '@angular/http';
+import { EditComponent } from './edit/edit.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MdButtonModule, MdIconModule, MdInputModule, MdListModule, MdToolbarModule } from '@angular/material';
 
@@ -25,9 +24,9 @@ const appRoutes: Routes = [
   ],
   imports: [
     BrowserModule,
+    RouterModule.forRoot(appRoutes),
     FormsModule,
     HttpModule,
-    RouterModule.forRoot(appRoutes),
     BrowserAnimationsModule,
     MdButtonModule,
     MdIconModule,

@@ -1,11 +1,11 @@
-/* tslint:disable:no-unused-variable */
-import { ActivatedRoute, Router } from '@angular/router';
-import { MockActivatedRoute, MockRouter } from '../shared/search/mocks/routes';
-import { MockSearchService } from '../shared/search/mocks/search.service';
-import { SearchComponent } from './search.component';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormsModule } from '@angular/forms';
+import { SearchComponent } from './search.component';
+import { MockSearchService } from '../shared/search/mocks/search.service';
+import { MockActivatedRoute, MockRouter } from '../shared/search/mocks/routes';
 import { SearchService } from '../shared/search/search.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { RouterTestingModule } from '@angular/router/testing';
 import { MdIconModule, MdInputModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -28,7 +28,7 @@ describe('SearchComponent', () => {
         {provide: ActivatedRoute, useValue: mockActivatedRoute},
         {provide: Router, useValue: mockRouter}
       ],
-      imports: [FormsModule, BrowserAnimationsModule, MdInputModule, MdIconModule]
+      imports: [FormsModule, RouterTestingModule, BrowserAnimationsModule, MdInputModule, MdIconModule]
     }).compileComponents();
   });
 

@@ -1,4 +1,3 @@
-/* tslint:disable:no-unused-variable */
 import { MockSearchService } from '../shared/search/mocks/search.service';
 import { EditComponent } from './edit.component';
 import { TestBed } from '@angular/core/testing';
