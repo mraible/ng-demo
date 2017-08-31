@@ -752,13 +752,13 @@ Since the `SearchComponent` doesn't execute a search automatically when you exec
 [source,javascript]
 .src/app/search/search.component.ts
 ----
-import { Router, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 ...
 
 sub: Subscription;
 
-constructor(private searchService: SearchService, private router: Router, private route: ActivatedRoute) {
+constructor(private searchService: SearchService, private route: ActivatedRoute) {
   this.sub = this.route.params.subscribe(params => {
     if (params['term']) {
       this.query = decodeURIComponent(params['term']);
