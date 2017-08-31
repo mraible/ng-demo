@@ -847,9 +847,9 @@ image::src/assets/images/edit-form-names.png[Edit form with names and validation
 If you want to provide your own validation messages instead of relying on the browser's, complete the following steps:
 
 * Remove `ngNativeValidate` and add `#editForm="ngForm"` to the `<form>` element.
-** Add `#name="ngModel"` to the `<input id="name">` element.
-** Add `[disabled]="!editForm.form.valid"` to the *Save* button.
-** Add the following under the `name` field to display a validation error.
+* Add `#name="ngModel"` to the `<input id="name">` element.
+* Add `[disabled]="!editForm.form.valid"` to the *Save* button.
+* Add the following under the `name` field to display a validation error.
 
 [source,html]
 ----
