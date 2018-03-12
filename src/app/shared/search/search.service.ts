@@ -17,7 +17,7 @@ export class SearchService {
     } else {
       q = q.toLowerCase();
     }
-    return this.getAll().map(data => {
+    return this.getAll().map((data: any) => {
       const results: any = [];
       data.map(item => {
         // check for item in localStorage
@@ -33,7 +33,7 @@ export class SearchService {
   }
 
   get(id: number) {
-    return this.getAll().map(all => {
+    return this.getAll().map((all: any) => {
       if (localStorage['person' + id]) {
         return JSON.parse(localStorage['person' + id]);
       }
