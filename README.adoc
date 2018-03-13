@@ -2,7 +2,7 @@
 
 :author: Matt Raible
 :email:  matt@raibledesigns.com
-:revnumber: 1.7
+:revnumber: 1.8
 :revdate:   {docdate}
 :subject: Angular CLI
 :keywords: Angular CLI, Angular, JavaScript, TypeScript, node, npm, Jasmine, Protractor
@@ -74,7 +74,7 @@ but will vary based on your internet connection speed.
 You can see the what version of Angular CLI you're using with `ng --version`.
 
 ----
-ng --version
+$ ng --version
     _                      _                 ____ _     ___
    / \   _ __   __ _ _   _| | __ _ _ __     / ___| |   |_ _|
   / △ \ | '_ \ / _` | | | | |/ _` | '__|   | |   | |    | |
@@ -235,7 +235,7 @@ $ ng g service search
   create src/app/search.service.ts (112 bytes)
 ----
 
-Move the generated `search.service.ts` and its test to `src/app/shared/search`. You will need to create this directory.
+Move the generated `search.service.ts` and its test to `src/app/shared/search`. You will need to create this directory, or use the following commands to do it for you.
 
 ----
 mkdir -p src/app/shared/search
@@ -704,7 +704,7 @@ gotoList() {
 }
 ----
 
-Since the `SearchComponent` doesn't execute a search automatically when you execute this URL, add the following logic to do so in its `onInit` method.
+Since the `SearchComponent` doesn't execute a search automatically when you execute this URL, add the following logic to do so in its `ngOnInit` method.
 
 [source,javascript]
 .src/app/search/search.component.ts
