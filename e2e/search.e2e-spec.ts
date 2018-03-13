@@ -16,7 +16,7 @@ describe('Search', () => {
     const searchBox = element(by.css('input'));
     searchBox.sendKeys('M');
     searchButton.click().then(() => {
-      const list = element.all(by.css('app-search md-list md-list-item'));
+      const list = element.all(by.css('app-search mat-list mat-list-item'));
       expect(list.count()).toBe(3);
     });
   });
