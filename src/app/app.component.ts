@@ -11,14 +11,12 @@ export class AppComponent {
 
   constructor(private oauthService: OAuthService) {
     this.oauthService.redirectUri = window.location.origin;
-    this.oauthService.clientId = 'MjlYvTtFW26gOoOAHKOz';
+    this.oauthService.clientId = '0oaeb04i9ynUIFpL00h7';
     this.oauthService.scope = 'openid profile email';
-    this.oauthService.issuer = 'https://dev-158606.oktapreview.com';
+    this.oauthService.issuer = 'https://dev-158606.oktapreview.com/oauth2/default';
     this.oauthService.tokenValidationHandler = new JwksValidationHandler();
 
     // Load Discovery Document and then try to login the user
-    this.oauthService.loadDiscoveryDocument().then(() => {
-      this.oauthService.tryLogin();
-    });
+    this.oauthService.loadDiscoveryDocumentAndTryLogin();
   }
 }
