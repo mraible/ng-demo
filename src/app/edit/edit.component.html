@@ -8,7 +8,7 @@
     <div class="form-group">
       <label>Name:</label>
       <input [(ngModel)]="editName" name="name" id="name" placeholder="name" required class="form-control" #name="ngModel"/>
-      <div [hidden]="name.valid || name.pristine" style="color: red">
+      <div [hidden]="name.valid || name.pristine" style="display: block" class="invalid-feedback">
         Name is required
       </div>
     </div>
