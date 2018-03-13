@@ -1,7 +1,6 @@
 import { OAuthService } from 'angular-oauth2-oidc';
 import { Injectable } from '@angular/core';
-
-declare const OktaAuth: any;
+import * as OktaAuth from '@okta/okta-auth-js';
 
 @Injectable()
 export class OktaAuthWrapper {
@@ -10,7 +9,8 @@ export class OktaAuthWrapper {
 
   constructor(private oauthService: OAuthService) {
     this.authClient = new OktaAuth({
-      url: this.oauthService.issuer
+      url: 'https://dev-158606.oktapreview.com',
+      issuer: 'default'
     });
   }
 
