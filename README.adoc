@@ -2,7 +2,7 @@
 
 :author: Matt Raible
 :email:  matt@raibledesigns.com
-:revnumber: 1.7
+:revnumber: 1.8
 :revdate:   {docdate}
 :subject: Angular CLI
 :keywords: Angular CLI, Angular, JavaScript, TypeScript, node, npm, Jasmine, Protractor
@@ -71,46 +71,6 @@ ng new ng-demo
 This will create a `ng-demo` project and run `npm install` in it. It takes about a minute to complete,
 but will vary based on your internet connection speed.
 
-----
-[mraible:~/dev] $ ng new ng-demo
-installing ng
-  create .editorconfig
-  create README.md
-  create src/app/app.component.css
-  create src/app/app.component.html
-  create src/app/app.component.spec.ts
-  create src/app/app.component.ts
-  create src/app/app.module.ts
-  create src/assets/.gitkeep
-  create src/environments/environment.prod.ts
-  create src/environments/environment.ts
-  create src/favicon.ico
-  create src/index.html
-  create src/main.ts
-  create src/polyfills.ts
-  create src/styles.css
-  create src/test.ts
-  create src/tsconfig.app.json
-  create src/tsconfig.spec.json
-  create src/typings.d.ts
-  create .angular-cli.json
-  create e2e/app.e2e-spec.ts
-  create e2e/app.po.ts
-  create e2e/tsconfig.e2e.json
-  create .gitignore
-  create karma.conf.js
-  create package.json
-  create protractor.conf.js
-  create tsconfig.json
-  create tslint.json
-Successfully initialized git.
-Installing packages for tooling via npm.
-Installed packages for tooling via npm.
-You can `ng set --global packageManager=yarn`.
-Project 'ng-demo' successfully created.
-[mraible:~] 46s $
-----
-
 You can see the what version of Angular CLI you're using with `ng --version`.
 
 ----
@@ -121,9 +81,10 @@ $ ng --version
  / ___ \| | | | (_| | |_| | | (_| | |      | |___| |___ | |
 /_/   \_\_| |_|\__, |\__,_|_|\__,_|_|       \____|_____|___|
                |___/
-@angular/cli: 1.3.2
-node: 8.4.0
-os: darwin x64
+
+Angular CLI: 1.7.3
+Node: 9.8.0
+OS: darwin x64
 ----
 
 == Run the application
@@ -145,7 +106,7 @@ You can make sure your new project's tests pass, run `ng test`:
 ----
 $ ng test
 ...
-Chrome 60.0.3112 (Mac OS X 10.12.6): Executed 3 of 3 SUCCESS (0.239 secs / 0.213 secs)
+Chrome 64.0.3282 (Mac OS X 10.13.3): Executed 3 of 3 SUCCESS (0.19 secs / 0.177 secs)
 ----
 
 == Add a search feature
@@ -159,12 +120,11 @@ In a terminal window, cd into your project's directory and run the following com
 [source]
 ----
 $ ng g component search
-installing component
-  create src/app/search/search.component.css
-  create src/app/search/search.component.html
-  create src/app/search/search.component.spec.ts
-  create src/app/search/search.component.ts
-  update src/app/app.module.ts
+  create src/app/search/search.component.css (0 bytes)
+  create src/app/search/search.component.html (25 bytes)
+  create src/app/search/search.component.spec.ts (628 bytes)
+  create src/app/search/search.component.ts (269 bytes)
+  update src/app/app.module.ts (398 bytes)
 ----
 
 Open `src/app/search/search.component.html` and replace its default HTML with the following:
@@ -271,17 +231,15 @@ To get search results, create a `SearchService` that makes HTTP requests to a JS
 
 ----
 $ ng g service search
-installing service
-  create src/app/search.service.spec.ts
-  create src/app/search.service.ts
-  WARNING Service is generated but not provided, it must be provided to be used
+  create src/app/search.service.spec.ts (374 bytes)
+  create src/app/search.service.ts (112 bytes)
 ----
 
-Move the generated `search.service.ts` and its test to `src/app/shared/search`. You will need to create this directory.
+Move the generated `search.service.ts` and its test to `src/app/shared/search`. You will need to create this directory, or use the following commands to do it for you.
 
 ----
-$ mkdir -p src/app/shared/search
-$ mv src/app/search.service.* src/app/shared/search/.
+mkdir -p src/app/shared/search
+mv src/app/search.service.* src/app/shared/search/.
 ----
 
 Create `src/assets/data/people.json` to hold your data.
@@ -326,7 +284,7 @@ Create `src/assets/data/people.json` to hold your data.
 ]
 ----
 
-Modify `src/app/shared/search/search.service.ts` and provide `Http` as a dependency in its constructor.
+Modify `src/app/shared/search/search.service.ts` and provide `HttpClient` as a dependency in its constructor.
 In this same file, create a `getAll()` method to gather all the people. Also, define the `Address` and `Person` classes
 that JSON will be marshalled to.
 
@@ -334,15 +292,14 @@ that JSON will be marshalled to.
 .src/app/shared/search/search.service.ts
 ----
 import { Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
-import 'rxjs/add/operator/map';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable()
 export class SearchService {
-  constructor(private http: Http) {}
+  constructor(private http: HttpClient) {}
 
   getAll() {
-    return this.http.get('assets/data/people.json').map((res: Response) => res.json());
+    return this.http.get('assets/data/people.json');
   }
 }
 
@@ -420,24 +377,24 @@ search(): void {
 At this point, you'll likely see the following message in your browser's console.
 
 ----
-ORIGINAL EXCEPTION: No provider for SearchService!
+NullInjectorError: No provider for SearchService!
 ----
 
 To fix the "No provider" error from above, update `app.module.ts` to import the `SearchService`
-and add the service to the list of providers. Because `SearchService` depends on `Http`, you'll
-need to import `HttpModule` as well.
+and add the service to the list of providers. Because `SearchService` depends on `HttpClient`, you'll
+need to import `HttpClientModule` as well.
 
 [source,javascript]
 .src/app/app.module.ts
 ----
 import { SearchService } from './shared';
-import { HttpModule } from '@angular/http';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   ...
   imports: [
     ...
-    HttpModule
+    HttpClientModule
   ],
   providers: [SearchService],
   bootstrap: [AppComponent]
@@ -503,7 +460,8 @@ But wait, you still don't have search functionality! To add a search feature, ad
 [source,javascript]
 .src/app/shared/search/search.service.ts
 ----
-import { Observable } from 'rxjs';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/map';
 
 search(q: string): Observable<any> {
   if (!q || q === '*') {
@@ -547,12 +505,11 @@ Run the following command to generate an `EditComponent`.
 [source]
 ----
 $ ng g component edit
-installing component
-  create src/app/edit/edit.component.css
-  create src/app/edit/edit.component.html
-  create src/app/edit/edit.component.spec.ts
-  create src/app/edit/edit.component.ts
-  update src/app/app.module.ts
+  create src/app/edit/edit.component.css (0 bytes)
+  create src/app/edit/edit.component.html (23 bytes)
+  create src/app/edit/edit.component.spec.ts (614 bytes)
+  create src/app/edit/edit.component.ts (261 bytes)
+  update src/app/app.module.ts (898 bytes)
 ----
 
 Add a route for this component in `app.module.ts`:
@@ -607,8 +564,8 @@ Modify `EditComponent` to import model and service classes and to use the `Searc
 .src/app/edit/edit.component.ts
 ----
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Address, Person, SearchService } from '../shared/index';
-import { Subscription } from 'rxjs';
+import { Address, Person, SearchService } from '../shared';
+import { Subscription } from 'rxjs/Subscription';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
@@ -682,7 +639,7 @@ search(q: string): Observable<any> {
   } else {
     q = q.toLowerCase();
   }
-  return this.getAll().map(data => {
+  return this.getAll().map((data: any) => {
     const results: any = [];
     data.map(item => {
       // check for item in localStorage
@@ -698,7 +655,7 @@ search(q: string): Observable<any> {
 }
 
 get(id: number) {
-  return this.getAll().map(all => {
+  return this.getAll().map((all: any) => {
     if (localStorage['person' + id]) {
       return JSON.parse(localStorage['person' + id]);
     }
@@ -747,18 +704,20 @@ gotoList() {
 }
 ----
 
-Since the `SearchComponent` doesn't execute a search automatically when you execute this URL, add the following logic to do so in its constructor.
+Since the `SearchComponent` doesn't execute a search automatically when you execute this URL, add the following logic to do so in its `ngOnInit` method.
 
 [source,javascript]
 .src/app/search/search.component.ts
 ----
 import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Subscription } from 'rxjs/Subscription';
 ...
 
 sub: Subscription;
 
-constructor(private searchService: SearchService, private route: ActivatedRoute) {
+constructor(private searchService: SearchService, private route: ActivatedRoute) {}
+
+ngOnInit() {
   this.sub = this.route.params.subscribe(params => {
     if (params['term']) {
       this.query = decodeURIComponent(params['term']);
@@ -883,8 +842,8 @@ integration testing. Angular's testing documentation lists https://angular.io/do
 If you run `ng test`, you'll likely received an error:
 
 ----
-Chrome 60.0.3112 (Mac OS X 10.12.6) AppComponent should create the app FAILED
-	'router-outlet' is not a known element:
+Chrome 64.0.3282 (Mac OS X 10.13.3) AppComponent should create the app FAILED
+        'router-outlet' is not a known element:
 ----
 
 This happens because the test is unaware of Angular's router. To fix this, import `RouterTestingModule` in `app.component.spec.ts`:
@@ -900,7 +859,9 @@ describe('AppComponent', () => {
       declarations: [
         AppComponent
       ],
-      imports: [RouterTestingModule]
+      imports: [
+        RouterTestingModule
+      ]
     }).compileComponents();
   }));
 ----
@@ -911,31 +872,31 @@ TIP: You can use `x` and `f` prefixes Jasmine's `describe` and `it` functions to
 
 === Unit test the SearchService
 
-Modify `src/app/shared/search/search.service.spec.ts` and setup the test's infrastructure using https://angular.io/docs/js/latest/api/http/testing/MockBackend-class.html[MockBackend]
-and https://angular.io/docs/ts/latest/api/http/index/BaseRequestOptions-class.html[BaseRequestOptions].
+Modify `src/app/shared/search/search.service.spec.ts` and setup the test's infrastructure (a.k.a. `TestBed`) using `HttpClientTestingModule` and `HttpTestingController`.
+
+TIP: I learned how to test services that use `HttpClient` from Ciro Nunes' https://medium.com/netscape/testing-with-the-angular-httpclient-api-648203820712[Testing with the Angular HttpClient API].
 
 [source,javascript]
 .src/app/shared/search/search.service.spec.ts
 ----
-import { TestBed, inject, tick, fakeAsync } from '@angular/core/testing';
+import { getTestBed, TestBed } from '@angular/core/testing';
 import { SearchService } from './search.service';
-import { BaseRequestOptions, Http, ConnectionBackend, Response, ResponseOptions } from '@angular/http';
-import { MockBackend } from '@angular/http/testing';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 
 describe('SearchService', () => {
-  beforeEach(() => {
+  let injector: TestBed;
+  let service: SearchService;
+  let httpMock: HttpTestingController;
 
+  beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [SearchService,
-        {
-          provide: Http, useFactory: (backend: ConnectionBackend, defaultOptions: BaseRequestOptions) => {
-          return new Http(backend, defaultOptions);
-        }, deps: [MockBackend, BaseRequestOptions]
-        },
-        {provide: MockBackend, useClass: MockBackend},
-        {provide: BaseRequestOptions, useClass: BaseRequestOptions}
-      ]
+      imports: [HttpClientTestingModule],
+      providers: [SearchService]
     });
+
+    injector = getTestBed();
+    service = injector.get(SearchService);
+    httpMock = injector.get(HttpTestingController);
   });
   ...
 ----
@@ -950,30 +911,43 @@ Chrome 60.0.3112 (Mac OS X 10.12.6) SearchComponent should create FAILED
 	Can't bind to 'ngModel' since it isn't a known property of 'input'. ("<h2>Search</h2>
 ----
 
-Add the first test of `getAll()` to `search.service.spec.ts`. This test shows how `MockBackend` can be used to mock results and set the response.
-
-TIP: When you are testing code that returns either a Promise or an RxJS Observable, you can use the `fakeAsync` helper to test that code as if it were synchronous. Promises are be fulfilled and Observables are notified immediately after you call `tick()`.
+`HttpTestingController` allows you to mock requests and use its `flush` method to provide response values. Since the HTTP request methods return an Observable, you can subscribe to it and create expectations in the callback methods. Add the first test of `getAll()` to `search.service.spec.ts`.
 
 The test below should be on the same level as `beforeEach`.
 
 [source,javascript]
 .src/app/shared/search/search.service.spec.ts
 ----
-it('should retrieve all search results',
-  inject([SearchService, MockBackend], fakeAsync((searchService: SearchService, mockBackend: MockBackend) => {
-    let res: Response;
-    mockBackend.connections.subscribe(c => {
-      expect(c.request.url).toBe('assets/data/people.json');
-      const response = new ResponseOptions({body: '[{"name": "John Elway"}, {"name": "Gary Kubiak"}]'});
-      c.mockRespond(new Response(response));
-    });
-    searchService.getAll().subscribe((response) => {
-      res = response;
-    });
-    tick();
-    expect(res[0].name).toBe('John Elway');
-  }))
-);
+it('should retrieve all search results', () => {
+  const dummyData = [
+    {name: 'John Elway'},
+    {name: 'Gary Kubiak'}
+  ];
+
+  service.getAll().subscribe((people: any) => {
+    expect(people.length).toBe(2);
+    expect(people[0].name).toBe('John Elway');
+    expect(people).toEqual(dummyData);
+  });
+
+  const req = httpMock.expectOne('assets/data/people.json');
+  expect(req.request.method).toBe('GET');
+  req.flush(dummyData);
+});
+----
+
+While you're there, fix the 'should be created' test and add an `afterEach` to verify requests.
+
+[source,javascript]
+.src/app/shared/search/search.service.spec.ts
+----
+afterEach(() => {
+  httpMock.verify();
+});
+
+it('should be created', () => {
+  expect(service).toBeTruthy();
+});
 ----
 
 Notice that tests continually run as you add them when using `ng test`. You can run tests once by using `ng test --watch=false` or `ng test -sr`.
@@ -982,37 +956,35 @@ Add a couple more tests for filtering by search term and fetching by id.
 [source,javascript]
 .src/app/shared/search/search.service.spec.ts
 ----
-it('should filter by search term',
-  inject([SearchService, MockBackend], fakeAsync((searchService: SearchService, mockBackend: MockBackend) => {
-    let res;
-    mockBackend.connections.subscribe(c => {
-      expect(c.request.url).toBe('assets/data/people.json');
-      const response = new ResponseOptions({body: '[{"name": "John Elway"}, {"name": "Gary Kubiak"}]'});
-      c.mockRespond(new Response(response));
-    });
-    searchService.search('john').subscribe((response) => {
-      res = response;
-    });
-    tick();
-    expect(res[0].name).toBe('John Elway');
-  }))
-);
+it('should filter by search term', () => {
+  const dummyData = [
+    {name: 'John Elway'}
+  ];
 
-it('should fetch by id',
-  inject([SearchService, MockBackend], fakeAsync((searchService: SearchService, mockBackend: MockBackend) => {
-    let res;
-    mockBackend.connections.subscribe(c => {
-      expect(c.request.url).toBe('assets/data/people.json');
-      const response = new ResponseOptions({body: '[{"id": 1, "name": "John Elway"}, {"id": 2, "name": "Gary Kubiak"}]'});
-      c.mockRespond(new Response(response));
-    });
-    searchService.search('2').subscribe((response) => {
-      res = response;
-    });
-    tick();
-    expect(res[0].name).toBe('Gary Kubiak');
-  }))
-);
+  service.search('john').subscribe((people: any) => {
+    expect(people.length).toBe(1);
+    expect(people[0].name).toBe('John Elway');
+  });
+
+  const req = httpMock.expectOne('assets/data/people.json');
+  expect(req.request.method).toBe('GET');
+  req.flush(dummyData);
+});
+
+it('should fetch by id', () => {
+  const dummyData = [
+    {id: 1, name: 'John Elway'},
+    {id: 2, name: 'Gary Kubiak'}
+  ];
+
+  service.get(2).subscribe((person: Person) => {
+    expect(person.name).toBe('Gary Kubiak');
+  });
+
+  const req = httpMock.expectOne('assets/data/people.json');
+  expect(req.request.method).toBe('GET');
+  req.flush(dummyData);
+});
 ----
 
 === Unit test the SearchComponent
@@ -1137,7 +1109,8 @@ Alongside, create `routes.ts` to mock Angular's `Router` and `ActivatedRoute`.
 .src/app/shared/search/mocks/routes.ts
 ----
 import { ActivatedRoute, Params } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/of';
 
 export class MockActivatedRoute extends ActivatedRoute {
   params: Observable<Params>;
@@ -1158,14 +1131,14 @@ With mocks in place, you can `TestBed.configureTestingModule()` to setup `Search
 [source,javascript]
 .src/app/search/search.component.spec.ts
 ----
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { SearchComponent } from './search.component';
 import { MockSearchService } from '../shared/search/mocks/search.service';
 import { MockActivatedRoute, MockRouter } from '../shared/search/mocks/routes';
-import { SearchService } from '../shared/search/search.service';
+import { SearchService } from '../shared';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
+import { FormsModule } from '@angular/forms';
 
 describe('SearchComponent', () => {
   let component: SearchComponent;
@@ -1174,26 +1147,31 @@ describe('SearchComponent', () => {
   let mockActivatedRoute: MockActivatedRoute;
   let mockRouter: MockRouter;
 
-  beforeEach(() => {
+  beforeEach(async(() => {
     mockSearchService = new MockSearchService();
     mockActivatedRoute = new MockActivatedRoute({'term': 'peyton'});
     mockRouter = new MockRouter();
 
     TestBed.configureTestingModule({
-      declarations: [SearchComponent],
+      declarations: [ SearchComponent ],
       providers: [
         {provide: SearchService, useValue: mockSearchService},
         {provide: ActivatedRoute, useValue: mockActivatedRoute},
         {provide: Router, useValue: mockRouter}
       ],
       imports: [FormsModule, RouterTestingModule]
-    }).compileComponents();
-  });
+    })
+    .compileComponents();
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(SearchComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
   });
 });
 ----
@@ -1226,7 +1204,7 @@ Update the test for `EditComponent`, verifying fetching a single record works. N
 import { MockSearchService } from '../shared/search/mocks/search.service';
 import { EditComponent } from './edit.component';
 import { TestBed } from '@angular/core/testing';
-import { SearchService } from '../shared/search/search.service';
+import { SearchService } from '../shared';
 import { MockRouter, MockActivatedRoute } from '../shared/search/mocks/routes';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -1273,7 +1251,7 @@ describe('EditComponent', () => {
 });
 ----
 
-You should see "Executed 9 of 9 [green]#SUCCESS# (0.501 secs / 0.494 secs)" in the shell window that's running `ng test`. If you don't, try cancelling the command and restarting.
+You should see "Executed 11 of 11 [green]#SUCCESS# (0.416 secs / 0.399 secs)" in the shell window that's running `ng test`. If you don't, try cancelling the command and restarting.
 
 === Integration test the search UI
 
@@ -1289,30 +1267,31 @@ All tests should pass.
 
 ----
 $ ng e2e
-** NG Live Development Server is listening on localhost:49154, open your browser on http://localhost:49154 **
-Date: 2017-08-31T17:03:08.568Z
-Hash: f7c4c12fb89e1559bd8b
-Time: 7927ms
-chunk {inline} inline.bundle.js, inline.bundle.js.map (inline) 5.83 kB [entry] [rendered]
-chunk {main} main.bundle.js, main.bundle.js.map (main) 2.92 MB {inline} [initial] [rendered]
-chunk {polyfills} polyfills.bundle.js, polyfills.bundle.js.map (polyfills) 209 kB {inline} [initial] [rendered]
-chunk {styles} styles.bundle.js, styles.bundle.js.map (styles) 11.3 kB {inline} [initial] [rendered]
-(node:11443) [DEP0022] DeprecationWarning: os.tmpDir() is deprecated. Use os.tmpdir() instead.
+** NG Live Development Server is listening on localhost:49153, open your browser on http://localhost:49153/ **
+Date: 2018-03-12T22:03:34.491Z
+Hash: 03a3575db9d7cae2b815
+Time: 9429ms
+chunk {inline} inline.bundle.js, inline.bundle.js.map (inline) 3.89 kB [entry] [rendered]
+chunk {main} main.bundle.js, main.bundle.js.map (main) 22 kB [initial] [rendered]
+chunk {polyfills} polyfills.bundle.js, polyfills.bundle.js.map (polyfills) 202 kB [initial] [rendered]
+chunk {styles} styles.bundle.js, styles.bundle.js.map (styles) 14.5 kB [initial] [rendered]
+chunk {vendor} vendor.bundle.js, vendor.bundle.js.map (vendor) 3.55 MB [initial] [rendered]
+(node:21544) [DEP0022] DeprecationWarning: os.tmpDir() is deprecated. Use os.tmpdir() instead.
 
 webpack: Compiled successfully.
-[11:03:08] I/file_manager - creating folder /Users/mraible/dev/ng-demo/node_modules/webdriver-manager/selenium
-[11:03:12] I/update - chromedriver: unzipping chromedriver_2.32.zip
-[11:03:12] I/update - chromedriver: setting permissions to 0755 for /Users/mraible/dev/ng-demo/node_modules/webdriver-manager/selenium/chromedriver_2.32
-[11:03:12] I/launcher - Running 1 instances of WebDriver
-[11:03:12] I/direct - Using ChromeDriver directly...
+[16:03:34] I/file_manager - creating folder /Users/mraible/dev/ng-demo/node_modules/protractor/node_modules/webdriver-manager/selenium
+[16:03:40] I/update - chromedriver: unzipping chromedriver_2.36.zip
+[16:03:41] I/update - chromedriver: setting permissions to 0755 for /Users/mraible/dev/ng-demo/node_modules/protractor/node_modules/webdriver-manager/selenium/chromedriver_2.36
+[16:03:41] I/launcher - Running 1 instances of WebDriver
+[16:03:41] I/direct - Using ChromeDriver directly...
 Jasmine started
 
   ng-demo App
     ✓ should display welcome message
 
-Executed 1 of 1 spec SUCCESS in 0.892 sec.
-[11:03:15] I/launcher - 0 instance(s) of WebDriver still running
-[11:03:15] I/launcher - chrome #01 passed
+Executed 1 of 1 spec SUCCESS in 0.814 sec.
+[16:03:43] I/launcher - 0 instance(s) of WebDriver still running
+[16:03:43] I/launcher - chrome #01 passed
 ----
 
 === Testing the search feature
@@ -1421,7 +1400,7 @@ services:
   - docker
 language: node_js
 node_js:
-  - "8.4.0"
+  - "9.8.0"
 addons:
   apt:
     sources:
@@ -1466,7 +1445,7 @@ If you've checked your project into source control, you can use Jenkins to autom
 
 ----
 node {
-    def nodeHome = tool name: 'node-8.4.0', type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'
+    def nodeHome = tool name: 'node-9.8.0', type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'
     env.PATH = "${nodeHome}/bin:${env.PATH}"
 
     stage('check tools') {

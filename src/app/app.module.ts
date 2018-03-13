@@ -1,17 +1,17 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
 import { SearchComponent } from './search/search.component';
-import { Routes, RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 import { SearchService } from './shared';
-import { HttpModule } from '@angular/http';
 import { EditComponent } from './edit/edit.component';
 
 const appRoutes: Routes = [
-  {path: 'search', component: SearchComponent},
-  {path: 'edit/:id', component: EditComponent},
-  {path: '', redirectTo: '/search', pathMatch: 'full'}
+  { path: 'search', component: SearchComponent },
+  { path: 'edit/:id', component: EditComponent },
+  { path: '', redirectTo: '/search', pathMatch: 'full' }
 ];
 
 @NgModule({
@@ -22,12 +22,11 @@ const appRoutes: Routes = [
   ],
   imports: [
     BrowserModule,
-    RouterModule.forRoot(appRoutes),
     FormsModule,
-    HttpModule
+    HttpClientModule,
+    RouterModule.forRoot(appRoutes)
   ],
   providers: [SearchService],
   bootstrap: [AppComponent]
 })
-export class AppModule {
-}
+export class AppModule { }
