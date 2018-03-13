@@ -1,49 +1,50 @@
 <div *ngIf="person">
   <h3>{{editName}}</h3>
-  <form #editForm="ngForm" (ngSubmit)="save()" ngNativeValidate>
+  <form #editForm="ngForm" (ngSubmit)="save()">
     <div>
       <label>Id:</label>
       {{person.id}}
     </div>
     <p>
-      <md-input-container>
-        <input mdInput [(ngModel)]="editName" name="name" id="name" placeholder="Name" required/>
-      </md-input-container>
+      <mat-form-field>
+        <input matInput [(ngModel)]="editName" name="name" id="name" placeholder="name" required/>
+      </mat-form-field>
     </p>
     <p>
-      <md-input-container>
-        <input mdInput [(ngModel)]="editPhone" name="phone" id="phone" placeholder="Phone"/>
-      </md-input-container>
+      <mat-form-field>
+        <input matInput [(ngModel)]="editPhone" name="phone" id="phone" placeholder="Phone"/>
+      </mat-form-field>
     </p>
     <table>
       <tr>
         <td>
-          <md-input-container>
-            <input mdInput placeholder="Address" [(ngModel)]="editAddress.street" name="street" id="street">
-          </md-input-container>
+          <mat-form-field>
+            <input matInput placeholder="Address" [(ngModel)]="editAddress.street" name="street" id="street">
+          </mat-form-field>
         </td>
         <td>
-          <md-input-container>
-            <input mdInput placeholder="City" [(ngModel)]="editAddress.city" name="city" id="city">
-          </md-input-container>
+          <mat-form-field>
+            <input matInput placeholder="City" [(ngModel)]="editAddress.city" name="city" id="city">
+          </mat-form-field>
         </td>
       </tr>
       <tr>
         <td>
-          <md-input-container>
-            <input mdInput placeholder="State" #state [(ngModel)]="editAddress.state" name="state" id="state" maxlength="2">
-          </md-input-container>
+          <mat-form-field>
+            <input matInput placeholder="State" #state [(ngModel)]="editAddress.state" name="state" id="state" maxlength="2">
+          </mat-form-field>
         </td>
         <td>
-          <md-input-container>
-            <input mdInput placeholder="Zip" #postalCode maxlength="5" [(ngModel)]="editAddress.zip" name="zip" id="zip">
-            <md-hint align="end">{{postalCode.value.length}} / 5</md-hint>
-          </md-input-container>
+          <mat-form-field>
+            <input matInput placeholder="Zip" #postalCode maxlength="5" [(ngModel)]="editAddress.zip" name="zip" id="zip">
+            <mat-hint align="end">{{postalCode.value.length}} / 5</mat-hint>
+          </mat-form-field>
         </td>
       </tr>
     </table>
 
-    <button md-raised-button type="submit" color="primary" id="save">Save</button>
-    <button md-button (click)="cancel(); false" id="cancel">Cancel</button>
+    <button mat-raised-button type="submit" color="primary" id="save"
+            [disabled]="!editForm.form.valid">Save</button>
+    <button mat-button (click)="cancel(); false" id="cancel">Cancel</button>
   </form>
 </div>

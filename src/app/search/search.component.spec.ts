@@ -1,13 +1,13 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { SearchComponent } from './search.component';
 import { MockSearchService } from '../shared/search/mocks/search.service';
 import { MockActivatedRoute, MockRouter } from '../shared/search/mocks/routes';
-import { SearchService } from '../shared/search/search.service';
+import { SearchService } from '../shared';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
-import { MdIconModule, MdInputModule } from '@angular/material';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { FormsModule } from '@angular/forms';
+import { MatIconModule, MatInputModule, MatListModule } from '@angular/material';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('SearchComponent', () => {
   let component: SearchComponent;
@@ -16,26 +16,32 @@ describe('SearchComponent', () => {
   let mockActivatedRoute: MockActivatedRoute;
   let mockRouter: MockRouter;
 
-  beforeEach(() => {
+  beforeEach(async(() => {
     mockSearchService = new MockSearchService();
     mockActivatedRoute = new MockActivatedRoute({'term': 'peyton'});
     mockRouter = new MockRouter();
 
     TestBed.configureTestingModule({
-      declarations: [SearchComponent],
+      declarations: [ SearchComponent ],
       providers: [
         {provide: SearchService, useValue: mockSearchService},
         {provide: ActivatedRoute, useValue: mockActivatedRoute},
         {provide: Router, useValue: mockRouter}
       ],
-      imports: [FormsModule, RouterTestingModule, BrowserAnimationsModule, MdInputModule, MdIconModule]
-    }).compileComponents();
-  });
+      imports: [FormsModule, RouterTestingModule,
+        MatListModule, MatIconModule, MatInputModule, NoopAnimationsModule]
+    })
+    .compileComponents();
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(SearchComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
   });
 
   it('should search when a term is set and search() is called', () => {

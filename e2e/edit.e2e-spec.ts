@@ -22,7 +22,7 @@ describe('Edit', () => {
     name.sendKeys(' Won!');
     save.click();
     // verify one element matched this change
-    const list = element.all(by.css('app-search md-list md-list-item'));
+    const list = element.all(by.css('app-search mat-list mat-list-item'));
     expect(list.count()).toBe(1);
   });
 });

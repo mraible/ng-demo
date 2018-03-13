@@ -1,5 +1,5 @@
 node {
-    def nodeHome = tool name: 'node-8.4.0', type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'
+    def nodeHome = tool name: 'node-9.8.0', type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'
     env.PATH = "${nodeHome}/bin:${env.PATH}"
 
     stage('check tools') {
@@ -27,14 +27,12 @@ node {
         sh '''
         # exit 1 on errors
         set -e
-
         # deal with remote
         echo "Checking if remote exists..."
         if ! git ls-remote heroku; then
           echo "Adding heroku remote..."
           git remote add heroku https://git.heroku.com/evening-meadow-46789.git
         fi
-
         # push only origin/master to heroku/master - will do nothing if
         # master doesn't change.
         echo "Updating heroku master branch..."
