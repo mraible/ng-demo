@@ -1,15 +1,14 @@
 import { Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
-import { Observable } from 'rxjs';
 
 @Injectable()
 export class SearchService {
-
-  constructor(private http: Http) {}
+  constructor(private http: HttpClient) {}
 
   getAll() {
-    return this.http.get('assets/data/people.json').map((res: Response) => res.json());
+    return this.http.get('assets/data/people.json');
   }
 
   search(q: string): Observable<any> {
@@ -18,7 +17,7 @@ export class SearchService {
     } else {
       q = q.toLowerCase();
     }
-    return this.getAll().map(data => {
+    return this.getAll().map((data: any) => {
       const results: any = [];
       data.map(item => {
         // check for item in localStorage
@@ -34,7 +33,7 @@ export class SearchService {
   }
 
   get(id: number) {
-    return this.getAll().map(all => {
+    return this.getAll().map((all: any) => {
       if (localStorage['person' + id]) {
         return JSON.parse(localStorage['person' + id]);
       }

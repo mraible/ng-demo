@@ -3,7 +3,6 @@
   <input type="search" name="query" [(ngModel)]="query" (keyup.enter)="search()" placeholder="Search" class="form-control mr-sm-2">
   <button type="button" (click)="search()" class="btn btn-primary">Search</button>
 </form>
-
 <table *ngIf="searchResults" class="table">
   <thead>
   <tr>
