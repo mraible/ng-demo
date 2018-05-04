@@ -16,11 +16,11 @@ node {
     }
 
     stage('unit tests') {
-        sh "ng test --watch false"
+        sh "ng test"
     }
 
     stage('protractor tests') {
-        sh "npm run e2e"
+        sh "ng e2e"
     }
 
     stage('deploying') {
