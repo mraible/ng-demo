@@ -389,7 +389,6 @@ To fix the "No provider" error from above, update `app.module.ts` to import `Htt
 [source,javascript]
 .src/app/app.module.ts
 ----
-import { SearchService } from './shared';
 import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
@@ -645,10 +644,9 @@ search(q: string): Observable<any> {
   }
   return this.getAll().pipe(
     map((data: any) => data
+        .map(item => !!localStorage['person' + item.id] ?
+          JSON.parse(localStorage['person' + item.id]) : item)
         .filter(item => JSON.stringify(item).toLowerCase().includes(q))
-        .map(item => !!localStorage['person' + item.id]
-          ? JSON.parse(localStorage['person' + item.id])
-          : item)
     ));
 }
 
