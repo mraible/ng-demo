@@ -1545,33 +1545,12 @@ because the Angular setup process can be tedious and CLI greatly simplifies thin
 To integrate Bootstrap 4 into your Angular CLI-generated app, complete the following steps.
 
 ----
-npm install bootstrap @ng-bootstrap/ng-bootstrap
+ng add @ng-bootstrap/schematics
 ----
 
-Add `NgbModule` as an import in `app.module.ts`:
+That's it! This will add Bootstrap's stylesheet to your `angular.json` file, add dependencies to `package.json` and add the `NgbModule` to your `app.module.ts`.
 
-[source,javascript]
-.src/app/app.module.ts
-----
-import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
-
-@NgModule({
-  ...
-  imports: [
-    ...
-    NgbModule.forRoot()
-  ]
-----
-
-Modify `src/styles.css` to add a reference to Bootstrap's CSS file:
-
-[source,json]
-.src/styles.css
-----
-@import "~bootstrap/dist/css/bootstrap.css";
-----
-
-Change HTML to use Bootstrap classes. For example, change the `<h1>` in `app.component.html` to be the following:
+The only thing you'll need to do is change your HTML to use Bootstrap classes. For example, change the `<h1>` in `app.component.html` to be the following:
 
 [source,html]
 .src/app/app.component.html
@@ -1586,3 +1565,7 @@ After modifying your HTML to match this branch, the edit screen will look as fol
 [[bootstrap4]]
 .Bootstrap 4
 image::src/assets/images/bootstrap4.png[Bootstrap 4, 800, scaledwidth="100%"]
+
+All of the HTML files in this `bootstrap4` branch have been modified to use Bootstrap.
+
+To learn more, see Angular CLI's https://github.com/angular/angular-cli/wiki/stories-include-bootstrap[include Bootstrap story].
