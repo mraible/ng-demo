@@ -1545,41 +1545,36 @@ because the Angular setup process can be tedious and CLI greatly simplifies thin
 To integrate Angular Material into your Angular CLI-generated app, complete the following steps.
 
 ----
-npm install @angular/material @angular/cdk
+ng add @angular/material
 ----
 
-Add the relevant Material modules as imports in `app.module.ts`:
+This will add Angular Material's stylesheet to your `angular.json` file, add stylesheets to your `index.html`, add dependencies to `package.json`, and add the `BrowserAnimationsModule` to your `app.module.ts`.
+
+You'll still need to add the Material component modules as imports in `app.module.ts`:
 
 [source,javascript]
 .src/app/app.module.ts
 ----
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatButtonModule, MatIconModule, MatInputModule, MatListModule, MatToolbarModule } from '@angular/material';
 
 @NgModule({
   ...
   imports: [
     ...
-    BrowserAnimationsModule,
     MatButtonModule,
     MatIconModule,
     MatInputModule,
     MatListModule,
-    MatToolbarModule,
+    MatToolbarModule
   ]
 ----
 
-Add Material icons and a theme to `src/styles.css`:
+After modifying your HTML to match this branch, the edit screen will look as follows.
 
-[source,css]
-----
-@import '~@angular/material/prebuilt-themes/indigo-pink.css';
-@import 'https://fonts.googleapis.com/icon?family=Material+Icons';
+[[angular-material]]
+.Angular Material
+image::src/assets/images/angular-material.png[Angular Material, 800, scaledwidth="100%"]
 
-body {
-  margin: 0;
-  font-family: Roboto, sans-serif;
-}
-----
+All of the HTML files in this `angular-material` branch have been modified to use Angular Material.
 
-Change HTML to use Material components. For example, change `<h1>` in `app.component.html` to be `<mat-toolbar>`.
+To learn more, see Angular CLI's https://github.com/angular/angular-cli/wiki/stories-include-angular-material[include Angular Material story].
