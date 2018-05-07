@@ -30,7 +30,7 @@ endif::[]
 :toc:
 
 This tutorial shows you how to build a simple search and edit application using https://angular.io[Angular] and
-https://github.com/angular/angular-cli[Angular CLI].
+https://github.com/angular/angular-cli[Angular CLI] version 6.0. If you'd rather use Angular 5, see https://github.com/mraible/ng-demo/blob/662159470802c53f445db6393576c0926e31d642/README.adoc[this version] (also available [via DocGist](http://gist.asciidoctor.org/?github-mraible%2Fng-demo%2F662159470802c53f445db6393576c0926e31d642%2F%2FREADME.adoc).
 
 ifdef::env-github[]
 TIP: It appears you're reading this document on GitHub. If you want a prettier view, install https://chrome.google.com/webstore/detail/asciidoctorjs-live-previe/iaalpfgpbocpdfblpnhhgllgbdbchmia[Asciidoctor.js Live Preview for Chrome], then view the https://raw.githubusercontent.com/mraible/ng-demo/master/README.adoc[raw document]. Another option is to use the http://gist.asciidoctor.org/?github-mraible/ng-demo//README.adoc[DocGist view].
@@ -343,7 +343,7 @@ To make these classes available for consumption by your components, create `src/
 export * from './search/search.service';
 ----
 
-NOTE: If you're wondering why you should use `index.ts`, see http://stackoverflow.com/questions/37564906/what-are-all-the-index-ts-used-for[this Stack Overflow question].
+The reason for creating this file is so you can import multiple classes on a single line rather than having to import each individual class on separate lines.
 
 In `search.component.ts`, add imports for these classes.
 
@@ -389,7 +389,6 @@ To fix the "No provider" error from above, update `app.module.ts` to import `Htt
 [source,javascript]
 .src/app/app.module.ts
 ----
-import { SearchService } from './shared';
 import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
@@ -398,13 +397,12 @@ import { HttpClientModule } from '@angular/common/http';
     ...
     HttpClientModule
   ],
-  providers: [SearchService],
+  providers: [],
   bootstrap: [AppComponent]
 })
 ----
 
-Now clicking the search button should work. To make the results look better, remove the `<pre>` tag and replace it with
-a `<table>`.
+Now clicking the search button should work. To make the results look better, remove the `<pre>` tag and replace it with a `<table>` in `search.component.html`.
 
 [source,xml]
 .src/app/search/search.component.html
@@ -463,18 +461,20 @@ But wait, you still don't have search functionality! To add a search feature, ad
 .src/app/shared/search/search.service.ts
 ----
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+...
 
-search(q: string): Observable<any> {
-  if (!q || q === '*') {
-    q = '';
-  } else {
-    q = q.toLowerCase();
+  search(q: string): Observable<any> {
+    if (!q || q === '*') {
+      q = '';
+    } else {
+      q = q.toLowerCase();
+    }
+    return this.getAll().pipe(
+      map((data: any) => data
+        .filter(item => JSON.stringify(item).toLowerCase().includes(q)))
+    );
   }
-  return this.getAll().pipe(
-    map((data: any) => data
-      .filter(item => JSON.stringify(item).toLowerCase().includes(q)))
-  );
-}
 ----
 
 Then refactor `SearchComponent` to call this method with its `query` variable.
@@ -521,7 +521,6 @@ Add a route for this component in `app.module.ts`:
 [source,javascript]
 .src/app/app.module.ts
 ----
-
 const appRoutes: Routes = [
   { path: 'search', component: SearchComponent },
   { path: 'edit/:id', component: EditComponent },
@@ -645,10 +644,9 @@ search(q: string): Observable<any> {
   }
   return this.getAll().pipe(
     map((data: any) => data
+        .map(item => !!localStorage['person' + item.id] ?
+          JSON.parse(localStorage['person' + item.id]) : item)
         .filter(item => JSON.stringify(item).toLowerCase().includes(q))
-        .map(item => !!localStorage['person' + item.id]
-          ? JSON.parse(localStorage['person' + item.id])
-          : item)
     ));
 }
 
