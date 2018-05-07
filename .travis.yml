@@ -30,7 +30,7 @@ before_install:
 install:
   - yarn install
 script:
-  - ng test --watch false
+  - ng test
   - ng e2e
 notifications:
   webhooks:
