@@ -398,7 +398,7 @@ import { HttpClientModule } from '@angular/common/http';
     ...
     HttpClientModule
   ],
-  providers: [SearchService],
+  providers: [],
   bootstrap: [AppComponent]
 })
 ----
@@ -462,18 +462,20 @@ But wait, you still don't have search functionality! To add a search feature, ad
 .src/app/shared/search/search.service.ts
 ----
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 ...
-search(q: string): Observable<any> {
-  if (!q || q === '*') {
-    q = '';
-  } else {
-    q = q.toLowerCase();
+
+  search(q: string): Observable<any> {
+    if (!q || q === '*') {
+      q = '';
+    } else {
+      q = q.toLowerCase();
+    }
+    return this.getAll().pipe(
+      map((data: any) => data
+        .filter(item => JSON.stringify(item).toLowerCase().includes(q)))
+    );
   }
-  return this.getAll().pipe(
-    map((data: any) => data
-      .filter(item => JSON.stringify(item).toLowerCase().includes(q)))
-  );
-}
 ----
 
 Then refactor `SearchComponent` to call this method with its `query` variable.
