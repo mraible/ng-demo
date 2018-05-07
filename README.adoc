@@ -343,7 +343,7 @@ To make these classes available for consumption by your components, create `src/
 export * from './search/search.service';
 ----
 
-NOTE: If you're wondering why you should use `index.ts`, see http://stackoverflow.com/questions/37564906/what-are-all-the-index-ts-used-for[this Stack Overflow question].
+The reason for creating this file is so you can import multiple classes on a single line rather than having to import each individual class on separate lines.
 
 In `search.component.ts`, add imports for these classes.
 
@@ -403,8 +403,7 @@ import { HttpClientModule } from '@angular/common/http';
 })
 ----
 
-Now clicking the search button should work. To make the results look better, remove the `<pre>` tag and replace it with
-a `<table>`.
+Now clicking the search button should work. To make the results look better, remove the `<pre>` tag and replace it with a `<table>` in `search.component.html`.
 
 [source,xml]
 .src/app/search/search.component.html
@@ -521,7 +520,6 @@ Add a route for this component in `app.module.ts`:
 [source,javascript]
 .src/app/app.module.ts
 ----
-
 const appRoutes: Routes = [
   { path: 'search', component: SearchComponent },
   { path: 'edit/:id', component: EditComponent },
