@@ -1292,9 +1292,9 @@ Executed 1 of 1 spec SUCCESS in 0.818 sec.
 [15:53:09] I/launcher - chrome #01 passed
 ----
 
-.Protractor with async / await
-****
-I was https://github.com/angular/protractor/issues/4307#issuecomment-386112285[recently made aware] of a better way to configure Protractor. To integrate these changes into your project, add the following to `e2e/protractor.conf.js`.
+==== Enhance Protractor with async / await
+
+I was https://github.com/angular/protractor/issues/4307#issuecomment-386112285[recently made aware] of a better way to configure Protractor. To integrate these improvements into your project, add the following to `e2e/protractor.conf.js`.
 
 ----
 SELENIUM_PROMISE_MANAGER: false,
@@ -1310,7 +1310,6 @@ it('should display welcome message', async () => {
 ----
 
 Run `ng e2e` again to make sure everything still works.
-****
 
 === Testing the search feature
 
