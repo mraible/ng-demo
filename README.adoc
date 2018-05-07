@@ -1552,10 +1552,10 @@ Login to your Okta account, or https://developer.okta.com/signup/[create one] if
 .OIDC App Settings
 image::src/assets/images/oidc-settings.png[OIDC App Settings, 800, scaledwidth="100%"]
 
-Install https://github.com/manfredsteyer[Manfred Steyer's] project to https://github.com/manfredsteyer/angular-oauth2-oidc[add OAuth 2 and OpenId Connect (OIDC) support] using npm.
+Install https://github.com/manfredsteyer[Manfred Steyer's] project to https://github.com/manfredsteyer/angular-oauth2-oidc[add OAuth 2 and OpenId Connect (OIDC) support] using npm. You'll also need https://www.npmjs.com/package/rxjs-compat[rxjs-compat] since this library has not been upgraded to RxJS 6.
 
 ----
-npm install angular-oauth2-oidc
+npm install angular-oauth2-oidc rxjs-compat
 ----
 
 Modify `app.component.ts` to import `OAuthService` and configure your app to use your Okta application settings.
@@ -1631,7 +1631,9 @@ import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from '@angular/router';
 import { OAuthService } from 'angular-oauth2-oidc';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class AuthGuard implements CanActivate {
 
   constructor(private oauthService: OAuthService, private router: Router) {}
@@ -1681,10 +1683,7 @@ const appRoutes: Routes = [
     ...
     OAuthModule.forRoot()
   ],
-  providers: [
-    AuthGuard,
-    SearchService
-  ],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
@@ -1761,7 +1760,9 @@ import { OAuthService } from 'angular-oauth2-oidc';
 import { Injectable } from '@angular/core';
 import * as OktaAuth from '@okta/okta-auth-js';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class OktaAuthWrapper {
 
   private authClient: any;
@@ -1813,23 +1814,6 @@ Export `OktaAuthWrapper` in `src/shared/index.ts`:
 .src/app/shared/index.ts
 ----
 export * from './auth/okta.auth.wrapper';
-----
-
-Add `OktaAuthWrapper` as a provider in `app.module.ts`.
-
-[source,ts]
-.src/app/app.module.ts
-----
-import { SearchService, AuthGuard, OktaAuthWrapper } from './shared';
-
-@NgModule({
-  ...
-  providers: [
-    ...
-    OktaAuthWrapper
-  ],
-  bootstrap: [AppComponent]
-})
 ----
 
 Change `HomeComponent` to modify its `template` so it has a button to login, as well as a sign-in form.
