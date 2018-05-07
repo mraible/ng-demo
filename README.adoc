@@ -1664,7 +1664,7 @@ Import the `OAuthModule` in `app.module.ts`, configure the new `HomeComponent`, 
 ----
 import { OAuthModule } from 'angular-oauth2-oidc';
 import { HomeComponent } from './home/home.component';
-import { SearchService, AuthGuard } from './shared';
+import { AuthGuard } from './shared';
 
 const appRoutes: Routes = [
   {path: 'search', component: SearchComponent, canActivate: [AuthGuard]},
