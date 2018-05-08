@@ -22,9 +22,12 @@
     "@angular/platform-browser": "^6.0.0",
     "@angular/platform-browser-dynamic": "^6.0.0",
     "@angular/router": "^6.0.0",
+    "@ng-bootstrap/schematics": "^2.0.0-alpha.1",
     "core-js": "^2.5.4",
     "rxjs": "^6.0.0",
-    "zone.js": "^0.8.26"
+    "zone.js": "^0.8.26",
+    "@ng-bootstrap/ng-bootstrap": "^2.0.0-alpha.0",
+    "bootstrap": "^4.0.0"
   },
   "devDependencies": {
     "@angular/compiler-cli": "^6.0.0",
