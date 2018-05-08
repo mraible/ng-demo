@@ -30,7 +30,7 @@ endif::[]
 :toc:
 
 This tutorial shows you how to build a simple search and edit application using https://angular.io[Angular] and
-https://github.com/angular/angular-cli[Angular CLI] version 6.0. If you'd rather use Angular 5, see https://github.com/mraible/ng-demo/blob/662159470802c53f445db6393576c0926e31d642/README.adoc[this version] (also available [via DocGist](http://gist.asciidoctor.org/?github-mraible%2Fng-demo%2F662159470802c53f445db6393576c0926e31d642%2F%2FREADME.adoc).
+https://github.com/angular/angular-cli[Angular CLI] version 6.0. If you'd rather use Angular 5, see https://github.com/mraible/ng-demo/blob/662159470802c53f445db6393576c0926e31d642/README.adoc[this version] (also available http://gist.asciidoctor.org/?github-mraible%2Fng-demo%2F662159470802c53f445db6393576c0926e31d642%2F%2FREADME.adoc[via DocGist]).
 
 ifdef::env-github[]
 TIP: It appears you're reading this document on GitHub. If you want a prettier view, install https://chrome.google.com/webstore/detail/asciidoctorjs-live-previe/iaalpfgpbocpdfblpnhhgllgbdbchmia[Asciidoctor.js Live Preview for Chrome], then view the https://raw.githubusercontent.com/mraible/ng-demo/master/README.adoc[raw document]. Another option is to use the http://gist.asciidoctor.org/?github-mraible/ng-demo//README.adoc[DocGist view].
