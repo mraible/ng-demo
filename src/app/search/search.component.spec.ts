@@ -20,15 +20,14 @@ describe('SearchComponent', () => {
     mockRouter = new MockRouter();
 
     TestBed.configureTestingModule({
-      declarations: [ SearchComponent ],
+      declarations: [SearchComponent],
       providers: [
         {provide: SearchService, useValue: mockSearchService},
-        {provide: ActivatedRoute, useValue: mockActivatedRoute},
-        {provide: Router, useValue: mockRouter}
+        {provide: ActivatedRoute, useValue: mockActivatedRoute}
       ],
       imports: [FormsModule, RouterTestingModule]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
