@@ -1537,32 +1537,14 @@ I hope you've enjoyed this in-depth tutorial on how to get started with Angular 
 of the pain out of setting up an Angular project and using Typescript. I expect great things from Angular CLI, mostly
 because the Angular setup process can be tedious and CLI greatly simplifies things.
 
-== Bonus: Bootstrap
+== Bonus: Angular Material, Bootstrap 4, and Okta
 
-To integrate Bootstrap 4 into your Angular CLI-generated app, complete the following steps.
+If you'd like to see how to integrate https://material.angular.io/[Angular Material], https://getbootstrap.com[Bootstrap 4],
+or http://developer.okta.com[authentication with Okta], this section is for you!
 
-----
-ng add @ng-bootstrap/schematics
-----
+I've created branches to show how to integrate each of these libraries. Click on the links below to see each branch's
+documentation.
 
-That's it! This will add Bootstrap's stylesheet to your `angular.json` file, add dependencies to `package.json`, and add the `NgbModule` to your `app.module.ts`.
-
-The only thing you'll need to do is change your HTML to use Bootstrap classes. For example, change the `<h1>` in `app.component.html` to be the following:
-
-[source,html]
-.src/app/app.component.html
-----
-<nav class="navbar navbar-light bg-secondary">
-  <a class="navbar-brand text-light" href="#">Welcome to {{title}}!</a>
-</nav>
-----
-
-After modifying your HTML to match this branch, the edit screen will look as follows.
-
-[[bootstrap4]]
-.Bootstrap 4
-image::src/assets/images/bootstrap4.png[Bootstrap 4, 800, scaledwidth="100%"]
-
-All of the HTML files in this `bootstrap4` branch have been modified to use Bootstrap.
-
-To learn more, see Angular CLI's https://github.com/angular/angular-cli/wiki/stories-include-bootstrap[include Bootstrap story].
+* https://github.com/mraible/ng-demo/tree/angular-material#bonus-angular-material[Angular Material]
+* https://github.com/mraible/ng-demo/tree/bootstrap4#bonus-bootstrap[Bootstrap 4]
+* https://github.com/mraible/ng-demo/tree/okta#bonus-okta[Authentication with Okta]
