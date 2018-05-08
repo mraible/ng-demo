@@ -5,27 +5,46 @@
       <label>Id:</label>
       {{person.id}}
     </div>
-    <div>
-      <label>Name:</label>
-      <input [(ngModel)]="editName" name="name" id="name" placeholder="name" required #name="ngModel"/>
-      <div [hidden]="name.valid || name.pristine" style="color: red">
-        Name is required
-      </div>
-    </div>
-    <div>
-      <label>Phone:</label>
-      <input [(ngModel)]="editPhone" name="phone" id="phone" placeholder="Phone"/>
-    </div>
-    <fieldset>
-      <legend>Address:</legend>
-      <address>
-        <input [(ngModel)]="editAddress.street" name="street" id="street"><br/>
-        <input [(ngModel)]="editAddress.city" name="city" id="city">,
-        <input [(ngModel)]="editAddress.state" name="state" id="state" size="2">
-        <input [(ngModel)]="editAddress.zip" name="zip" id="zip" size="5">
-      </address>
-    </fieldset>
-    <button type="submit" id="save" [disabled]="!editForm.form.valid">Save</button>
-    <button (click)="cancel()" id="cancel">Cancel</button>
+    <p>
+      <mat-form-field>
+        <input matInput [(ngModel)]="editName" name="name" id="name" placeholder="name" required/>
+      </mat-form-field>
+    </p>
+    <p>
+      <mat-form-field>
+        <input matInput [(ngModel)]="editPhone" name="phone" id="phone" placeholder="Phone"/>
+      </mat-form-field>
+    </p>
+    <table>
+      <tr>
+        <td>
+          <mat-form-field>
+            <input matInput placeholder="Address" [(ngModel)]="editAddress.street" name="street" id="street">
+          </mat-form-field>
+        </td>
+        <td>
+          <mat-form-field>
+            <input matInput placeholder="City" [(ngModel)]="editAddress.city" name="city" id="city">
+          </mat-form-field>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <mat-form-field>
+            <input matInput placeholder="State" #state [(ngModel)]="editAddress.state" name="state" id="state" maxlength="2">
+          </mat-form-field>
+        </td>
+        <td>
+          <mat-form-field>
+            <input matInput placeholder="Zip" #postalCode maxlength="5" [(ngModel)]="editAddress.zip" name="zip" id="zip">
+            <mat-hint align="end">{{postalCode.value.length}} / 5</mat-hint>
+          </mat-form-field>
+        </td>
+      </tr>
+    </table>
+
+    <button mat-raised-button type="submit" color="primary" id="save"
+            [disabled]="!editForm.form.valid">Save</button>
+    <button mat-button (click)="cancel(); false" id="cancel">Cancel</button>
   </form>
 </div>
