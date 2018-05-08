@@ -5,8 +5,6 @@ import { SearchService } from '../shared';
 import { MockRouter, MockActivatedRoute } from '../shared/search/mocks/routes';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatInputModule } from '@angular/material';
 
 describe('EditComponent', () => {
   let mockSearchService: MockSearchService;
@@ -25,7 +23,7 @@ describe('EditComponent', () => {
         {provide: ActivatedRoute, useValue: mockActivatedRoute},
         {provide: Router, useValue: mockRouter}
       ],
-      imports: [FormsModule, BrowserAnimationsModule, MatInputModule]
+      imports: [FormsModule]
     }).compileComponents();
   });
 
