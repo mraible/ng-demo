@@ -1,11 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/map';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class SearchService {
-  constructor(private http: HttpClient) {}
+
+  constructor(private http: HttpClient) { }
 
   getAll() {
     return this.http.get('assets/data/people.json');
@@ -17,28 +20,21 @@ export class SearchService {
     } else {
       q = q.toLowerCase();
     }
-    return this.getAll().map((data: any) => {
-      const results: any = [];
-      data.map(item => {
-        // check for item in localStorage
-        if (localStorage['person' + item.id]) {
-          item = JSON.parse(localStorage['person' + item.id]);
-        }
-        if (JSON.stringify(item).toLowerCase().includes(q)) {
-          results.push(item);
-        }
-      });
-      return results;
-    });
+    return this.getAll().pipe(
+      map((data: any) => data
+          .map(item => !!localStorage['person' + item.id] ?
+            JSON.parse(localStorage['person' + item.id]) : item)
+          .filter(item => JSON.stringify(item).toLowerCase().includes(q))
+      ));
   }
 
   get(id: number) {
-    return this.getAll().map((all: any) => {
+    return this.getAll().pipe(map((all: any) => {
       if (localStorage['person' + id]) {
         return JSON.parse(localStorage['person' + id]);
       }
       return all.find(e => e.id === id);
-    });
+    }));
   }
 
   save(person: Person) {

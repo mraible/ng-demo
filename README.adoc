@@ -2,9 +2,9 @@
 
 :author: Matt Raible
 :email:  matt@raibledesigns.com
-:revnumber: 1.8
-:revdate:   {docdate}
-:subject: Angular CLI
+:revnumber: 2.0
+:revdate: {docdate}
+:subject: Angular CLI and Angular
 :keywords: Angular CLI, Angular, JavaScript, TypeScript, node, npm, Jasmine, Protractor
 :icons: font
 :lang: en
@@ -30,7 +30,7 @@ endif::[]
 :toc:
 
 This tutorial shows you how to build a simple search and edit application using https://angular.io[Angular] and
-https://github.com/angular/angular-cli[Angular CLI].
+https://github.com/angular/angular-cli[Angular CLI] version 6.0. If you'd rather use Angular 5, see https://github.com/mraible/ng-demo/blob/662159470802c53f445db6393576c0926e31d642/README.adoc[this version] (also available [via DocGist](http://gist.asciidoctor.org/?github-mraible%2Fng-demo%2F662159470802c53f445db6393576c0926e31d642%2F%2FREADME.adoc).
 
 ifdef::env-github[]
 TIP: It appears you're reading this document on GitHub. If you want a prettier view, install https://chrome.google.com/webstore/detail/asciidoctorjs-live-previe/iaalpfgpbocpdfblpnhhgllgbdbchmia[Asciidoctor.js Live Preview for Chrome], then view the https://raw.githubusercontent.com/mraible/ng-demo/master/README.adoc[raw document]. Another option is to use the http://gist.asciidoctor.org/?github-mraible/ng-demo//README.adoc[DocGist view].
@@ -55,7 +55,7 @@ application with search and edit features.
 * A favorite text editor or IDE. I recommend https://www.jetbrains.com/idea/[IntelliJ IDEA] and its
 https://plugins.jetbrains.com/plugin/8395?pr=idea[Angular TypeScript Live Templates plugin].
 * http://nodejs.org/[Node.js] and npm installed. I recommend using https://github.com/creationix/nvm[nvm].
-* https://github.com/angular/angular-cli[Angular CLI] installed. If you don't have Angular CLI installed, install it using `npm install -g @angular/cli@1.7.4`.
+* https://github.com/angular/angular-cli[Angular CLI] installed. If you don't have Angular CLI installed, install it using `npm install -g @angular/cli@6.0.0`.
 
 TIP: https://augury.angular.io/[Angular Augury] is a Google Chrome Dev Tools extension for debugging Angular applications.
 I haven't needed it much myself, but I can see how it might come in handy.
@@ -75,14 +75,15 @@ You can see the what version of Angular CLI you're using with `ng --version`.
 
 ----
 $ ng --version
-    _                      _                 ____ _     ___
-   / \   _ __   __ _ _   _| | __ _ _ __     / ___| |   |_ _|
-  / △ \ | '_ \ / _` | | | | |/ _` | '__|   | |   | |    | |
- / ___ \| | | | (_| | |_| | | (_| | |      | |___| |___ | |
-/_/   \_\_| |_|\__, |\__,_|_|\__,_|_|       \____|_____|___|
-               |___/
+     _                      _                 ____ _     ___
+    / \   _ __   __ _ _   _| | __ _ _ __     / ___| |   |_ _|
+   / △ \ | '_ \ / _` | | | | |/ _` | '__|   | |   | |    | |
+  / ___ \| | | | (_| | |_| | | (_| | |      | |___| |___ | |
+ /_/   \_\_| |_|\__, |\__,_|_|\__,_|_|       \____|_____|___|
+                |___/
 
-Angular CLI: 1.7.3
+
+Angular CLI: 6.0.0
 Node: 9.8.0
 OS: darwin x64
 ----
@@ -106,7 +107,7 @@ You can make sure your new project's tests pass, run `ng test`:
 ----
 $ ng test
 ...
-Chrome 64.0.3282 (Mac OS X 10.13.3): Executed 3 of 3 SUCCESS (0.19 secs / 0.177 secs)
+Chrome 66.0.3359 (Mac OS X 10.13.4): Executed 3 of 3 SUCCESS (0.212 secs / 0.196 secs)
 ----
 
 == Add a search feature
@@ -120,11 +121,11 @@ In a terminal window, cd into your project's directory and run the following com
 [source]
 ----
 $ ng g component search
-  create src/app/search/search.component.css (0 bytes)
-  create src/app/search/search.component.html (25 bytes)
-  create src/app/search/search.component.spec.ts (628 bytes)
-  create src/app/search/search.component.ts (269 bytes)
-  update src/app/app.module.ts (398 bytes)
+CREATE src/app/search/search.component.css (0 bytes)
+CREATE src/app/search/search.component.html (25 bytes)
+CREATE src/app/search/search.component.spec.ts (628 bytes)
+CREATE src/app/search/search.component.ts (269 bytes)
+UPDATE src/app/app.module.ts (396 bytes)
 ----
 
 Open `src/app/search/search.component.html` and replace its default HTML with the following:
@@ -294,9 +295,12 @@ that JSON will be marshalled to.
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class SearchService {
-  constructor(private http: HttpClient) {}
+
+  constructor(private http: HttpClient) { }
 
   getAll() {
     return this.http.get('assets/data/people.json');
@@ -339,7 +343,7 @@ To make these classes available for consumption by your components, create `src/
 export * from './search/search.service';
 ----
 
-NOTE: If you're wondering why you should use `index.ts`, see http://stackoverflow.com/questions/37564906/what-are-all-the-index-ts-used-for[this Stack Overflow question].
+The reason for creating this file is so you can import multiple classes on a single line rather than having to import each individual class on separate lines.
 
 In `search.component.ts`, add imports for these classes.
 
@@ -358,7 +362,7 @@ export class SearchComponent implements OnInit {
   query: string;
   searchResults: Array<Person>;
 
-  constructor(private searchService: SearchService) {}
+  constructor(private searchService: SearchService) { }
 ----
 
 Then implement a `search()` method to call the service's `getAll()` method.
@@ -368,7 +372,7 @@ Then implement a `search()` method to call the service's `getAll()` method.
 ----
 search(): void {
   this.searchService.getAll().subscribe(
-    data => { this.searchResults = data; },
+    (data: any) => { this.searchResults = data; },
     error => console.log(error)
   );
 }
@@ -377,17 +381,14 @@ search(): void {
 At this point, you'll likely see the following message in your browser's console.
 
 ----
-NullInjectorError: No provider for SearchService!
+NullInjectorError: No provider for HttpClient!
 ----
 
-To fix the "No provider" error from above, update `app.module.ts` to import the `SearchService`
-and add the service to the list of providers. Because `SearchService` depends on `HttpClient`, you'll
-need to import `HttpClientModule` as well.
+To fix the "No provider" error from above, update `app.module.ts` to import `HttpClientModule`.
 
 [source,javascript]
 .src/app/app.module.ts
 ----
-import { SearchService } from './shared';
 import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
@@ -396,13 +397,12 @@ import { HttpClientModule } from '@angular/common/http';
     ...
     HttpClientModule
   ],
-  providers: [SearchService],
+  providers: [],
   bootstrap: [AppComponent]
 })
 ----
 
-Now clicking the search button should work. To make the results look better, remove the `<pre>` tag and replace it with
-a `<table>`.
+Now clicking the search button should work. To make the results look better, remove the `<pre>` tag and replace it with a `<table>` in `search.component.html`.
 
 [source,xml]
 .src/app/search/search.component.html
@@ -460,17 +460,21 @@ But wait, you still don't have search functionality! To add a search feature, ad
 [source,javascript]
 .src/app/shared/search/search.service.ts
 ----
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/map';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+...
 
-search(q: string): Observable<any> {
-  if (!q || q === '*') {
-    q = '';
-  } else {
-    q = q.toLowerCase();
+  search(q: string): Observable<any> {
+    if (!q || q === '*') {
+      q = '';
+    } else {
+      q = q.toLowerCase();
+    }
+    return this.getAll().pipe(
+      map((data: any) => data
+        .filter(item => JSON.stringify(item).toLowerCase().includes(q)))
+    );
   }
-  return this.getAll().map(data => data.filter(item => JSON.stringify(item).toLowerCase().includes(q)));
-}
 ----
 
 Then refactor `SearchComponent` to call this method with its `query` variable.
@@ -480,7 +484,7 @@ Then refactor `SearchComponent` to call this method with its `query` variable.
 ----
 search(): void {
   this.searchService.search(this.query).subscribe(
-    data => { this.searchResults = data; },
+    (data: any) => { this.searchResults = data; },
     error => console.log(error)
   );
 }
@@ -505,11 +509,11 @@ Run the following command to generate an `EditComponent`.
 [source]
 ----
 $ ng g component edit
-  create src/app/edit/edit.component.css (0 bytes)
-  create src/app/edit/edit.component.html (23 bytes)
-  create src/app/edit/edit.component.spec.ts (614 bytes)
-  create src/app/edit/edit.component.ts (261 bytes)
-  update src/app/app.module.ts (898 bytes)
+CREATE src/app/edit/edit.component.css (0 bytes)
+CREATE src/app/edit/edit.component.html (23 bytes)
+CREATE src/app/edit/edit.component.spec.ts (614 bytes)
+CREATE src/app/edit/edit.component.ts (261 bytes)
+UPDATE src/app/app.module.ts (844 bytes)
 ----
 
 Add a route for this component in `app.module.ts`:
@@ -517,7 +521,6 @@ Add a route for this component in `app.module.ts`:
 [source,javascript]
 .src/app/app.module.ts
 ----
-
 const appRoutes: Routes = [
   { path: 'search', component: SearchComponent },
   { path: 'edit/:id', component: EditComponent },
@@ -565,7 +568,7 @@ Modify `EditComponent` to import model and service classes and to use the `Searc
 ----
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Address, Person, SearchService } from '../shared';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
@@ -639,28 +642,21 @@ search(q: string): Observable<any> {
   } else {
     q = q.toLowerCase();
   }
-  return this.getAll().map((data: any) => {
-    const results: any = [];
-    data.map(item => {
-      // check for item in localStorage
-      if (localStorage['person' + item.id]) {
-        item = JSON.parse(localStorage['person' + item.id]);
-      }
-      if (JSON.stringify(item).toLowerCase().includes(q)) {
-        results.push(item);
-      }
-    });
-    return results;
-  });
+  return this.getAll().pipe(
+    map((data: any) => data
+        .map(item => !!localStorage['person' + item.id] ?
+          JSON.parse(localStorage['person' + item.id]) : item)
+        .filter(item => JSON.stringify(item).toLowerCase().includes(q))
+    ));
 }
 
 get(id: number) {
-  return this.getAll().map((all: any) => {
+  return this.getAll().pipe(map((all: any) => {
     if (localStorage['person' + id]) {
       return JSON.parse(localStorage['person' + id]);
     }
     return all.find(e => e.id === id);
-  });
+  }));
 }
 
 save(person: Person) {
@@ -710,12 +706,12 @@ Since the `SearchComponent` doesn't execute a search automatically when you exec
 .src/app/search/search.component.ts
 ----
 import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 ...
 
 sub: Subscription;
 
-constructor(private searchService: SearchService, private route: ActivatedRoute) {}
+constructor(private searchService: SearchService, private route: ActivatedRoute) { }
 
 ngOnInit() {
   this.sub = this.route.params.subscribe(params => {
@@ -737,7 +733,9 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 export class SearchComponent implements OnInit, OnDestroy {
 ...
   ngOnDestroy() {
-    this.sub.unsubscribe();
+    if (this.sub) {
+      this.sub.unsubscribe();
+    }
   }
 }
 ----
@@ -842,8 +840,8 @@ integration testing. Angular's testing documentation lists https://angular.io/do
 If you run `ng test`, you'll likely received an error:
 
 ----
-Chrome 64.0.3282 (Mac OS X 10.13.3) AppComponent should create the app FAILED
-        'router-outlet' is not a known element:
+Chrome 66.0.3359 (Mac OS X 10.13.4) AppComponent should create the app FAILED
+	'router-outlet' is not a known element:
 ----
 
 This happens because the test is unaware of Angular's router. To fix this, import `RouterTestingModule` in `app.component.spec.ts`:
@@ -859,9 +857,7 @@ describe('AppComponent', () => {
       declarations: [
         AppComponent
       ],
-      imports: [
-        RouterTestingModule
-      ]
+      imports: [RouterTestingModule]
     }).compileComponents();
   }));
 ----
@@ -904,10 +900,10 @@ describe('SearchService', () => {
 If you run `ng test`, you will likely see some errors about the test stubs that Angular CLI created for you. You can ignore these for now.
 
 ----
-Chrome 60.0.3112 (Mac OS X 10.12.6) EditComponent should be created FAILED
-	There is no directive with "exportAs" set to "ngForm" ("<div *ngIf="person">
+Chrome 66.0.3359 (Mac OS X 10.13.4) EditComponent should create FAILED
+	Can't bind to 'ngModel' since it isn't a known property of 'input'. ("
 
-Chrome 60.0.3112 (Mac OS X 10.12.6) SearchComponent should create FAILED
+Chrome 66.0.3359 (Mac OS X 10.13.4) SearchComponent should create FAILED
 	Can't bind to 'ngModel' since it isn't a known property of 'input'. ("<h2>Search</h2>
 ----
 
@@ -950,7 +946,8 @@ it('should be created', () => {
 });
 ----
 
-Notice that tests continually run as you add them when using `ng test`. You can run tests once by using `ng test --watch=false` or `ng test -sr`.
+TIP: You might notice that your tests only run once when you run `ng test`. This is different behavior than Angular CLI 1.x. You can continually run your tests with `ng test --watch=true`.
+
 Add a couple more tests for filtering by search term and fetching by id.
 
 [source,javascript]
@@ -977,7 +974,7 @@ it('should fetch by id', () => {
     {id: 2, name: 'Gary Kubiak'}
   ];
 
-  service.get(2).subscribe((person: Person) => {
+  service.get(2).subscribe((person: any) => {
     expect(person.name).toBe('Gary Kubiak');
   });
 
@@ -1109,15 +1106,14 @@ Alongside, create `routes.ts` to mock Angular's `Router` and `ActivatedRoute`.
 .src/app/shared/search/mocks/routes.ts
 ----
 import { ActivatedRoute, Params } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/of';
+import { Observable, of } from 'rxjs';
 
 export class MockActivatedRoute extends ActivatedRoute {
   params: Observable<Params>;
 
   constructor(parameters?: { [key: string]: any; }) {
     super();
-    this.params = Observable.of(parameters);
+    this.params = of(parameters);
   }
 }
 
@@ -1251,7 +1247,7 @@ describe('EditComponent', () => {
 });
 ----
 
-You should see "Executed 11 of 11 [green]#SUCCESS# (0.416 secs / 0.399 secs)" in the shell window that's running `ng test`. If you don't, try cancelling the command and restarting.
+You should see "Executed 11 of 11 [green]#SUCCESS# (0.384 secs / 0.372 secs)" in the shell window that's running `ng test`. If you don't, try cancelling the command and restarting.
 
 === Integration test the search UI
 
@@ -1267,46 +1263,65 @@ All tests should pass.
 
 ----
 $ ng e2e
-** NG Live Development Server is listening on localhost:49153, open your browser on http://localhost:49153/ **
-Date: 2018-03-12T22:03:34.491Z
-Hash: 03a3575db9d7cae2b815
-Time: 9429ms
-chunk {inline} inline.bundle.js, inline.bundle.js.map (inline) 3.89 kB [entry] [rendered]
-chunk {main} main.bundle.js, main.bundle.js.map (main) 22 kB [initial] [rendered]
-chunk {polyfills} polyfills.bundle.js, polyfills.bundle.js.map (polyfills) 202 kB [initial] [rendered]
-chunk {styles} styles.bundle.js, styles.bundle.js.map (styles) 14.5 kB [initial] [rendered]
-chunk {vendor} vendor.bundle.js, vendor.bundle.js.map (vendor) 3.55 MB [initial] [rendered]
-(node:21544) [DEP0022] DeprecationWarning: os.tmpDir() is deprecated. Use os.tmpdir() instead.
+** Angular Live Development Server is listening on localhost: 4200, open your browser on http://localhost:4200/ **
 
-webpack: Compiled successfully.
-[16:03:34] I/file_manager - creating folder /Users/mraible/dev/ng-demo/node_modules/protractor/node_modules/webdriver-manager/selenium
-[16:03:40] I/update - chromedriver: unzipping chromedriver_2.36.zip
-[16:03:41] I/update - chromedriver: setting permissions to 0755 for /Users/mraible/dev/ng-demo/node_modules/protractor/node_modules/webdriver-manager/selenium/chromedriver_2.36
-[16:03:41] I/launcher - Running 1 instances of WebDriver
-[16:03:41] I/direct - Using ChromeDriver directly...
+Date: 2018-05-04T21:53:03.235Z
+Hash: a92537a8e74e06d13a8a
+Time: 8302ms
+chunk {main} main.js, main.js.map (main) 26.5 kB [initial] [rendered]
+chunk {polyfills} polyfills.js, polyfills.js.map (polyfills) 226 kB [initial] [rendered]
+chunk {runtime} runtime.js, runtime.js.map (runtime) 5.4 kB [entry] [rendered]
+chunk {styles} styles.js, styles.js.map (styles) 15.6 kB [initial] [rendered]
+chunk {vendor} vendor.js, vendor.js.map (vendor) 3.98 MB [initial] [rendered]
+[15:53:03] I/file_manager - creating folder /Users/mraible/ng-demo/node_modules/protractor/node_modules/webdriver-manager/selenium
+ℹ ｢wdm｣: Compiled successfully.
+[15:53:05] I/update - chromedriver: unzipping chromedriver_2.38.zip
+[15:53:06] I/update - chromedriver: setting permissions to 0755 for /Users/mraible/ng-demo/node_modules/protractor/node_modules/webdriver-manager/selenium/chromedriver_2.38
+(node:2820) [DEP0022] DeprecationWarning: os.tmpDir() is deprecated. Use os.tmpdir() instead.
+[15:53:07] I/launcher - Running 1 instances of WebDriver
+[15:53:07] I/direct - Using ChromeDriver directly...
 Jasmine started
 
-  ng-demo App
+  workspace-project App
     ✓ should display welcome message
 
-Executed 1 of 1 spec SUCCESS in 0.814 sec.
-[16:03:43] I/launcher - 0 instance(s) of WebDriver still running
-[16:03:43] I/launcher - chrome #01 passed
+Executed 1 of 1 spec SUCCESS in 0.818 sec.
+[15:53:09] I/launcher - 0 instance(s) of WebDriver still running
+[15:53:09] I/launcher - chrome #01 passed
 ----
+
+==== Enhance Protractor with async / await
+
+I was https://github.com/angular/protractor/issues/4307#issuecomment-386112285[recently made aware] of a better way to configure Protractor. To integrate these improvements into your project, add the following to `e2e/protractor.conf.js`.
+
+----
+SELENIUM_PROMISE_MANAGER: false,
+----
+
+Then change `e2e/src/app.e2e-spec.ts` so its test uses `async` and `await`.
+
+----
+it('should display welcome message', async () => {
+  await page.navigateTo();
+  expect(await page.getParagraphText()).toEqual('Welcome to app!');
+});
+----
+
+Run `ng e2e` again to make sure everything still works.
 
 === Testing the search feature
 
-Create end-to-end tests in `e2e/search.e2e-spec.ts` to verify the search feature works. Populate it with the following code:
+Create end-to-end tests in `e2e/src/search.e2e-spec.ts` to verify the search feature works. Populate it with the following code:
 
 [source,javascript]
-.e2e/search.e2e-spec.ts
+.e2e/src/search.e2e-spec.ts
 ----
 import { browser, by, element } from 'protractor';
 
 describe('Search', () => {
 
-  beforeEach(() => {
-    browser.get('/search');
+  beforeEach(async () => {
+    await browser.get('/search');
   });
 
   it('should have an input and search button', () => {
@@ -1314,53 +1329,54 @@ describe('Search', () => {
     expect(element(by.css('app-root app-search form button')).isPresent()).toEqual(true);
   });
 
-  it('should allow searching', () => {
+  it('should allow searching', async () => {
     const searchButton = element(by.css('button'));
     const searchBox = element(by.css('input'));
-    searchBox.sendKeys('M');
-    searchButton.click().then(() => {
-      const list = element.all(by.css('app-search table tbody tr'));
-      expect(list.count()).toBe(3);
-    });
+    await searchBox.sendKeys('M');
+    await searchButton.click();
+    const list = element.all(by.css('app-search table tbody tr'));
+    expect(list.count()).toBe(3);
   });
 });
+
 ----
 
 === Testing the edit feature
 
-Create a `e2e/edit.e2e-spec.ts` test to verify the `EditComponent` renders a person's information and that their information can be updated.
+Create a `e2e/src/edit.e2e-spec.ts` test to verify the `EditComponent` renders a person's information and that their information can be updated.
 
 [source,javascript]
-.e2e/edit.e2e-spec.ts
+.e2e/src/edit.e2e-spec.ts
 ----
 import { browser, by, element } from 'protractor';
 
 describe('Edit', () => {
 
-  beforeEach(() => {
-    browser.get('/edit/1');
+  beforeEach(async () => {
+    await browser.get('/edit/1');
   });
 
   const name = element(by.id('name'));
   const street = element(by.id('street'));
   const city = element(by.id('city'));
 
-  it('should allow viewing a person', () => {
-    expect(element(by.css('h3')).getText()).toEqual('Peyton Manning');
-    expect(name.getAttribute('value')).toEqual('Peyton Manning');
-    expect(street.getAttribute('value')).toEqual('1234 Main Street');
-    expect(city.getAttribute('value')).toEqual('Greenwood Village');
+  it('should allow viewing a person', async () => {
+    expect(await element(by.css('h3')).getText()).toEqual('Peyton Manning');
+    expect(await name.getAttribute('value')).toEqual('Peyton Manning');
+    expect(await street.getAttribute('value')).toEqual('1234 Main Street');
+    expect(await city.getAttribute('value')).toEqual('Greenwood Village');
   });
 
-  it('should allow updating a name', function () {
+  it('should allow updating a name', async () => {
     const save = element(by.id('save'));
     name.sendKeys(' Won!');
-    save.click();
+    await save.click();
     // verify one element matched this change
     const list = element.all(by.css('app-search table tbody tr'));
     expect(list.count()).toBe(1);
   });
 });
+
 ----
 
 Run `ng e2e` to verify all your end-to-end tests pass. You should see a success message similar to the one below in
@@ -1373,7 +1389,7 @@ image::src/assets/images/protractor-success.png[Protractor success, 800, scaledw
 If you made it this far and have all your specs passing - congratulations! You're well on your way to writing quality
 code with Angular and verifying it works.
 
-You can see the test coverage of your project by running `ng test -cc -sr` and then opening `coverage/index.html` in your browser.
+You can see the test coverage of your project by running `ng test --code-coverage` and then opening `coverage/index.html` in your browser.
 
 You might notice that the new components and service could use some additional coverage. If you feel the need to improve this coverage, please create a pull request!
 
@@ -1426,7 +1442,7 @@ before_install:
 install:
   - yarn install
 script:
-  - ng test --watch false
+  - ng test
   - ng e2e
 notifications:
   webhooks:
@@ -1462,11 +1478,11 @@ node {
     }
 
     stage('unit tests') {
-        sh "ng test --watch false"
+        sh "ng test"
     }
 
     stage('protractor tests') {
-        sh "npm run e2e"
+        sh "ng e2e"
     }
 }
 ----
@@ -1485,7 +1501,7 @@ https://account.run.pivotal.io/z/uaa/sign-up[Create a Pivotal account] and https
 
 [source,bash]
 ----
-ng build -prod --aot
+ng build --prod --aot
 cd dist && touch Staticfile
 # enable pushstate so no 404s on refresh
 echo 'pushstate: enabled' > Staticfile
@@ -1506,7 +1522,7 @@ https://signup.heroku.com/[Create a Heroku account] and https://devcenter.heroku
 . Add `preinstall` and `postinstall` scripts to `package.json`:
 
   "preinstall": "npm install -g http-server-spa",
-  "postinstall": "ng build -prod --aot"
+  "postinstall": "ng build --prod --aot"
 
 . Run `git push heroku master`
 . View the application in your browser with `heroku open`
