@@ -832,41 +832,16 @@ If you didn't complete the previous section, you can clone the ng-demo repositor
 
 ----
 git clone -b test-start https://github.com/mraible/ng-demo.git
-cd ng-demo && git checkout test-start
+cd ng-demo && npm i
 ----
 ====
 
 In this section, you'll learn to use http://jasmine.github.io/[Jasmine] for unit testing controllers and https://angular.github.io/protractor/[Protractor] for
 integration testing. Angular's testing documentation lists https://angular.io/docs/ts/latest/guide/testing.html[good reasons] to test, but doesn't currently have many examples.
 
-=== Fix the AppComponent test
+=== Fix the Tests
 
-If you run `ng test`, you'll likely received an error:
-
-----
-Chrome 66.0.3359 (Mac OS X 10.13.4) AppComponent should create the app FAILED
-	'router-outlet' is not a known element:
-----
-
-This happens because the test is unaware of Angular's router. To fix this, import `RouterTestingModule` in `app.component.spec.ts`:
-
-[source,javascript]
-.src/app/app.component.spec.ts
-----
-import { RouterTestingModule } from '@angular/router/testing';
-
-describe('AppComponent', () => {
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [
-        AppComponent
-      ],
-      imports: [RouterTestingModule]
-    }).compileComponents();
-  }));
-----
-
-You'll also get failures for the components and service you created. These failures will be solved as you complete the section below.
+If you run `ng test`, you'll likely get failures for the components and service you created. These failures will be solved as you complete the section below.
 
 TIP: You can use `x` and `f` prefixes Jasmine's `describe` and `it` functions to _exclude_ only run only a particular test.
 
@@ -904,10 +879,10 @@ describe('SearchService', () => {
 If you run `ng test`, you will likely see some errors about the test stubs that Angular CLI created for you. You can ignore these for now.
 
 ----
-Chrome 66.0.3359 (Mac OS X 10.13.4) EditComponent should create FAILED
-	Can't bind to 'ngModel' since it isn't a known property of 'input'. ("
+Chrome 70.0.3538 (Mac OS X 10.13.6) EditComponent should create FAILED
+	There is no directive with "exportAs" set to "ngForm" ("<div *ngIf="person">
 
-Chrome 66.0.3359 (Mac OS X 10.13.4) SearchComponent should create FAILED
+Chrome 70.0.3538 (Mac OS X 10.13.6) SearchComponent should create FAILED
 	Can't bind to 'ngModel' since it isn't a known property of 'input'. ("<h2>Search</h2>
 ----
 
@@ -949,8 +924,6 @@ it('should be created', () => {
   expect(service).toBeTruthy();
 });
 ----
-
-TIP: You might notice that your tests only run once when you run `ng test`. This is different behavior than Angular CLI 1.x. You can continually run your tests with `ng test --watch=true`.
 
 Add a couple more tests for filtering by search term and fetching by id.
 
@@ -1251,7 +1224,7 @@ describe('EditComponent', () => {
 });
 ----
 
-You should see "Executed 11 of 11 [green]#SUCCESS# (0.384 secs / 0.372 secs)" in the shell window that's running `ng test`. If you don't, try cancelling the command and restarting.
+You should see "Executed 11 of 11 [green]#SUCCESS# (0.411 secs / 0.399 secs)" in the shell window that's running `ng test`. If you don't, try cancelling the command and restarting.
 
 === Integration test the search UI
 
@@ -1267,31 +1240,31 @@ All tests should pass.
 
 ----
 $ ng e2e
-** Angular Live Development Server is listening on localhost: 4200, open your browser on http://localhost:4200/ **
+** Angular Live Development Server is listening on localhost:4200, open your browser on http://localhost:4200/ **
 
-Date: 2018-05-04T21:53:03.235Z
-Hash: a92537a8e74e06d13a8a
-Time: 8302ms
-chunk {main} main.js, main.js.map (main) 26.5 kB [initial] [rendered]
-chunk {polyfills} polyfills.js, polyfills.js.map (polyfills) 226 kB [initial] [rendered]
-chunk {runtime} runtime.js, runtime.js.map (runtime) 5.4 kB [entry] [rendered]
-chunk {styles} styles.js, styles.js.map (styles) 15.6 kB [initial] [rendered]
-chunk {vendor} vendor.js, vendor.js.map (vendor) 3.98 MB [initial] [rendered]
-[15:53:03] I/file_manager - creating folder /Users/mraible/ng-demo/node_modules/protractor/node_modules/webdriver-manager/selenium
+Date: 2018-11-18T16:31:59.824Z
+Hash: ba8063b94d89f79646a4
+Time: 6650ms
+chunk {main} main.js, main.js.map (main) 29.8 kB [initial] [rendered]
+chunk {polyfills} polyfills.js, polyfills.js.map (polyfills) 223 kB [initial] [rendered]
+chunk {runtime} runtime.js, runtime.js.map (runtime) 6.08 kB [entry] [rendered]
+chunk {styles} styles.js, styles.js.map (styles) 16.2 kB [initial] [rendered]
+chunk {vendor} vendor.js, vendor.js.map (vendor) 3.89 MB [initial] [rendered]
 ℹ ｢wdm｣: Compiled successfully.
-[15:53:05] I/update - chromedriver: unzipping chromedriver_2.38.zip
-[15:53:06] I/update - chromedriver: setting permissions to 0755 for /Users/mraible/ng-demo/node_modules/protractor/node_modules/webdriver-manager/selenium/chromedriver_2.38
-(node:2820) [DEP0022] DeprecationWarning: os.tmpDir() is deprecated. Use os.tmpdir() instead.
-[15:53:07] I/launcher - Running 1 instances of WebDriver
-[15:53:07] I/direct - Using ChromeDriver directly...
+[09:32:00] I/update - chromedriver: file exists /Users/mraible/dev/ng-demo/node_modules/protractor/node_modules/webdriver-manager/selenium/chromedriver_2.43.zip
+[09:32:00] I/update - chromedriver: unzipping chromedriver_2.43.zip
+[09:32:00] I/update - chromedriver: setting permissions to 0755 for /Users/mraible/dev/ng-demo/node_modules/protractor/node_modules/webdriver-manager/selenium/chromedriver_2.43
+[09:32:00] I/update - chromedriver: chromedriver_2.43 up to date
+[09:32:00] I/launcher - Running 1 instances of WebDriver
+[09:32:00] I/direct - Using ChromeDriver directly...
 Jasmine started
 
   workspace-project App
     ✓ should display welcome message
 
-Executed 1 of 1 spec SUCCESS in 0.818 sec.
-[15:53:09] I/launcher - 0 instance(s) of WebDriver still running
-[15:53:09] I/launcher - chrome #01 passed
+Executed 1 of 1 spec SUCCESS in 0.83 sec.
+[09:32:02] I/launcher - 0 instance(s) of WebDriver still running
+[09:32:02] I/launcher - chrome #01 passed
 ----
 
 ==== Enhance Protractor with async / await
@@ -1307,7 +1280,7 @@ Then change `e2e/src/app.e2e-spec.ts` so its test uses `async` and `await`.
 ----
 it('should display welcome message', async () => {
   await page.navigateTo();
-  expect(await page.getParagraphText()).toEqual('Welcome to app!');
+  expect(await page.getTitleText()).toEqual('Welcome to ng-demo!');
 });
 ----
 
@@ -1342,7 +1315,6 @@ describe('Search', () => {
     expect(list.count()).toBe(3);
   });
 });
-
 ----
 
 === Testing the edit feature
@@ -1380,7 +1352,6 @@ describe('Edit', () => {
     expect(list.count()).toBe(1);
   });
 });
-
 ----
 
 Run `ng e2e` to verify all your end-to-end tests pass. You should see a success message similar to the one below in
@@ -1420,7 +1391,7 @@ services:
   - docker
 language: node_js
 node_js:
-  - "9.8.0"
+  - "11.0.0"
 addons:
   apt:
     sources:
@@ -1428,9 +1399,7 @@ addons:
     packages:
     - google-chrome-stable
 cache:
-  yarn: true
   directories:
-    - $HOME/.yarn-cache
     - node_modules
 branches:
   only:
@@ -1439,12 +1408,9 @@ before_install:
   - export CHROME_BIN=/usr/bin/google-chrome
   - export DISPLAY=:99.0
   - sh -e /etc/init.d/xvfb start
-  # Repo for Yarn
-  - curl -o- -L https://yarnpkg.com/install.sh | bash
-  - export PATH=$HOME/.yarn/bin:$PATH
-  - yarn global add @angular/cli
+  - npm install -g @angular/cli@7.0.6
 install:
-  - yarn install
+  - npm ci
 script:
   - ng test
   - ng e2e
@@ -1465,7 +1431,7 @@ If you've checked your project into source control, you can use Jenkins to autom
 
 ----
 node {
-    def nodeHome = tool name: 'node-9.8.0', type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'
+    def nodeHome = tool name: 'node-11.0.0', type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'
     env.PATH = "${nodeHome}/bin:${env.PATH}"
 
     stage('check tools') {

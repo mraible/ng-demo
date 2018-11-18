@@ -28,7 +28,7 @@ describe('SearchComponent', () => {
       ],
       imports: [FormsModule, RouterTestingModule]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
