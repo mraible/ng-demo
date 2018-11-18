@@ -1491,7 +1491,7 @@ https://signup.heroku.com/[Create a Heroku account] and https://devcenter.heroku
 
 . Add `preinstall` and `postinstall` scripts to `package.json`:
 
-  "preinstall": "npm install -g http-server-spa",
+  "preinstall": "npm i -g http-server-spa",
   "postinstall": "ng build --prod=true"
 
 . Run `git push heroku master`
