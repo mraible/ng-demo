@@ -5,13 +5,11 @@
   "license": "MIT",
   "scripts": {
     "ng": "ng",
-    "start": "http-server-spa dist/ng-demo index.html $PORT",
+    "start": "ng serve",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e",
-    "preinstall": "npm i -g http-server-spa",
-    "postinstall": "ng build --prod=true"
+    "e2e": "ng e2e"
   },
   "private": true,
   "dependencies": {
