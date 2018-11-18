@@ -31,7 +31,7 @@ describe('SearchComponent', () => {
       imports: [FormsModule, RouterTestingModule,
         MatListModule, MatIconModule, MatInputModule, NoopAnimationsModule]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
