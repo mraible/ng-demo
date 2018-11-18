@@ -25,7 +25,7 @@ before_install:
 install:
   - npm ci
 script:
-  - ng test
+  - ng test --watch=false
   - ng e2e
 notifications:
   webhooks:

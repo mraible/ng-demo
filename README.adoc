@@ -1364,7 +1364,7 @@ image::src/assets/images/protractor-success.png[Protractor success, 800, scaledw
 If you made it this far and have all your specs passing - congratulations! You're well on your way to writing quality
 code with Angular and verifying it works.
 
-You can see the test coverage of your project by running `ng test --code-coverage` and then opening `coverage/index.html` in your browser.
+You can see the test coverage of your project by running `ng test --codeCoverage=true` and then opening `coverage/index.html` in your browser.
 
 You might notice that the new components and service could use some additional coverage. If you feel the need to improve this coverage, please create a pull request!
 
@@ -1412,7 +1412,7 @@ before_install:
 install:
   - npm ci
 script:
-  - ng test
+  - ng test --watch=false
   - ng e2e
 notifications:
   webhooks:
@@ -1471,7 +1471,7 @@ https://account.run.pivotal.io/z/uaa/sign-up[Create a Pivotal account] and https
 
 [source,bash]
 ----
-ng build --prod --aot
+ng build --prod=true
 cd dist && touch Staticfile
 # enable pushstate so no 404s on refresh
 echo 'pushstate: enabled' > Staticfile
@@ -1492,7 +1492,7 @@ https://signup.heroku.com/[Create a Heroku account] and https://devcenter.heroku
 . Add `preinstall` and `postinstall` scripts to `package.json`:
 
   "preinstall": "npm install -g http-server-spa",
-  "postinstall": "ng build --prod --aot"
+  "postinstall": "ng build --prod"
 
 . Run `git push heroku master`
 . View the application in your browser with `heroku open`
