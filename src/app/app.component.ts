@@ -1,5 +1,12 @@
 import { Component } from '@angular/core';
-import { OAuthService, JwksValidationHandler } from 'angular-oauth2-oidc';
+import { OAuthService, JwksValidationHandler, AuthConfig } from 'angular-oauth2-oidc';
+
+export const authConfig: AuthConfig = {
+  issuer: 'https://dev-737523.oktapreview.com/oauth2/default',
+  redirectUri: window.location.origin,
+  clientId: '0oahku3cxrZV1xyB70h7',
+  scope: 'openid profile email'
+};
 
 @Component({
   selector: 'app-root',
@@ -7,13 +14,10 @@ import { OAuthService, JwksValidationHandler } from 'angular-oauth2-oidc';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'app';
+  title = 'ng-demo';
 
   constructor(private oauthService: OAuthService) {
-    this.oauthService.redirectUri = window.location.origin;
-    this.oauthService.clientId = '0oaeb04i9ynUIFpL00h7';
-    this.oauthService.scope = 'openid profile email';
-    this.oauthService.issuer = 'https://dev-158606.oktapreview.com/oauth2/default';
+    this.oauthService.configure(authConfig);
     this.oauthService.tokenValidationHandler = new JwksValidationHandler();
 
     // Load Discovery Document and then try to login the user

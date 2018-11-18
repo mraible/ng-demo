@@ -1,13 +1,13 @@
 <div *ngIf="person">
   <h3>{{editName}}</h3>
-  <form #editForm="ngForm" (ngSubmit)="save()">
+  <form (ngSubmit)="save()" #editForm="ngForm">
     <div>
       <label>Id:</label>
       {{person.id}}
     </div>
     <div>
       <label>Name:</label>
-      <input [(ngModel)]="editName" name="name" id="name" placeholder="name" required #name="ngModel"/>
+      <input #name="ngModel" [(ngModel)]="editName" name="name" id="name" placeholder="name" required/>
       <div [hidden]="name.valid || name.pristine" style="color: red">
         Name is required
       </div>

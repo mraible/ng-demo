@@ -1,5 +1,5 @@
 import { getTestBed, TestBed } from '@angular/core/testing';
-import { Person, SearchService } from './search.service';
+import { SearchService } from './search.service';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 
 describe('SearchService', () => {
@@ -64,7 +64,7 @@ describe('SearchService', () => {
       {id: 2, name: 'Gary Kubiak'}
     ];
 
-    service.get(2).subscribe((person: Person) => {
+    service.get(2).subscribe((person: any) => {
       expect(person.name).toBe('Gary Kubiak');
     });
 
