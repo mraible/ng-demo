@@ -1400,7 +1400,7 @@ addons:
     - google-chrome-stable
 cache:
   directories:
-    - node_modules
+  - node_modules
 branches:
   only:
   - master
