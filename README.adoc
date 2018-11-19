@@ -1118,16 +1118,19 @@ describe('SearchComponent', () => {
   let fixture: ComponentFixture<SearchComponent>;
   let mockSearchService: MockSearchService;
   let mockActivatedRoute: MockActivatedRoute;
+  let mockRouter: MockRouter;
 
   beforeEach(async(() => {
     mockSearchService = new MockSearchService();
     mockActivatedRoute = new MockActivatedRoute({'term': 'peyton'});
+    mockRouter = new MockRouter();
 
     TestBed.configureTestingModule({
       declarations: [ SearchComponent ],
       providers: [
         {provide: SearchService, useValue: mockSearchService},
-        {provide: ActivatedRoute, useValue: mockActivatedRoute}
+        {provide: ActivatedRoute, useValue: mockActivatedRoute},
+        {provide: Router, useValue: mockRouter}
       ],
       imports: [FormsModule, RouterTestingModule]
     })
@@ -1504,14 +1507,361 @@ I hope you've enjoyed this in-depth tutorial on how to get started with Angular 
 of the pain out of setting up an Angular project and using Typescript. I expect great things from Angular CLI, mostly
 because the Angular setup process can be tedious and CLI greatly simplifies things.
 
-== Bonus: Angular Material, Bootstrap 4, and Okta
+== Bonus: Okta
 
-If you'd like to see how to integrate https://material.angular.io/[Angular Material], https://getbootstrap.com[Bootstrap 4],
-or http://developer.okta.com[authentication with Okta], this section is for you!
+To integrate http://developer.okta.com[Okta] for user authentication, you'll first need to https://www.okta.com/developer/signup/[register] and create an OpenID Connect application.
 
-I've created branches to show how to integrate each of these libraries. Click on the links below to see each branch's
-documentation.
+=== Create an OpenID Connect App in Okta
 
-* https://github.com/mraible/ng-demo/tree/angular-material#bonus-angular-material[Angular Material]
-* https://github.com/mraible/ng-demo/tree/bootstrap4#bonus-bootstrap[Bootstrap 4]
-* https://github.com/mraible/ng-demo/tree/okta#bonus-okta[Authentication with Okta]
+OpenID Connect is built on top of the OAuth 2.0 protocol. It allows clients to verify the identity of the user and, as well as to obtain their basic profile information. To learn more, see http://openid.net/connect/[http://openid.net/connect].
+
+Login to your Okta account, or https://developer.okta.com/signup/[create one] if you don’t have one. Navigate to *Applications* > *Add Application*. Select *Single-Page App (SPA)* and click *Next*. Click the *Create* button and give your application a name. On the next screen, change the *Base URIs* and *Login redirect URIs* to `http://localhost:4200`. Click *Done*. Edit your application to add `http://localhost:4200` as a *Logout redirect URI*. When you are finished, your settings should look similar to the screenshot below.
+
+.OIDC App Settings
+image::src/assets/images/oidc-settings.png[OIDC App Settings, 800, scaledwidth="100%"]
+
+Install https://github.com/manfredsteyer[Manfred Steyer's] project to https://github.com/manfredsteyer/angular-oauth2-oidc[add OAuth 2 and OpenId Connect (OIDC) support] using npm.
+
+----
+npm i angular-oauth2-oidc@5.0.2
+----
+
+Modify `app.component.ts` to import `OAuthService` and configure your app to use your Okta application settings.
+
+[source,js]
+.src/app/app.component.ts
+----
+import { Component } from '@angular/core';
+import { OAuthService, JwksValidationHandler, AuthConfig } from 'angular-oauth2-oidc';
+
+export const authConfig: AuthConfig = {
+  issuer: 'https://{yourOktaDomain}/oauth2/default',
+  redirectUri: window.location.origin,
+  clientId: '{yourClientId}',
+  scope: 'openid profile email'
+};
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent {
+  title = 'ng-demo';
+
+  constructor(private oauthService: OAuthService) {
+    this.oauthService.configure(authConfig);
+    this.oauthService.tokenValidationHandler = new JwksValidationHandler();
+
+    // Load Discovery Document and then try to login the user
+    this.oauthService.loadDiscoveryDocumentAndTryLogin();
+  }
+}
+----
+
+Create `src/app/home/home.component.ts` and configure it to have *Login* and *Logout* buttons.
+
+[source,ts]
+----
+import { Component } from '@angular/core';
+import { OAuthService } from 'angular-oauth2-oidc';
+
+@Component({
+  template: `
+    <div *ngIf="givenName">
+      <h2>Welcome, {{givenName}}!</h2>
+      <button (click)="logout()">Logout</button>
+      <p><a routerLink="/search" routerLinkActive="active">Search</a></p>
+    </div>
+
+    <div *ngIf="!givenName">
+      <button (click)="login()">Login</button>
+    </div>`
+})
+export class HomeComponent {
+
+  constructor(private oauthService: OAuthService) {
+  }
+
+  login() {
+    this.oauthService.initImplicitFlow();
+  }
+
+  logout() {
+    this.oauthService.logOut();
+  }
+
+  get givenName() {
+    const claims = this.oauthService.getIdentityClaims();
+    if (!claims) {
+      return null;
+    }
+    return claims['name'];
+  }
+}
+----
+
+Create `src/app/shared/auth/auth.guard.service.ts` to navigate to the `HomeComponent` if the user is not authenticated.
+
+[source,ts]
+.src/app/shared/auth/auth.guard.service.ts
+----
+import { Injectable } from '@angular/core';
+import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from '@angular/router';
+import { OAuthService } from 'angular-oauth2-oidc';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class AuthGuard implements CanActivate {
+
+  constructor(private oauthService: OAuthService, private router: Router) {}
+
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
+    if (this.oauthService.hasValidIdToken()) {
+      return true;
+    }
+
+    this.router.navigate(['/home']);
+    return false;
+  }
+}
+----
+
+Export `AuthGuard` in `src/shared/index.ts`:
+
+[source,ts]
+.src/app/shared/index.ts
+----
+export * from './auth/auth.guard.service';
+----
+
+Import the `OAuthModule` in `app-routing.module.ts`, configure the new `HomeComponent`, and lock the `/search` and `/edit` routes down with the `AuthGuard`.
+
+[source,ts]
+.src/app/app-routing.module.ts
+----
+import { HomeComponent } from './home/home.component';
+import { AuthGuard } from './shared';
+import { OAuthModule } from 'angular-oauth2-oidc';
+
+const routes: Routes = [
+  { path: 'search', component: SearchComponent, canActivate: [AuthGuard] },
+  { path: 'edit/:id', component: EditComponent, canActivate: [AuthGuard] },
+  { path: 'home', component: HomeComponent },
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
+  { path: '**', redirectTo: 'home' }
+];
+
+@NgModule({
+  imports: [RouterModule.forRoot(routes), OAuthModule.forRoot()],
+  exports: [RouterModule]
+})
+export class AppRoutingModule { }
+----
+
+After making these changes, you should be able to run `ng serve` and see a login button.
+
+[[okta-login-button]]
+.Okta login button
+image::src/assets/images/okta-login-button.png[Login button, 800, scaledwidth="100%"]
+
+Click the *Login* button and sign-in with one of the people that's configured in your Okta application.
+
+[[okta-login]]
+.Okta login form
+image::src/assets/images/okta-login-form.png[Okta login form, 800, scaledwidth="100%"]
+
+After logging in, you'll be able to click *Search* and view people's information.
+
+[[okta-post-login]]
+.View after login
+image::src/assets/images/okta-post-login.png[View after login, 800, scaledwidth="100%"]
+
+If it works - great! If you want to build your own login form in your app, continue reading to learn how to use the https://github.com/okta/okta-auth-js[Okta Auth SDK] with `OAuthService`.
+
+=== Authentication with Okta Auth SDK
+
+The Okta Auth SDK builds on top of Otka's http://developer.okta.com/docs/api/resources/authn.html[Authentication API] and
+http://developer.okta.com/docs/api/resources/oidc.html[OAuth 2.0 API] to enable you to create a fully branded sign-in
+experience using JavaScript.
+
+Install it using npm:
+
+[source,bash]
+----
+npm i @okta/okta-auth-js@2.2.0
+----
+
+The components in this section use Bootstrap CSS classes. Install Bootstrap 4.
+
+[source,bash]
+----
+npm install bootstrap@4.1.3
+----
+
+Modify `src/styles.css` to add a reference to Bootstrap’s CSS file.
+
+[source,css]
+.src/styles.css
+----
+@import "~bootstrap/dist/css/bootstrap.css";
+----
+
+Update `src/app/app.component.html` to use Bootstrap classes for its navbar and grid system.
+
+[source,html]
+.src/app/app.component.html
+----
+<nav class="navbar navbar-light bg-secondary">
+  <a class="navbar-brand text-light" href="#">Welcome to {{ title }}!</a>
+</nav>
+<div class="container-fluid">
+  <router-outlet></router-outlet>
+</div>
+----
+
+Create `src/app/shared/auth/okta.auth.wrapper.ts` to wrap the Okta Auth SDK and integrate it with `OAuthService`. Its
+`login()` method uses `OktaAuth` to get a session token and exchange it for ID and access tokens.
+
+[source,ts]
+.src/app/shared/auth/okta.auth.wrapper.ts
+----
+import { OAuthService } from 'angular-oauth2-oidc';
+import { Injectable } from '@angular/core';
+import * as OktaAuth from '@okta/okta-auth-js';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class OktaAuthWrapper {
+
+  private authClient: any;
+
+  constructor(private oauthService: OAuthService) {
+    this.authClient = new OktaAuth({
+      url: 'https://{yourOktaDomain}',
+      issuer: 'default'
+    });
+  }
+
+  login(username: string, password: string): Promise<any> {
+    return this.oauthService.createAndSaveNonce().then(nonce => {
+      return this.authClient.signIn({
+        username: username,
+        password: password
+      }).then((response) => {
+        if (response.status === 'SUCCESS') {
+          return this.authClient.token.getWithoutPrompt({
+            clientId: this.oauthService.clientId,
+            responseType: ['id_token', 'token'],
+            scopes: ['openid', 'profile', 'email'],
+            sessionToken: response.sessionToken,
+            nonce: nonce,
+            redirectUri: window.location.origin
+          })
+            .then((tokens) => {
+              const idToken = tokens[0].idToken;
+              const accessToken = tokens[1].accessToken;
+              const keyValuePair = `#id_token=${encodeURIComponent(idToken)}&access_token=${encodeURIComponent(accessToken)}`;
+              return this.oauthService.tryLogin({ // <1>
+                customHashFragment: keyValuePair,
+                disableOAuth2StateCheck: true
+              });
+            });
+        } else {
+          return Promise.reject('We cannot handle the ' + response.status + ' status');
+        }
+      });
+    });
+  }
+}
+----
+<1> Process and store the `idToken` and `accessToken` so they can be retrieved using `OAuthService.getIdToken()` and `OAuthService.getAccessToken()`.
+
+Export `OktaAuthWrapper` in `src/shared/index.ts`:
+
+[source,ts]
+.src/app/shared/index.ts
+----
+export * from './auth/okta.auth.wrapper';
+----
+
+Change `HomeComponent` to modify its `template` so it has a button to login, as well as a sign-in form.
+
+[source,ts]
+.src/app/home/home.component.html
+----
+@Component({
+  template: `
+    <div *ngIf="givenName" class="col-12 mt-2">
+      <button (click)="logout()" class="btn btn-sm btn-outline-primary float-right">Logout</button>
+      <h2>Welcome, {{givenName}}!</h2>
+      <p><a routerLink="/search" routerLinkActive="active">Search</a></p>
+    </div>
+
+    <div class="card mt-2" *ngIf="!givenName">
+      <div class="card-body">
+        <h4 class="card-title">Login with Authorization Server</h4>
+        <button class="btn btn-primary" (click)="login()">Login</button>
+      </div>
+    </div>
+
+    <div class="card mt-2" *ngIf="!givenName">
+      <div class="card-body">
+        <h4 class="card-title">Login with Username/Password</h4>
+
+        <p class="alert alert-error" *ngIf="loginFailed">
+          Login wasn't successful.
+        </p>
+
+        <div class="form-group">
+          <label>Username</label>
+          <input class="form-control" [(ngModel)]="username">
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input class="form-control" type="password" [(ngModel)]="password">
+        </div>
+        <div class="form-group">
+          <button class="btn btn-primary" (click)="loginWithPassword()">Login</button>
+        </div>
+      </div>
+    </div>`
+})
+----
+
+After making these changes, the `HomeComponent` should render as follows.
+
+[[login-form]]
+.Custom sign-in form
+image::src/assets/images/sign-in-form.png[Custom login form, 800, scaledwidth="100%"]
+
+Add local variables for the username and password fields, import `OktaAuthWrapper`, and implement a `loginWithPassword()` method in `HomeComponent`.
+
+[source,ts]
+.src/app/home/home.component.ts
+----
+import { OktaAuthWrapper } from '../shared';
+...
+
+username;
+password;
+
+constructor(private oauthService: OAuthService,
+            private oktaAuthWrapper: OktaAuthWrapper) {
+}
+
+loginWithPassword() {
+  this.oktaAuthWrapper.login(this.username, this.password)
+    .catch(err => console.error('error logging in', err));
+}
+----
+
+You should be able to sign in using the form, using one of your app's registered users. After logging in, you'll be able to click *Search* and view people's information.
+
+[[sign-in-success]]
+.View after sign-in
+image::src/assets/images/sign-in-form-success.png[View after sign-in, 800, scaledwidth="100%"]
+
+If everything works - congrats! If you encountered issues, please post a question to Stack Overflow with an http://stackoverflow.com/questions/tagged/okta[okta tag], or hit me up on Twitter https://twitter.com/mraible[@mraible].

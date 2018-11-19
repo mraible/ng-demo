@@ -1,20 +1,24 @@
 import { TestBed, async } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
-import { RouterTestingModule } from '@angular/router/testing';
-import { OAuthModule } from 'angular-oauth2-oidc';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { OAuthService } from 'angular-oauth2-oidc';
 
 describe('AppComponent', () => {
+  let oauthService = {
+    configure(config: any) {},
+    loadDiscoveryDocumentAndTryLogin() {}
+  };
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule,
-        OAuthModule.forRoot(),
-        HttpClientTestingModule
+        RouterTestingModule
       ],
       declarations: [
         AppComponent
+      ],
+      providers: [
+        {provide: OAuthService, useValue: oauthService}
       ]
     }).compileComponents();
   }));
@@ -31,10 +35,10 @@ describe('AppComponent', () => {
     expect(app.title).toEqual('ng-demo');
   });
 
-  it('should render title in a h1 tag', () => {
+  it('should render title in a nav tag', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.debugElement.nativeElement;
-    expect(compiled.querySelector('h1').textContent).toContain('Welcome to ng-demo!');
+    expect(compiled.querySelector('nav').textContent).toContain('Welcome to ng-demo!');
   });
 });

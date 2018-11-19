@@ -11,7 +11,7 @@ export class OktaAuthWrapper {
 
   constructor(private oauthService: OAuthService) {
     this.authClient = new OktaAuth({
-      url: 'https://dev-158606.oktapreview.com',
+      url: 'https://dev-737523.oktapreview.com',
       issuer: 'default'
     });
   }
@@ -35,10 +35,10 @@ export class OktaAuthWrapper {
               const idToken = tokens[0].idToken;
               const accessToken = tokens[1].accessToken;
               const keyValuePair = `#id_token=${encodeURIComponent(idToken)}&access_token=${encodeURIComponent(accessToken)}`;
-              return this.oauthService.tryLogin({
+              return this.oauthService.tryLogin({ // <1>
                 customHashFragment: keyValuePair,
                 disableOAuth2StateCheck: true
-              });
+            });
             });
         } else {
           return Promise.reject('We cannot handle the ' + response.status + ' status');
