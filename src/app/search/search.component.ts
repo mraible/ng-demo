@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Person, SearchService } from '../shared';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -24,6 +24,12 @@ export class SearchComponent implements OnInit, OnDestroy {
     });
   }
 
+  ngOnDestroy() {
+    if (this.sub) {
+      this.sub.unsubscribe();
+    }
+  }
+
   search(): void {
     this.searchService.search(this.query).subscribe(
       (data: any) => { this.searchResults = data; },
@@ -31,9 +37,4 @@ export class SearchComponent implements OnInit, OnDestroy {
     );
   }
 
-  ngOnDestroy() {
-    if (this.sub) {
-      this.sub.unsubscribe();
-    }
-  }
 }

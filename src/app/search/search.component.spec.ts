@@ -12,15 +12,13 @@ describe('SearchComponent', () => {
   let fixture: ComponentFixture<SearchComponent>;
   let mockSearchService: MockSearchService;
   let mockActivatedRoute: MockActivatedRoute;
-  let mockRouter: MockRouter;
 
   beforeEach(async(() => {
     mockSearchService = new MockSearchService();
     mockActivatedRoute = new MockActivatedRoute({'term': 'peyton'});
-    mockRouter = new MockRouter();
 
     TestBed.configureTestingModule({
-      declarations: [SearchComponent],
+      declarations: [ SearchComponent ],
       providers: [
         {provide: SearchService, useValue: mockSearchService},
         {provide: ActivatedRoute, useValue: mockActivatedRoute}
