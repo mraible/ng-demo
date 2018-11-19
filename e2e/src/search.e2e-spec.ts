@@ -1,6 +1,6 @@
 import { browser, by, element } from 'protractor';
 
-describe('Search', () => {
+xdescribe('Search', () => {
 
   beforeEach(async () => {
     await browser.get('/search');
