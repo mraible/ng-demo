@@ -2,7 +2,7 @@
 
 :author: Matt Raible
 :email:  matt@raibledesigns.com
-:revnumber: 2.0
+:revnumber: 7.0
 :revdate: {docdate}
 :subject: Angular CLI and Angular
 :keywords: Angular CLI, Angular, JavaScript, TypeScript, node, npm, Jasmine, Protractor
@@ -30,7 +30,9 @@ endif::[]
 :toc:
 
 This tutorial shows you how to build a simple search and edit application using https://angular.io[Angular] and
-https://github.com/angular/angular-cli[Angular CLI] version 6.0. If you'd rather use Angular 5, see https://github.com/mraible/ng-demo/blob/662159470802c53f445db6393576c0926e31d642/README.adoc[this version] (also available http://gist.asciidoctor.org/?github-mraible%2Fng-demo%2F662159470802c53f445db6393576c0926e31d642%2F%2FREADME.adoc[via DocGist]).
+https://github.com/angular/angular-cli[Angular CLI] version 7.0.
+
+If you'd rather use Angular 6, see https://github.com/mraible/ng-demo/blob/41d9526dbc0a35131118f7f101938dfe75a0e212/README.adoc[this version] (also available http://gist.asciidoctor.org/?github-mraible%2Fng-demo%2F41d9526dbc0a35131118f7f101938dfe75a0e212%2F%2FREADME.adoc[via DocGist]). The Angular 5 version is https://github.com/mraible/ng-demo/blob/662159470802c53f445db6393576c0926e31d642/README.adoc[available here].
 
 ifdef::env-github[]
 TIP: It appears you're reading this document on GitHub. If you want a prettier view, install https://chrome.google.com/webstore/detail/asciidoctorjs-live-previe/iaalpfgpbocpdfblpnhhgllgbdbchmia[Asciidoctor.js Live Preview for Chrome], then view the https://raw.githubusercontent.com/mraible/ng-demo/master/README.adoc[raw document]. Another option is to use the http://gist.asciidoctor.org/?github-mraible/ng-demo//README.adoc[DocGist view].
@@ -38,8 +40,7 @@ endif::[]
 
 .Source Code
 ****
-If you'd like to get right to it, the https://github.com/mraible/ng-demo[source is on GitHub]. To run the app,
-use `ng serve`. To test it, run `ng test`. To run its integration tests, run `ng e2e`.
+If you'd like to get right to it, the https://github.com/mraible/ng-demo[source is on GitHub]. To run the app, use `ng serve`. To test it, run `ng test`. To run its integration tests, run `ng e2e`.
 ****
 
 toc::[]
@@ -55,7 +56,7 @@ application with search and edit features.
 * A favorite text editor or IDE. I recommend https://www.jetbrains.com/idea/[IntelliJ IDEA] and its
 https://plugins.jetbrains.com/plugin/8395?pr=idea[Angular TypeScript Live Templates plugin].
 * http://nodejs.org/[Node.js] and npm installed. I recommend using https://github.com/creationix/nvm[nvm].
-* https://github.com/angular/angular-cli[Angular CLI] installed. If you don't have Angular CLI installed, install it using `npm install -g @angular/cli@6.0.0`.
+* https://github.com/angular/angular-cli[Angular CLI] installed. If you don't have Angular CLI installed, install it using `npm install -g @angular/cli@7.0.6`.
 
 TIP: https://augury.angular.io/[Angular Augury] is a Google Chrome Dev Tools extension for debugging Angular applications.
 I haven't needed it much myself, but I can see how it might come in handy.
@@ -67,6 +68,8 @@ Create a new project using the `ng new` command:
 ----
 ng new ng-demo
 ----
+
+When prompted to install Angular routing, type "Y". For the stylesheet format, choose "CSS" (the default).
 
 This will create a `ng-demo` project and run `npm install` in it. It takes about a minute to complete,
 but will vary based on your internet connection speed.
@@ -83,9 +86,21 @@ $ ng --version
                 |___/
 
 
-Angular CLI: 6.0.0
-Node: 9.8.0
+Angular CLI: 7.0.6
+Node: 11.1.0
 OS: darwin x64
+Angular:
+...
+
+Package                      Version
+------------------------------------------------------
+@angular-devkit/architect    0.10.6
+@angular-devkit/core         7.0.6
+@angular-devkit/schematics   7.0.6
+@schematics/angular          7.0.6
+@schematics/update           0.10.6
+rxjs                         6.3.3
+typescript                   3.1.6
 ----
 
 == Run the application
@@ -107,7 +122,7 @@ You can make sure your new project's tests pass, run `ng test`:
 ----
 $ ng test
 ...
-Chrome 66.0.3359 (Mac OS X 10.13.4): Executed 3 of 3 SUCCESS (0.212 secs / 0.196 secs)
+Chrome 70.0.3538 (Mac OS X 10.13.6): Executed 3 of 3 SUCCESS (0.162 secs / 0.149 secs)
 ----
 
 == Add a search feature
@@ -125,7 +140,7 @@ CREATE src/app/search/search.component.css (0 bytes)
 CREATE src/app/search/search.component.html (25 bytes)
 CREATE src/app/search/search.component.spec.ts (628 bytes)
 CREATE src/app/search/search.component.ts (269 bytes)
-UPDATE src/app/app.module.ts (396 bytes)
+UPDATE src/app/app.module.ts (475 bytes)
 ----
 
 Open `src/app/search/search.component.html` and replace its default HTML with the following:
@@ -144,42 +159,20 @@ Open `src/app/search/search.component.html` and replace its default HTML with th
 .Adding a Search Route
 ****
 
-The https://angular.io/docs/ts/latest/guide/router.html[Router documentation] for Angular provides the information you need to setup a route to the `SearchComponent` you just generated. Here's a quick summary:
+The https://angular.io/guide/router[Router & Navigation documentation] for Angular provides the information you need to setup a route to the `SearchComponent` you just generated. Here's a quick summary:
 
-In `src/app/app.module.ts`, add an `appRoutes` constant and import it in `@NgModule`:
+In `src/app/app-routing.module.ts`, modify the `routes` constant to add `SearchComponent` as the default:
 
 [source,javascript]
-.src/app/app.module.ts
+.src/app/app-routing.module.ts
 ----
-import { Routes, RouterModule } from '@angular/router';
+import { SearchComponent } from './search/search.component';
 
-const appRoutes: Routes = [
+const routes: Routes = [
   { path: 'search', component: SearchComponent },
   { path: '', redirectTo: '/search', pathMatch: 'full' }
 ];
-
-@NgModule({
-  ...
-  imports: [
-    ...
-    RouterModule.forRoot(appRoutes)
-  ]
-  ...
-})
-export class AppModule { }
 ----
-
-In `src/app/app.component.html`, adjust the placeholder content and add a `<router-outlet>` tag to display routes.
-
-[source,html]
-.src/app/app.component.html
-----
-<h1>Welcome to {{title}}!</h1>
-<!-- Routed views go here -->
-<router-outlet></router-outlet>
-----
-
-Now that you have routing setup, you can continue writing the search feature.
 ****
 
 If you still have `ng serve` running, your browser should refresh automatically. If not, navigate to http://localhost:4200. You will likely see a blank screen. Open your JavaScript console and you'll see the problem.
@@ -212,6 +205,16 @@ Now you should see the search form.
 .Search component
 image::src/assets/images/search-without-css.png[Search component, 800, scaledwidth="100%"]
 
+If yours looks different, it's because I trimmed my `app.component.html` to the bare minimum.
+
+[source,html]
+.src/app/app.component.html
+----
+<h1>Welcome to {{ title }}!</h1>
+
+<router-outlet></router-outlet>
+----
+
 If you want to add CSS for this components, open `src/app/search/search.component.css` and add some CSS. For example:
 
 [source,css]
@@ -231,16 +234,9 @@ The next section shows you how to create and use a JSON file and `localStorage` 
 To get search results, create a `SearchService` that makes HTTP requests to a JSON file. Start by generating a new service.
 
 ----
-$ ng g service search
-  create src/app/search.service.spec.ts (374 bytes)
-  create src/app/search.service.ts (112 bytes)
-----
-
-Move the generated `search.service.ts` and its test to `src/app/shared/search`. You will need to create this directory, or use the following commands to do it for you.
-
-----
-mkdir -p src/app/shared/search
-mv src/app/search.service.* src/app/shared/search/.
+$ ng g service shared/search/search
+CREATE src/app/shared/search/search.service.spec.ts (333 bytes)
+CREATE src/app/shared/search/search.service.ts (135 bytes)
 ----
 
 Create `src/assets/data/people.json` to hold your data.
@@ -336,7 +332,7 @@ export class Person {
 }
 ----
 
-To make these classes available for consumption by your components, create `src/app/shared/index.ts` and add the following:
+To make these classes easier to consume by your components, create `src/app/shared/index.ts` and add the following:
 
 [source,javascript]
 ----
@@ -513,15 +509,17 @@ CREATE src/app/edit/edit.component.css (0 bytes)
 CREATE src/app/edit/edit.component.html (23 bytes)
 CREATE src/app/edit/edit.component.spec.ts (614 bytes)
 CREATE src/app/edit/edit.component.ts (261 bytes)
-UPDATE src/app/app.module.ts (844 bytes)
+UPDATE src/app/app.module.ts (691 bytes)
 ----
 
-Add a route for this component in `app.module.ts`:
+Add a route for this component in `app-routing.module.ts`:
 
 [source,javascript]
-.src/app/app.module.ts
+.src/app/app-routing.module.ts
 ----
-const appRoutes: Routes = [
+import { EditComponent } from './edit/edit.component';
+
+const routes: Routes = [
   { path: 'search', component: SearchComponent },
   { path: 'edit/:id', component: EditComponent },
   { path: '', redirectTo: '/search', pathMatch: 'full' }
@@ -728,7 +726,7 @@ You'll want to implement `OnDestroy` and define the `ngOnDestroy` method to clea
 [source,javascript]
 .src/app/search/search.component.ts
 ----
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 
 export class SearchComponent implements OnInit, OnDestroy {
 ...
@@ -815,6 +813,12 @@ If you want to provide your own validation messages instead of relying on the br
 </div>
 ----
 
+This validation mechanism will render as follows:
+
+[[edit-form-names]]
+.Edit form with custom validation
+image::src/assets/images/edit-form-validation-custom.png[Edit form with custom validation, 800, scaledwidth="100%"]
+
 To learn more about forms and validation, see https://angular.io/guide/forms[Angular forms documentation].
 
 == Testing
@@ -827,42 +831,17 @@ to automate your testing. Without tests, you'll likely be testing manually. This
 If you didn't complete the previous section, you can clone the ng-demo repository and checkout the `test-start` branch.
 
 ----
-git clone https://github.com/mraible/ng-demo.git
-cd ng-demo && git checkout test-start
+git clone -b test-start https://github.com/mraible/ng-demo.git
+cd ng-demo && npm i
 ----
 ====
 
 In this section, you'll learn to use http://jasmine.github.io/[Jasmine] for unit testing controllers and https://angular.github.io/protractor/[Protractor] for
 integration testing. Angular's testing documentation lists https://angular.io/docs/ts/latest/guide/testing.html[good reasons] to test, but doesn't currently have many examples.
 
-=== Fix the AppComponent test
+=== Fix the Tests
 
-If you run `ng test`, you'll likely received an error:
-
-----
-Chrome 66.0.3359 (Mac OS X 10.13.4) AppComponent should create the app FAILED
-	'router-outlet' is not a known element:
-----
-
-This happens because the test is unaware of Angular's router. To fix this, import `RouterTestingModule` in `app.component.spec.ts`:
-
-[source,javascript]
-.src/app/app.component.spec.ts
-----
-import { RouterTestingModule } from '@angular/router/testing';
-
-describe('AppComponent', () => {
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [
-        AppComponent
-      ],
-      imports: [RouterTestingModule]
-    }).compileComponents();
-  }));
-----
-
-You'll also get failures for the components and service you created. These failures will be solved as you complete the section below.
+If you run `ng test`, you'll likely get failures for the components and service you created. These failures will be solved as you complete the section below.
 
 TIP: You can use `x` and `f` prefixes Jasmine's `describe` and `it` functions to _exclude_ only run only a particular test.
 
@@ -900,10 +879,10 @@ describe('SearchService', () => {
 If you run `ng test`, you will likely see some errors about the test stubs that Angular CLI created for you. You can ignore these for now.
 
 ----
-Chrome 66.0.3359 (Mac OS X 10.13.4) EditComponent should create FAILED
-	Can't bind to 'ngModel' since it isn't a known property of 'input'. ("
+Chrome 70.0.3538 (Mac OS X 10.13.6) EditComponent should create FAILED
+	There is no directive with "exportAs" set to "ngForm" ("<div *ngIf="person">
 
-Chrome 66.0.3359 (Mac OS X 10.13.4) SearchComponent should create FAILED
+Chrome 70.0.3538 (Mac OS X 10.13.6) SearchComponent should create FAILED
 	Can't bind to 'ngModel' since it isn't a known property of 'input'. ("<h2>Search</h2>
 ----
 
@@ -945,8 +924,6 @@ it('should be created', () => {
   expect(service).toBeTruthy();
 });
 ----
-
-TIP: You might notice that your tests only run once when you run `ng test`. This is different behavior than Angular CLI 1.x. You can continually run your tests with `ng test --watch=true`.
 
 Add a couple more tests for filtering by search term and fetching by id.
 
@@ -1141,19 +1118,16 @@ describe('SearchComponent', () => {
   let fixture: ComponentFixture<SearchComponent>;
   let mockSearchService: MockSearchService;
   let mockActivatedRoute: MockActivatedRoute;
-  let mockRouter: MockRouter;
 
   beforeEach(async(() => {
     mockSearchService = new MockSearchService();
     mockActivatedRoute = new MockActivatedRoute({'term': 'peyton'});
-    mockRouter = new MockRouter();
 
     TestBed.configureTestingModule({
       declarations: [ SearchComponent ],
       providers: [
         {provide: SearchService, useValue: mockSearchService},
-        {provide: ActivatedRoute, useValue: mockActivatedRoute},
-        {provide: Router, useValue: mockRouter}
+        {provide: ActivatedRoute, useValue: mockActivatedRoute}
       ],
       imports: [FormsModule, RouterTestingModule]
     })
@@ -1247,7 +1221,7 @@ describe('EditComponent', () => {
 });
 ----
 
-You should see "Executed 11 of 11 [green]#SUCCESS# (0.384 secs / 0.372 secs)" in the shell window that's running `ng test`. If you don't, try cancelling the command and restarting.
+You should see "Executed 11 of 11 [green]#SUCCESS# (0.411 secs / 0.399 secs)" in the shell window that's running `ng test`. If you don't, try cancelling the command and restarting.
 
 === Integration test the search UI
 
@@ -1263,31 +1237,31 @@ All tests should pass.
 
 ----
 $ ng e2e
-** Angular Live Development Server is listening on localhost: 4200, open your browser on http://localhost:4200/ **
+** Angular Live Development Server is listening on localhost:4200, open your browser on http://localhost:4200/ **
 
-Date: 2018-05-04T21:53:03.235Z
-Hash: a92537a8e74e06d13a8a
-Time: 8302ms
-chunk {main} main.js, main.js.map (main) 26.5 kB [initial] [rendered]
-chunk {polyfills} polyfills.js, polyfills.js.map (polyfills) 226 kB [initial] [rendered]
-chunk {runtime} runtime.js, runtime.js.map (runtime) 5.4 kB [entry] [rendered]
-chunk {styles} styles.js, styles.js.map (styles) 15.6 kB [initial] [rendered]
-chunk {vendor} vendor.js, vendor.js.map (vendor) 3.98 MB [initial] [rendered]
-[15:53:03] I/file_manager - creating folder /Users/mraible/ng-demo/node_modules/protractor/node_modules/webdriver-manager/selenium
+Date: 2018-11-18T16:31:59.824Z
+Hash: ba8063b94d89f79646a4
+Time: 6650ms
+chunk {main} main.js, main.js.map (main) 29.8 kB [initial] [rendered]
+chunk {polyfills} polyfills.js, polyfills.js.map (polyfills) 223 kB [initial] [rendered]
+chunk {runtime} runtime.js, runtime.js.map (runtime) 6.08 kB [entry] [rendered]
+chunk {styles} styles.js, styles.js.map (styles) 16.2 kB [initial] [rendered]
+chunk {vendor} vendor.js, vendor.js.map (vendor) 3.89 MB [initial] [rendered]
 ℹ ｢wdm｣: Compiled successfully.
-[15:53:05] I/update - chromedriver: unzipping chromedriver_2.38.zip
-[15:53:06] I/update - chromedriver: setting permissions to 0755 for /Users/mraible/ng-demo/node_modules/protractor/node_modules/webdriver-manager/selenium/chromedriver_2.38
-(node:2820) [DEP0022] DeprecationWarning: os.tmpDir() is deprecated. Use os.tmpdir() instead.
-[15:53:07] I/launcher - Running 1 instances of WebDriver
-[15:53:07] I/direct - Using ChromeDriver directly...
+[09:32:00] I/update - chromedriver: file exists /Users/mraible/dev/ng-demo/node_modules/protractor/node_modules/webdriver-manager/selenium/chromedriver_2.43.zip
+[09:32:00] I/update - chromedriver: unzipping chromedriver_2.43.zip
+[09:32:00] I/update - chromedriver: setting permissions to 0755 for /Users/mraible/dev/ng-demo/node_modules/protractor/node_modules/webdriver-manager/selenium/chromedriver_2.43
+[09:32:00] I/update - chromedriver: chromedriver_2.43 up to date
+[09:32:00] I/launcher - Running 1 instances of WebDriver
+[09:32:00] I/direct - Using ChromeDriver directly...
 Jasmine started
 
   workspace-project App
     ✓ should display welcome message
 
-Executed 1 of 1 spec SUCCESS in 0.818 sec.
-[15:53:09] I/launcher - 0 instance(s) of WebDriver still running
-[15:53:09] I/launcher - chrome #01 passed
+Executed 1 of 1 spec SUCCESS in 0.83 sec.
+[09:32:02] I/launcher - 0 instance(s) of WebDriver still running
+[09:32:02] I/launcher - chrome #01 passed
 ----
 
 ==== Enhance Protractor with async / await
@@ -1303,7 +1277,7 @@ Then change `e2e/src/app.e2e-spec.ts` so its test uses `async` and `await`.
 ----
 it('should display welcome message', async () => {
   await page.navigateTo();
-  expect(await page.getParagraphText()).toEqual('Welcome to app!');
+  expect(await page.getTitleText()).toEqual('Welcome to ng-demo!');
 });
 ----
 
@@ -1338,7 +1312,6 @@ describe('Search', () => {
     expect(list.count()).toBe(3);
   });
 });
-
 ----
 
 === Testing the edit feature
@@ -1376,7 +1349,6 @@ describe('Edit', () => {
     expect(list.count()).toBe(1);
   });
 });
-
 ----
 
 Run `ng e2e` to verify all your end-to-end tests pass. You should see a success message similar to the one below in
@@ -1389,7 +1361,7 @@ image::src/assets/images/protractor-success.png[Protractor success, 800, scaledw
 If you made it this far and have all your specs passing - congratulations! You're well on your way to writing quality
 code with Angular and verifying it works.
 
-You can see the test coverage of your project by running `ng test --code-coverage` and then opening `coverage/index.html` in your browser.
+You can see the test coverage of your project by running `ng test --codeCoverage=true` and then opening `coverage/index.html` in your browser.
 
 You might notice that the new components and service could use some additional coverage. If you feel the need to improve this coverage, please create a pull request!
 
@@ -1416,7 +1388,7 @@ services:
   - docker
 language: node_js
 node_js:
-  - "9.8.0"
+  - "11.0.0"
 addons:
   apt:
     sources:
@@ -1424,10 +1396,8 @@ addons:
     packages:
     - google-chrome-stable
 cache:
-  yarn: true
   directories:
-    - $HOME/.yarn-cache
-    - node_modules
+  - node_modules
 branches:
   only:
   - master
@@ -1435,14 +1405,11 @@ before_install:
   - export CHROME_BIN=/usr/bin/google-chrome
   - export DISPLAY=:99.0
   - sh -e /etc/init.d/xvfb start
-  # Repo for Yarn
-  - curl -o- -L https://yarnpkg.com/install.sh | bash
-  - export PATH=$HOME/.yarn/bin:$PATH
-  - yarn global add @angular/cli
+  - npm install -g @angular/cli@7.0.6
 install:
-  - yarn install
+  - npm ci
 script:
-  - ng test
+  - ng test --watch=false
   - ng e2e
 notifications:
   webhooks:
@@ -1451,7 +1418,7 @@ notifications:
     on_start: false
 ----
 
-https://travis-ci.org/mraible/ng-demo/builds/268073398[Here] is a build showing all unit and integration tests passing.
+https://travis-ci.org/mraible/ng-demo/builds/456656948[Here] is a build showing all unit and integration tests passing.
 
 === Jenkins
 
@@ -1461,7 +1428,7 @@ If you've checked your project into source control, you can use Jenkins to autom
 
 ----
 node {
-    def nodeHome = tool name: 'node-9.8.0', type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'
+    def nodeHome = tool name: 'node-11.0.0', type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'
     env.PATH = "${nodeHome}/bin:${env.PATH}"
 
     stage('check tools') {
@@ -1501,10 +1468,10 @@ https://account.run.pivotal.io/z/uaa/sign-up[Create a Pivotal account] and https
 
 [source,bash]
 ----
-ng build --prod --aot
+ng build --prod=true
 cd dist && touch Staticfile
 # enable pushstate so no 404s on refresh
-echo 'pushstate: enabled' > Staticfile
+echo 'root: ng-demo\npushstate: enabled' > Staticfile
 cf push ng-demo
 ----
 
@@ -1517,12 +1484,12 @@ https://signup.heroku.com/[Create a Heroku account] and https://devcenter.heroku
 . Run `heroku create`
 . Change `package.json` to have a different `start` script.
 
-   "start": "http-server-spa dist index.html $PORT",
+   "start": "http-server-spa dist/ng-demo index.html $PORT",
 
 . Add `preinstall` and `postinstall` scripts to `package.json`:
 
-  "preinstall": "npm install -g http-server-spa",
-  "postinstall": "ng build --prod --aot"
+  "preinstall": "npm i -g http-server-spa",
+  "postinstall": "ng build --prod=true"
 
 . Run `git push heroku master`
 . View the application in your browser with `heroku open`
