@@ -1512,6 +1512,6 @@ or http://developer.okta.com[authentication with Okta], this section is for you!
 I've created branches to show how to integrate each of these libraries. Click on the links below to see each branch's
 documentation.
 
-* https://github.com/mraible/ng-demo/tree/angular-material#bonus-angular-material[Angular Material]
-* https://github.com/mraible/ng-demo/tree/bootstrap4#bonus-bootstrap[Bootstrap 4]
-* https://github.com/mraible/ng-demo/tree/okta#bonus-okta[Authentication with Okta]
+* link:../../tree/angular-material#bonus-angular-material[Angular Material]
+* link:../../tree/bootstrap4#bonus-bootstrap[Bootstrap 4]
+* link:../../tree/okta#bonus-okta[Authentication with Okta]
