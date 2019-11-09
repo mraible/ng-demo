@@ -24,8 +24,7 @@ describe('SearchComponent', () => {
         {provide: ActivatedRoute, useValue: mockActivatedRoute}
       ],
       imports: [FormsModule, RouterTestingModule]
-    })
-      .compileComponents();
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -36,17 +35,5 @@ describe('SearchComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
-  });
-
-  it('should search when a term is set and search() is called', () => {
-    component = fixture.debugElement.componentInstance;
-    component.query = 'M';
-    component.search();
-    expect(mockSearchService.searchSpy).toHaveBeenCalledWith('M');
-  });
-
-  it('should search automatically when a term is on the URL', () => {
-    fixture.detectChanges();
-    expect(mockSearchService.searchSpy).toHaveBeenCalledWith('peyton');
   });
 });
