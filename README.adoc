@@ -663,7 +663,9 @@ export class EditComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.sub.unsubscribe();
+    if (this.sub) {
+      this.sub.unsubscribe();
+    }
   }
 
   cancel() {
@@ -887,6 +889,23 @@ If you run `ng test`, you'll likely get failures for the components and service 
 
 TIP: You can use `x` and `f` prefixes Jasmine's `describe` and `it` functions to _exclude_ only run only a particular test.
 
+=== Fix the `AppComponent` test
+
+If you changed the `app.component.html` template like I did, you'll need to modify `app.component.spec.ts` to account for the change in HTML. Change its last test to look for an `<h1>` element.
+
+[source,ts]
+.src/app/app/app.component.spec.ts
+----
+it('should render title', () => {
+  const fixture = TestBed.createComponent(AppComponent);
+  fixture.detectChanges();
+  const compiled = fixture.nativeElement;
+  expect(compiled.querySelector('h1').textContent).toContain('ng-demo app is running!');
+});
+----
+
+Now this test should pass.
+
 === Unit test the SearchService
 
 Modify `src/app/shared/search/search.service.spec.ts` and setup the test's infrastructure (a.k.a. `TestBed`) using `HttpClientTestingModule` and `HttpTestingController`.
@@ -899,7 +918,6 @@ import { SearchService } from './search.service';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 
 describe('SearchService', () => {
-  let injector: TestBed;
   let service: SearchService;
   let httpMock: HttpTestingController;
 
@@ -909,9 +927,8 @@ describe('SearchService', () => {
       providers: [SearchService]
     });
 
-    injector = getTestBed();
-    service = injector.inject(SearchService);
-    httpMock = injector.inject(HttpTestingController);
+    service = TestBed.inject(SearchService);
+    httpMock = TestBed.inject(HttpTestingController);
   });
 
   it('should be created', () => {
@@ -938,20 +955,20 @@ The test below should be on the same level as `beforeEach`.
 .src/app/shared/search/search.service.spec.ts
 ----
 it('should retrieve all search results', () => {
-  const dummyData = [
-    {name: 'John Elway'},
-    {name: 'Gary Kubiak'}
+  const mockResponse = [
+    {name: 'Nikola Jokić'},
+    {name: 'Mike Malone'}
   ];
 
   service.getAll().subscribe((people: any) => {
     expect(people.length).toBe(2);
-    expect(people[0].name).toBe('John Elway');
-    expect(people).toEqual(dummyData);
+    expect(people[0].name).toBe('Nikola Jokić');
+    expect(people).toEqual(mockResponse);
   });
 
   const req = httpMock.expectOne('assets/data/people.json');
   expect(req.request.method).toBe('GET');
-  req.flush(dummyData);
+  req.flush(mockResponse);
 });
 ----
 
@@ -971,153 +988,39 @@ Add a couple more tests for filtering by search term and fetching by id.
 .src/app/shared/search/search.service.spec.ts
 ----
 it('should filter by search term', () => {
-  const dummyData = [
-    {name: 'John Elway'}
-  ];
+  const mockResponse = [{name: 'Nikola Jokić'}];
 
-  service.search('john').subscribe((people: any) => {
+  service.search('nik').subscribe((people: any) => {
     expect(people.length).toBe(1);
-    expect(people[0].name).toBe('John Elway');
+    expect(people[0].name).toBe('Nikola Jokić');
   });
 
   const req = httpMock.expectOne('assets/data/people.json');
   expect(req.request.method).toBe('GET');
-  req.flush(dummyData);
+  req.flush(mockResponse);
 });
 
 it('should fetch by id', () => {
-  const dummyData = [
-    {id: 1, name: 'John Elway'},
-    {id: 2, name: 'Gary Kubiak'}
+  const mockResponse = [
+    {id: 1, name: 'Nikola Jokić'},
+    {id: 2, name: 'Mike Malone'}
   ];
 
   service.get(2).subscribe((person: any) => {
-    expect(person.name).toBe('Gary Kubiak');
+    expect(person.name).toBe('Mike Malone');
   });
 
   const req = httpMock.expectOne('assets/data/people.json');
   expect(req.request.method).toBe('GET');
-  req.flush(dummyData);
+  req.flush(mockResponse);
 });
 ----
 
 === Unit test the SearchComponent
 
-To unit test the `SearchComponent`, create a `MockSearchProvider` that has http://angular-tips.com/blog/2014/03/introduction-to-unit-test-spies/[spies]. These allow you to _spy_ on functions to check if they were called.
+To unit test the `SearchComponent`, you can mock the methods in `SearchService` with http://angular-tips.com/blog/2014/03/introduction-to-unit-test-spies/[spies]. These allow you to _spy_ on functions to check if they were called.
 
-Create `src/app/shared/search/search.mock.ts` and populate it with spies for each method, as well as methods to set the response and subscribe to results.
-
-[source,javascript]
-.src/app/shared/search/mocks/search.service.ts
-----
-import { SpyObject } from './helper';
-import { SearchService } from '../search.service';
-import Spy = jasmine.Spy;
-
-export class MockSearchService extends SpyObject {
-  getAllSpy: Spy;
-  getByIdSpy: Spy;
-  searchSpy: Spy;
-  saveSpy: Spy;
-  fakeResponse: any;
-
-  constructor() {
-    super( SearchService );
-
-    this.fakeResponse = null;
-    this.getAllSpy = this.spy('getAll').andReturn(this);
-    this.getByIdSpy = this.spy('get').andReturn(this);
-    this.searchSpy = this.spy('search').andReturn(this);
-    this.saveSpy = this.spy('save').andReturn(this);
-  }
-
-  subscribe(callback: any) {
-    callback(this.fakeResponse);
-  }
-
-  setResponse(json: any): void {
-    this.fakeResponse = json;
-  }
-}
-----
-
-In this same directory, create a `helper.ts` class to implement the `SpyObject` that `MockSearchService` extends.
-
-[source,javascript]
-.src/app/shared/search/mocks/helper.ts
-----
-/// <reference path="../../../../../node_modules/@types/jasmine/index.d.ts"‌​/>
-
-export interface GuinessCompatibleSpy extends jasmine.Spy {
-  /** By chaining the spy with and.returnValue, all calls to the function will return a specific
-   * value. */
-  andReturn(val: any): void;
-  /** By chaining the spy with and.callFake, all calls to the spy will delegate to the supplied
-   * function. */
-  andCallFake(fn: Function): GuinessCompatibleSpy;
-  /** removes all recorded calls */
-  reset();
-}
-
-export class SpyObject {
-  static stub(object = null, config = null, overrides = null) {
-    if (!(object instanceof SpyObject)) {
-      overrides = config;
-      config = object;
-      object = new SpyObject();
-    }
-
-    const m = {};
-    Object.keys(config).forEach((key) => m[key] = config[key]);
-    Object.keys(overrides).forEach((key) => m[key] = overrides[key]);
-    for (const key in m) {
-      object.spy(key).andReturn(m[key]);
-    }
-    return object;
-  }
-
-  constructor(type = null) {
-    if (type) {
-      for (const prop in type.prototype) {
-        let m = null;
-        try {
-          m = type.prototype[prop];
-        } catch (e) {
-          // As we are creating spys for abstract classes,
-          // these classes might have getters that throw when they are accessed.
-          // As we are only auto creating spys for methods, this
-          // should not matter.
-        }
-        if (typeof m === 'function') {
-          this.spy(prop);
-        }
-      }
-    }
-  }
-
-  spy(name) {
-    if (!this[name]) {
-      this[name] = this._createGuinnessCompatibleSpy(name);
-    }
-    return this[name];
-  }
-
-  prop(name, value) { this[name] = value; }
-
-  /** @internal */
-  _createGuinnessCompatibleSpy(name): GuinessCompatibleSpy {
-    const newSpy: GuinessCompatibleSpy = <any>jasmine.createSpy(name);
-    newSpy.andCallFake = <any>newSpy.and.callFake;
-    newSpy.andReturn = <any>newSpy.and.returnValue;
-    newSpy.reset = <any>newSpy.calls.reset;
-    // revisit return null here (previously needed for rtts_assert).
-    newSpy.and.returnValue(null);
-    return newSpy;
-  }
-}
-----
-
-Alongside, create `routes.ts` to mock Angular's `Router` and `ActivatedRoute`.
+Create `src/app/shared/search/mocks/routes.ts` to mock Angular's `Router` and `ActivatedRoute`.
 
 [source,javascript]
 .src/app/shared/search/mocks/routes.ts
@@ -1139,7 +1042,7 @@ export class MockRouter {
 }
 ----
 
-With mocks in place, you can `TestBed.configureTestingModule()` to setup `SearchComponent` to use these as providers.
+With this mock in place, you can `TestBed.configureTestingModule()` to setup `SearchComponent` to use it as a provider. In the second `beforeEach()`, you can see that the `search()` method is spied on and its results are mocked. The response isn't important in this case because you're just unit testing the `EditComponent`.
 
 [source,javascript]
 .src/app/search/search.component.spec.ts
@@ -1150,31 +1053,32 @@ import { SearchService } from '../shared';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { FormsModule } from '@angular/forms';
-import { MockSearchService } from '../shared/search/mocks/search.service';
 import { MockActivatedRoute, MockRouter } from '../shared/search/mocks/routes';
 
 describe('SearchComponent', () => {
   let component: SearchComponent;
   let fixture: ComponentFixture<SearchComponent>;
-  let mockSearchService: MockSearchService;
+  let mockSearchService: SearchService;
   let mockActivatedRoute: MockActivatedRoute;
 
   beforeEach(async(() => {
-    mockSearchService = new MockSearchService();
-    mockActivatedRoute = new MockActivatedRoute({'term': 'peyton'});
+    mockActivatedRoute = new MockActivatedRoute({'term': 'nikola'});
 
     TestBed.configureTestingModule({
-      declarations: [ SearchComponent ],
+      declarations: [SearchComponent],
       providers: [
-        {provide: SearchService, useValue: mockSearchService},
         {provide: ActivatedRoute, useValue: mockActivatedRoute}
       ],
-      imports: [FormsModule, RouterTestingModule]
-    })
-    .compileComponents();
+      imports: [FormsModule, RouterTestingModule, HttpClientTestingModule]
+    }).compileComponents();
   }));
 
   beforeEach(() => {
+    // mock response
+    mockSearchService = TestBed.inject(SearchService);
+    mockSearchService.search = jasmine.createSpy().and.returnValue(of([]));
+
+    // initialize component
     fixture = TestBed.createComponent(SearchComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -1186,69 +1090,73 @@ describe('SearchComponent', () => {
 });
 ----
 
-Add two tests, one to verify a search term is used when it's set on the component, and a second to verify search is
-called when a term is passed in as a route parameter.
+Add two tests, one to verify a search term is used when it's set on the component, and a second to verify search is called when a term is passed in as a route parameter.
 
 [source,javascript]
 .src/app/search/search.component.spec.ts
 ----
 it('should search when a term is set and search() is called', () => {
   component = fixture.debugElement.componentInstance;
-  component.query = 'M';
+  component.query = 'J';
   component.search();
-  expect(mockSearchService.searchSpy).toHaveBeenCalledWith('M');
+  expect(mockSearchService.search).toHaveBeenCalledWith('J');
 });
 
 it('should search automatically when a term is on the URL', () => {
   fixture.detectChanges();
-  expect(mockSearchService.searchSpy).toHaveBeenCalledWith('peyton');
+  expect(mockSearchService.search).toHaveBeenCalledWith('nikola');
 });
 ----
 
-Update the test for `EditComponent`, verifying fetching a single record works. Notice how you can access the component directly with
-`fixture.debugElement.componentInstance`, or its rendered version with `fixture.debugElement.nativeElement`.
+Update the test for `EditComponent`, verifying fetching a single record works. Notice how you can access the component directly with `fixture.debugElement.componentInstance`, or its rendered version with `fixture.debugElement.nativeElement`.
 
 [source,javascript]
 .src/app/edit/edit.component.spec.ts
 ----
-import { MockSearchService } from '../shared/search/mocks/search.service';
 import { EditComponent } from './edit.component';
 import { TestBed } from '@angular/core/testing';
-import { SearchService } from '../shared';
+import { Address, Person, SearchService } from '../shared';
 import { MockRouter, MockActivatedRoute } from '../shared/search/mocks/routes';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { of } from 'rxjs';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('EditComponent', () => {
-  let mockSearchService: MockSearchService;
+  let mockSearchService: SearchService;
   let mockActivatedRoute: MockActivatedRoute;
   let mockRouter: MockRouter;
 
   beforeEach(() => {
-    mockSearchService = new MockSearchService();
-    mockActivatedRoute = new MockActivatedRoute({'id': 1});
+    mockActivatedRoute = new MockActivatedRoute({id: 1});
     mockRouter = new MockRouter();
 
     TestBed.configureTestingModule({
       declarations: [EditComponent],
       providers: [
-        {provide: SearchService, useValue: mockSearchService},
         {provide: ActivatedRoute, useValue: mockActivatedRoute},
         {provide: Router, useValue: mockRouter}
       ],
-      imports: [FormsModule]
+      imports: [FormsModule, HttpClientTestingModule]
     }).compileComponents();
+
+    mockSearchService = TestBed.inject(SearchService);
   });
 
   it('should fetch a single record', () => {
     const fixture = TestBed.createComponent(EditComponent);
 
-    const person = {name: 'Emmanuel Sanders', address: {city: 'Denver'}};
-    mockSearchService.setResponse(person);
+    const person = new Person({id: 1, name: 'Gary Harris'});
+    person.address = new Address({city: 'Denver'});
 
+    // mock response
+    spyOn(mockSearchService, 'get').and.returnValue(of(person));
+
+    // initialize component
     fixture.detectChanges();
+
     // verify service was called
-    expect(mockSearchService.getByIdSpy).toHaveBeenCalledWith(1);
+    expect(mockSearchService.get).toHaveBeenCalledWith(1);
 
     // verify data was set on component when initialized
     const editComponent = fixture.debugElement.componentInstance;
@@ -1256,12 +1164,13 @@ describe('EditComponent', () => {
 
     // verify HTML renders as expected
     const compiled = fixture.debugElement.nativeElement;
-    expect(compiled.querySelector('h3').innerHTML).toBe('Emmanuel Sanders');
+    expect(compiled.querySelector('h3').innerHTML).toBe('Gary Harris');
   });
 });
+
 ----
 
-You should see "Executed 11 of 11 [green]#SUCCESS# (0.411 secs / 0.399 secs)" in the shell window that's running `ng test`. If you don't, try cancelling the command and restarting.
+You should see "Executed 11 of 11 [green]#SUCCESS# (0.192 secs / 0.141 secs)" in the shell window that's running `ng test`. If you don't, try cancelling the command and restarting.
 
 === Integration test the search UI
 
@@ -1273,55 +1182,55 @@ To verify end-to-end tests work in the project before you begin, run the followi
 ng e2e
 ----
 
-All tests should pass.
+You'll likely see the following error:
+
+----
+1) workspace-project App should display welcome message
+  - Failed: No element found using locator: By(css selector, app-root .content span)
+----
+
+This happens because you changed the HTML structure of `app.component.html`. To fix it, change the selector in `app.po.ts` to look for the `<h1>` element.
+
+[source,ts]
+.e2e/src/app.po.ts
+----
+getTitleText() {
+  return element(by.css('app-root h1')).getText() as Promise<string>;
+}
+----
+
+Now you should be able to run `ng e2e` and have everything pass.
 
 ----
 $ ng e2e
-** Angular Live Development Server is listening on localhost:4200, open your browser on http://localhost:4200/ **
+[13:17:48] I/update - chromedriver: file exists /Users/mraible/ng-demo/node_modules/protractor/node_modules/webdriver-manager/selenium/chromedriver_78.0.3904.70.zip
+[13:17:48] I/update - chromedriver: unzipping chromedriver_78.0.3904.70.zip
+[13:17:48] I/update - chromedriver: setting permissions to 0755 for /Users/mraible/ng-demo/node_modules/protractor/node_modules/webdriver-manager/selenium/chromedriver_78.0.3904.70
+[13:17:48] I/update - chromedriver: chromedriver_78.0.3904.70 up to date
+10% building 3/3 modules 0 activeℹ ｢wds｣: Project is running at http://localhost:4200/webpack-dev-server/
+ℹ ｢wds｣: webpack output is served from /
+ℹ ｢wds｣: 404s will fallback to //index.html
 
-Date: 2018-11-18T16:31:59.824Z
-Hash: ba8063b94d89f79646a4
-Time: 6650ms
-chunk {main} main.js, main.js.map (main) 29.8 kB [initial] [rendered]
-chunk {polyfills} polyfills.js, polyfills.js.map (polyfills) 223 kB [initial] [rendered]
-chunk {runtime} runtime.js, runtime.js.map (runtime) 6.08 kB [entry] [rendered]
-chunk {styles} styles.js, styles.js.map (styles) 16.2 kB [initial] [rendered]
-chunk {vendor} vendor.js, vendor.js.map (vendor) 3.89 MB [initial] [rendered]
+chunk {main} main.js, main.js.map (main) 43.7 kB [initial] [rendered]
+chunk {polyfills} polyfills.js, polyfills.js.map (polyfills) 140 kB [initial] [rendered]
+chunk {runtime} runtime.js, runtime.js.map (runtime) 6.15 kB [entry] [rendered]
+chunk {styles} styles.js, styles.js.map (styles) 9.7 kB [initial] [rendered]
+chunk {vendor} vendor.js, vendor.js.map (vendor) 3.4 MB [initial] [rendered]
+Date: 2019-11-10T12:17:54.297Z - Hash: 39ae6b27a6f3cf993057 - Time: 4962ms
+** Angular Live Development Server is listening on localhost:4200, open your browser on http://localhost:4200/ **
 ℹ ｢wdm｣: Compiled successfully.
-[09:32:00] I/update - chromedriver: file exists /Users/mraible/dev/ng-demo/node_modules/protractor/node_modules/webdriver-manager/selenium/chromedriver_2.43.zip
-[09:32:00] I/update - chromedriver: unzipping chromedriver_2.43.zip
-[09:32:00] I/update - chromedriver: setting permissions to 0755 for /Users/mraible/dev/ng-demo/node_modules/protractor/node_modules/webdriver-manager/selenium/chromedriver_2.43
-[09:32:00] I/update - chromedriver: chromedriver_2.43 up to date
-[09:32:00] I/launcher - Running 1 instances of WebDriver
-[09:32:00] I/direct - Using ChromeDriver directly...
+[13:17:54] I/launcher - Running 1 instances of WebDriver
+[13:17:54] I/direct - Using ChromeDriver directly...
 Jasmine started
 
   workspace-project App
     ✓ should display welcome message
 
-Executed 1 of 1 spec SUCCESS in 0.83 sec.
-[09:32:02] I/launcher - 0 instance(s) of WebDriver still running
-[09:32:02] I/launcher - chrome #01 passed
+Executed 1 of 1 spec SUCCESS in 0.586 sec.
+[13:17:57] I/launcher - 0 instance(s) of WebDriver still running
+[13:17:57] I/launcher - chrome #01 passed
+Execution time: 10 s.
 ----
-
-==== Enhance Protractor with async / await
-
-I was https://github.com/angular/protractor/issues/4307#issuecomment-386112285[recently made aware] of a better way to configure Protractor. To integrate these improvements into your project, add the following to `e2e/protractor.conf.js`.
-
-----
-SELENIUM_PROMISE_MANAGER: false,
-----
-
-Then change `e2e/src/app.e2e-spec.ts` so its test uses `async` and `await`.
-
-----
-it('should display welcome message', async () => {
-  await page.navigateTo();
-  expect(await page.getTitleText()).toEqual('Welcome to ng-demo!');
-});
-----
-
-Run `ng e2e` again to make sure everything still works.
 
 === Testing the search feature
 
