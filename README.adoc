@@ -1255,7 +1255,7 @@ describe('Search', () => {
   it('should allow searching', async () => {
     const searchButton = element(by.css('button'));
     const searchBox = element(by.css('input'));
-    await searchBox.sendKeys('M');
+    await searchBox.sendKeys('A');
     await searchButton.click();
     const list = element.all(by.css('app-search table tbody tr'));
     expect(list.count()).toBe(3);
@@ -1300,19 +1300,30 @@ describe('Edit', () => {
 });
 ----
 
-Run `ng e2e` to verify all your end-to-end tests pass. You should see a success message similar to the one below in
-your terminal window.
+Run `ng e2e` to verify all your end-to-end tests pass. You should see a success message similar to the one below in your terminal window.
 
 [[protractor-success]]
 .Protractor success
 image::src/assets/images/protractor-success.png[Protractor success, 800, scaledwidth="100%"]
 
-If you made it this far and have all your specs passing - congratulations! You're well on your way to writing quality
-code with Angular and verifying it works.
+If you made it this far and have all your specs passing - congratulations! You're well on your way to writing quality code with Angular and verifying it works.
 
-You can see the test coverage of your project by running `ng test --codeCoverage=true` and then opening `coverage/index.html` in your browser.
+You can see the test coverage of your project by running `ng test --codeCoverage=true`.
 
-You might notice that the new components and service could use some additional coverage. If you feel the need to improve this coverage, please create a pull request!
+You'll see a print out of code coverage in your terminal window.
+
+----
+=============================== Coverage summary ===============================
+Statements   : 80.82% ( 59/73 )
+Branches     : 71.43% ( 30/42 )
+Functions    : 83.33% ( 25/30 )
+Lines        : 79.1% ( 53/67 )
+================================================================================
+----
+
+You can also open `coverage/index.html` in your browser.
+
+You might notice that the `EditComponent` could use some additional coverage. If you feel the need to improve this coverage, please create a pull request!
 
 [[test-coverage]]
 .Test coverage
@@ -1331,19 +1342,20 @@ If you've checked in your project to GitHub, you can use Travis CI.
 
 [source,yaml]
 ----
+dist: bionic
 os:
   - linux
 services:
   - docker
+  - xvfb
 language: node_js
 node_js:
-  - "11.0.0"
+  - "12.13.0"
 addons:
   apt:
-    sources:
-    - google-chrome
     packages:
-    - google-chrome-stable
+      - dpkg
+  chrome: stable
 cache:
   directories:
   - node_modules
@@ -1351,10 +1363,7 @@ branches:
   only:
   - master
 before_install:
-  - export CHROME_BIN=/usr/bin/google-chrome
-  - export DISPLAY=:99.0
-  - sh -e /etc/init.d/xvfb start
-  - npm install -g @angular/cli@7.0.6
+  - npm install -g @angular/cli@9.0.0-rc.1
 install:
   - npm ci
 script:
@@ -1377,7 +1386,7 @@ If you've checked your project into source control, you can use Jenkins to autom
 
 ----
 node {
-    def nodeHome = tool name: 'node-11.0.0', type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'
+    def nodeHome = tool name: 'node-12.13.0', type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'
     env.PATH = "${nodeHome}/bin:${env.PATH}"
 
     stage('check tools') {
@@ -1449,9 +1458,7 @@ A completed project with this code in it is available on GitHub at https://githu
 
 == Summary
 
-I hope you've enjoyed this in-depth tutorial on how to get started with Angular and Angular CLI. Angular CLI takes much
-of the pain out of setting up an Angular project and using Typescript. I expect great things from Angular CLI, mostly
-because the Angular setup process can be tedious and CLI greatly simplifies things.
+I hope you've enjoyed this in-depth tutorial on how to get started with Angular and Angular CLI. Angular CLI takes much of the pain out of setting up an Angular project and using Typescript. I expect great things from Angular CLI, mostly because the Angular setup process can be tedious and CLI greatly simplifies things.
 
 == Bonus: Angular Material, Bootstrap 4, and Okta
 
