@@ -4,8 +4,8 @@
 :email:  matt@raibledesigns.com
 :revnumber: 9.0
 :revdate: {docdate}
-:subject: Angular CLI and Angular
-:keywords: Angular CLI, Angular, JavaScript, TypeScript, node, npm, Jasmine, Protractor
+:subject: Angular and Angular CLI
+:keywords: Angular, Angular CLI, TypeScript, JavaScript, Node, npm, Jasmine, Protractor
 :icons: font
 :lang: en
 :language: javadocript
