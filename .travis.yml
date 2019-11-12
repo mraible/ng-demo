@@ -15,9 +15,6 @@ addons:
 cache:
   directories:
     - node_modules
-branches:
-  only:
-    - master
 before_install:
   - npm install -g @angular/cli@9.0.0-rc.1
 install:
