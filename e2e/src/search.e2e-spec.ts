@@ -14,7 +14,7 @@ describe('Search', () => {
   it('should allow searching', async () => {
     const searchButton = element(by.css('button'));
     const searchBox = element(by.css('input'));
-    await searchBox.sendKeys('M');
+    await searchBox.sendKeys('A');
     await searchButton.click();
     const list = element.all(by.css('app-search table tbody tr'));
     expect(list.count()).toBe(3);
