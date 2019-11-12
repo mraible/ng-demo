@@ -1,22 +1,22 @@
-import { Component } from '@angular/core';
-import { OAuthService, JwksValidationHandler } from 'angular-oauth2-oidc';
+import { Component, OnInit } from '@angular/core';
+import { OktaAuthService } from '@okta/okta-angular';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
-  title = 'app';
+export class AppComponent implements OnInit {
+  title = 'ng-demo';
+  isAuthenticated: boolean;
 
-  constructor(private oauthService: OAuthService) {
-    this.oauthService.redirectUri = window.location.origin;
-    this.oauthService.clientId = '0oaeb04i9ynUIFpL00h7';
-    this.oauthService.scope = 'openid profile email';
-    this.oauthService.issuer = 'https://dev-158606.oktapreview.com/oauth2/default';
-    this.oauthService.tokenValidationHandler = new JwksValidationHandler();
+  constructor(public oktaAuth: OktaAuthService) {
+  }
 
-    // Load Discovery Document and then try to login the user
-    this.oauthService.loadDiscoveryDocumentAndTryLogin();
+  async ngOnInit() {
+    this.isAuthenticated = await this.oktaAuth.isAuthenticated();
+    this.oktaAuth.$authenticationState.subscribe(
+      (isAuthenticated: boolean)  => this.isAuthenticated = isAuthenticated
+    );
   }
 }
