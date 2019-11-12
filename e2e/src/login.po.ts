@@ -13,14 +13,14 @@ export class LoginPage {
     await browser.get('/');
     await browser.wait(ec.visibilityOf(this.signInButton));
     await this.signInButton.click();
-    await this.oauth(process.env.E2E_USERNAME, process.env.E2E_PASSWORD);
+    await this.loginToIdP(process.env.E2E_USERNAME, process.env.E2E_PASSWORD);
     const welcome = /Welcome, Okta Demo/;
     await browser.wait(ec.visibilityOf(this.logoutButton));
     await browser.sleep(2000); // wait for user to resolve
     expect(this.welcomeMessage.getText()).toMatch(welcome);
   }
 
-  async oauth(username: string, password: string) {
+  async loginToIdP(username: string, password: string) {
     // Entering non angular site, tell webdriver to switch to synchronous mode.
     await browser.waitForAngularEnabled(false);
     await browser.wait(ec.visibilityOf(this.username));
