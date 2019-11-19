@@ -1497,9 +1497,11 @@ Change HTML to use Bootstrap classes. For example, change the `<h1>` in `app.com
 .src/app/app.component.html
 ----
 <nav class="navbar navbar-light bg-secondary">
-  <a class="navbar-brand text-light" href="#">Welcome to {{ title }}!</a>
+  <a class="navbar-brand text-light" href="#">{{ title }} app is running!</a>
 </nav>
 ----
+
+// todo: confirm that ng add @angular/localize is needed
 
 After modifying your HTML to match this branch, the edit screen will look as follows.
 
