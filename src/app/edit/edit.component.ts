@@ -23,7 +23,7 @@ export class EditComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.sub = this.route.params.subscribe(params => {
-      const id = + params.id; // (+) converts string 'id' to a number
+      const id = + params['id']; // (+) converts string 'id' to a number
       this.service.get(id).subscribe(person => {
         if (person) {
           this.editName = person.name;
@@ -38,9 +38,7 @@ export class EditComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    if (this.sub) {
-      this.sub.unsubscribe();
-    }
+    this.sub.unsubscribe();
   }
 
   cancel() {

@@ -1,35 +1,35 @@
 [
   {
     "id": 1,
-    "name": "Nikola Jokić",
-    "phone": "(720) 555-1212",
+    "name": "Peyton Manning",
+    "phone": "(303) 567-8910",
     "address": {
-      "street": "2000 16th Street",
+      "street": "1234 Main Street",
+      "city": "Greenwood Village",
+      "state": "CO",
+      "zip": "80111"
+    }
+  },
+  {
+    "id": 2,
+    "name": "Demaryius Thomas",
+    "phone": "(720) 213-9876",
+    "address": {
+      "street": "5555 Marion Street",
       "city": "Denver",
       "state": "CO",
       "zip": "80202"
     }
   },
   {
-    "id": 2,
-    "name": "Jamal Murray",
-    "phone": "(303) 321-8765",
-    "address": {
-      "street": "2654 Washington Street",
-      "city": "Lakewood",
-      "state": "CO",
-      "zip": "80568"
-    }
-  },
-  {
     "id": 3,
-    "name": "Gary Harris",
-    "phone": "(303) 323-1233",
+    "name": "Von Miller",
+    "phone": "(917) 323-2333",
     "address": {
-      "street": "99 Westside Way",
-      "city": "Breckenridge",
+      "street": "14 Mountain Way",
+      "city": "Vail",
       "state": "CO",
-      "zip": "82210"
+      "zip": "81657"
     }
   }
 ]
