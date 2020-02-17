@@ -12,7 +12,7 @@ import { EditComponent } from './edit/edit.component';
   declarations: [
     AppComponent,
     SearchComponent,
-    EditComponent
+    EditComponent,
   ],
   imports: [
     BrowserModule,
