@@ -913,7 +913,7 @@ Modify `src/app/shared/search/search.service.spec.ts` and setup the test's infra
 [source,javascript]
 .src/app/shared/search/search.service.spec.ts
 ----
-import { getTestBed, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { SearchService } from './search.service';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 
