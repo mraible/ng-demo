@@ -59,7 +59,7 @@ You'll build a simple web application with Angular CLI, a tool for Angular devel
 * A favorite text editor or IDE. I recommend https://www.jetbrains.com/idea/[IntelliJ IDEA] and its
 https://plugins.jetbrains.com/plugin/8395?pr=idea[Angular TypeScript Live Templates plugin].
 * http://nodejs.org/[Node.js] and npm installed.
-* https://github.com/angular/angular-cli[Angular CLI] installed. If you don't have Angular CLI installed, install it using `npm install -g @angular/cli@9.0.0-rc.1`.
+* https://github.com/angular/angular-cli[Angular CLI] installed. If you don't have Angular CLI installed, install it using `npm install -g @angular/cli@9.0.2`.
 
 == Create your project
 
@@ -1197,11 +1197,11 @@ Now you should be able to run `ng e2e` and have everything pass.
 
 ----
 $ ng e2e
-[17:18:12] I/config_source - curl -o/Users/mraible/ng-demo/node_modules/protractor/node_modules/webdriver-manager/selenium/chrome-response.xml https://chromedriver.storage.googleapis.com/
-[17:18:13] I/update - chromedriver: file exists /Users/mraible/ng-demo/node_modules/protractor/node_modules/webdriver-manager/selenium/chromedriver_80.0.3987.106.zip
-[17:18:13] I/update - chromedriver: unzipping chromedriver_80.0.3987.106.zip
-[17:18:13] I/update - chromedriver: setting permissions to 0755 for /Users/mraible/ng-demo/node_modules/protractor/node_modules/webdriver-manager/selenium/chromedriver_80.0.3987.106
-[17:18:13] I/update - chromedriver: chromedriver_80.0.3987.106 up to date
+[16:18:12] I/config_source - curl -o/Users/mraible/ng-demo/node_modules/protractor/node_modules/webdriver-manager/selenium/chrome-response.xml https://chromedriver.storage.googleapis.com/
+[16:18:13] I/update - chromedriver: file exists /Users/mraible/ng-demo/node_modules/protractor/node_modules/webdriver-manager/selenium/chromedriver_80.0.3987.106.zip
+[16:18:13] I/update - chromedriver: unzipping chromedriver_80.0.3987.106.zip
+[16:18:13] I/update - chromedriver: setting permissions to 0755 for /Users/mraible/ng-demo/node_modules/protractor/node_modules/webdriver-manager/selenium/chromedriver_80.0.3987.106
+[16:18:13] I/update - chromedriver: chromedriver_80.0.3987.106 up to date
 
 chunk {main} main.js, main.js.map (main) 43.5 kB [initial] [rendered]
 chunk {polyfills} polyfills.js, polyfills.js.map (polyfills) 140 kB [initial] [rendered]
@@ -1211,16 +1211,16 @@ chunk {vendor} vendor.js, vendor.js.map (vendor) 3.38 MB [initial] [rendered]
 Date: 2020-02-18T00:18:22.499Z - Hash: 3fac0c4de320c4fe0b2c - Time: 5627ms
 ** Angular Live Development Server is listening on localhost:4200, open your browser on http://localhost:4200/ **
 ℹ ｢wdm｣: Compiled successfully.
-[13:17:54] I/launcher - Running 1 instances of WebDriver
-[13:17:54] I/direct - Using ChromeDriver directly...
+[16:18:23] I/launcher - Running 1 instances of WebDriver
+[16:18:23] I/direct - Using ChromeDriver directly...
 Jasmine started
 
   workspace-project App
     ✓ should display welcome message
 
 Executed 1 of 1 spec SUCCESS in 0.586 sec.
-[13:17:57] I/launcher - 0 instance(s) of WebDriver still running
-[13:17:57] I/launcher - chrome #01 passed
+[16:18:27] I/launcher - 0 instance(s) of WebDriver still running
+[16:18:27] I/launcher - chrome #01 passed
 Execution time: 10 s.
 ----
 
