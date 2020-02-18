@@ -51,8 +51,7 @@ toc::[]
 
 == What you'll build
 
-You'll build a simple web application with Angular CLI, a tool for Angular development. You'll create an
-application with search and edit features.
+You'll build a simple web application with Angular CLI, a tool for Angular development. You'll create an application with search and edit features.
 
 == What you'll need
 
@@ -87,19 +86,21 @@ $ ng version
                 |___/
 
 
-Angular CLI: 9.0.0-rc.1
+Angular CLI: 9.0.2
 Node: 12.13.0
 OS: darwin x64
+
 Angular:
 ...
+Ivy Workspace:
 
 Package                      Version
 ------------------------------------------------------
-@angular-devkit/architect    0.900.0-rc.1
-@angular-devkit/core         9.0.0-rc.1
-@angular-devkit/schematics   9.0.0-rc.1
-@schematics/angular          9.0.0-rc.1
-@schematics/update           0.900.0-rc.1
+@angular-devkit/architect    0.900.2
+@angular-devkit/core         9.0.2
+@angular-devkit/schematics   9.0.2
+@schematics/angular          9.0.2
+@schematics/update           0.900.2
 rxjs                         6.5.3
 ----
 
@@ -114,27 +115,30 @@ If you run this command from the `ng-demo` directory, you'll see even more infor
                 |___/
 
 
-Angular CLI: 9.0.0-rc.1
+Angular CLI: 9.0.2
 Node: 12.13.0
 OS: darwin x64
-Angular: 9.0.0-rc.1
-... animations, cli, common, compiler, compiler-cli, core, forms
+
+Angular: 9.0.1
+... animations, common, compiler, compiler-cli, core, forms
 ... language-service, platform-browser, platform-browser-dynamic
 ... router
+Ivy Workspace: Yes
 
 Package                           Version
 -----------------------------------------------------------
-@angular-devkit/architect         0.900.0-rc.1
-@angular-devkit/build-angular     0.900.0-rc.1
-@angular-devkit/build-optimizer   0.900.0-rc.1
-@angular-devkit/build-webpack     0.900.0-rc.1
-@angular-devkit/core              9.0.0-rc.1
-@angular-devkit/schematics        9.0.0-rc.1
-@ngtools/webpack                  9.0.0-rc.1
-@schematics/angular               9.0.0-rc.1
-@schematics/update                0.900.0-rc.1
-rxjs                              6.5.3
-typescript                        3.6.4
+@angular-devkit/architect         0.900.2
+@angular-devkit/build-angular     0.900.2
+@angular-devkit/build-optimizer   0.900.2
+@angular-devkit/build-webpack     0.900.2
+@angular-devkit/core              9.0.2
+@angular-devkit/schematics        9.0.2
+@angular/cli                      9.0.2
+@ngtools/webpack                  9.0.2
+@schematics/angular               9.0.2
+@schematics/update                0.900.2
+rxjs                              6.5.4
+typescript                        3.7.5
 webpack                           4.41.2
 ----
 
@@ -157,7 +161,7 @@ You can make sure your new project's tests pass, run `ng test`:
 ----
 $ ng test
 ...
-Chrome 78.0.3904 (Mac OS X 10.15.1): Executed 3 of 3 SUCCESS (0.225 secs / 0.191 secs)
+Chrome 80.0.3987 (Mac OS X 10.15.3): Executed 3 of 3 SUCCESS (0.197 secs / 0.137 secs)
 ----
 
 == Add a search feature
@@ -193,12 +197,23 @@ ERROR in src/app/search/search.component.html:3:50 - error TS2339:
  Property 'query' does not exist on type 'SearchComponent'.
 ----
 
-To fix this, add a `query` property to `src/app/search/search.component.ts:
+To fix this, add a `query` property to `src/app/search/search.component.ts`. While you're there, add a `searchResults` property and an empty `search()` method.
 
-[source,ts]
+[source,javascript]
 .src/app/search/search.component.ts
 ----
+export class SearchComponent implements OnInit {
+  query: string;
+  searchResults: any;
 
+  constructor() { }
+
+  ngOnInit() {
+  }
+
+  search(): void {}
+
+}
 ----
 
 
@@ -246,25 +261,6 @@ import { FormsModule } from '@angular/forms';
 export class AppModule { }
 ----
 
-To fix other compilation errors about missing properties in `SearchComponent`, add the `query` and `searchResults` properties and an empty `search()` method to it.
-
-[source,javascript]
-.src/app/search/search.component.ts
-----
-export class SearchComponent implements OnInit {
-  query: string;
-  searchResults: any;
-
-  constructor() { }
-
-  ngOnInit() {
-  }
-
-  search(): void {}
-
-}
-----
-
 Now you should be able to see the search form.
 
 [[search-component]]
@@ -292,8 +288,7 @@ If you want to add CSS for this components, open `src/app/search/search.componen
 }
 ----
 
-This section has shown you how to generate a new component and add it to a basic Angular application with Angular CLI.
-The next section shows you how to create and use a JSON file and `localStorage` to create a fake API.
+This section has shown you how to generate a new component and add it to a basic Angular application with Angular CLI. The next section shows you how to create and use a JSON file and `localStorage` to create a fake API.
 
 === The Backend
 
@@ -346,8 +341,7 @@ Create `src/assets/data/people.json` to hold your data.
 ----
 
 Modify `src/app/shared/search/search.service.ts` and provide `HttpClient` as a dependency in its constructor.
-In this same file, create a `getAll()` method to gather all the people. Also, define the `Address` and `Person` classes
-that JSON will be marshalled to.
+In this same file, create a `getAll()` method to gather all the people. Also, define the `Address` and `Person` classes that JSON will be marshalled to.
 
 [source,javascript]
 .src/app/shared/search/search.service.ts
@@ -1203,20 +1197,18 @@ Now you should be able to run `ng e2e` and have everything pass.
 
 ----
 $ ng e2e
-[13:17:48] I/update - chromedriver: file exists /Users/mraible/ng-demo/node_modules/protractor/node_modules/webdriver-manager/selenium/chromedriver_78.0.3904.70.zip
-[13:17:48] I/update - chromedriver: unzipping chromedriver_78.0.3904.70.zip
-[13:17:48] I/update - chromedriver: setting permissions to 0755 for /Users/mraible/ng-demo/node_modules/protractor/node_modules/webdriver-manager/selenium/chromedriver_78.0.3904.70
-[13:17:48] I/update - chromedriver: chromedriver_78.0.3904.70 up to date
-10% building 3/3 modules 0 activeℹ ｢wds｣: Project is running at http://localhost:4200/webpack-dev-server/
-ℹ ｢wds｣: webpack output is served from /
-ℹ ｢wds｣: 404s will fallback to //index.html
+[17:18:12] I/config_source - curl -o/Users/mraible/ng-demo/node_modules/protractor/node_modules/webdriver-manager/selenium/chrome-response.xml https://chromedriver.storage.googleapis.com/
+[17:18:13] I/update - chromedriver: file exists /Users/mraible/ng-demo/node_modules/protractor/node_modules/webdriver-manager/selenium/chromedriver_80.0.3987.106.zip
+[17:18:13] I/update - chromedriver: unzipping chromedriver_80.0.3987.106.zip
+[17:18:13] I/update - chromedriver: setting permissions to 0755 for /Users/mraible/ng-demo/node_modules/protractor/node_modules/webdriver-manager/selenium/chromedriver_80.0.3987.106
+[17:18:13] I/update - chromedriver: chromedriver_80.0.3987.106 up to date
 
-chunk {main} main.js, main.js.map (main) 43.7 kB [initial] [rendered]
+chunk {main} main.js, main.js.map (main) 43.5 kB [initial] [rendered]
 chunk {polyfills} polyfills.js, polyfills.js.map (polyfills) 140 kB [initial] [rendered]
 chunk {runtime} runtime.js, runtime.js.map (runtime) 6.15 kB [entry] [rendered]
 chunk {styles} styles.js, styles.js.map (styles) 9.7 kB [initial] [rendered]
-chunk {vendor} vendor.js, vendor.js.map (vendor) 3.4 MB [initial] [rendered]
-Date: 2019-11-10T12:17:54.297Z - Hash: 39ae6b27a6f3cf993057 - Time: 4962ms
+chunk {vendor} vendor.js, vendor.js.map (vendor) 3.38 MB [initial] [rendered]
+Date: 2020-02-18T00:18:22.499Z - Hash: 3fac0c4de320c4fe0b2c - Time: 5627ms
 ** Angular Live Development Server is listening on localhost:4200, open your browser on http://localhost:4200/ **
 ℹ ｢wdm｣: Compiled successfully.
 [13:17:54] I/launcher - Running 1 instances of WebDriver
@@ -1283,15 +1275,15 @@ describe('Edit', () => {
   const city = element(by.id('city'));
 
   it('should allow viewing a person', async () => {
-    expect(await element(by.css('h3')).getText()).toEqual('Peyton Manning');
-    expect(await name.getAttribute('value')).toEqual('Peyton Manning');
-    expect(await street.getAttribute('value')).toEqual('1234 Main Street');
-    expect(await city.getAttribute('value')).toEqual('Greenwood Village');
+    expect(await element(by.css('h3')).getText()).toEqual('Nikola Jokić');
+    expect(await name.getAttribute('value')).toEqual('Nikola Jokić');
+    expect(await street.getAttribute('value')).toEqual('2000 16th Street');
+    expect(await city.getAttribute('value')).toEqual('Denver');
   });
 
   it('should allow updating a name', async () => {
     const save = element(by.id('save'));
-    name.sendKeys(' Won!');
+    name.sendKeys(' Rocks!');
     await save.click();
     // verify one element matched this change
     const list = element.all(by.css('app-search table tbody tr'));
@@ -1331,7 +1323,7 @@ image::src/assets/images/test-coverage.png[Test coverage, 800, scaledwidth="100%
 
 == Continuous Integration
 
-At the time of this writing, Angular CLI did not have any continuous integration support. This section shows you how to setup continuous integration with https://travis-ci.org/[Travis CI] and https://jenkins.io/2.0/[Jenkins].
+At the time of this writing, Angular CLI did not have any continuous integration support. This section shows you how to setup continuous integration with https://travis-ci.org/[Travis CI] and https://jenkins.io/[Jenkins].
 
 === Travis CI
 
@@ -1363,7 +1355,7 @@ branches:
   only:
   - master
 before_install:
-  - npm install -g @angular/cli@9.0.0-rc.1
+  - npm install -g @angular/cli
 install:
   - npm ci
 script:
@@ -1413,7 +1405,7 @@ node {
 ----
 
 [start=2]
-. Download https://jenkins.io/2.0/[Jenkins 2] and install it on your local hard drive. Start it using `java -jar jenkins.war`.
+. Download https://jenkins.io/download/[Jenkins] and install it on your local hard drive. Start it using `java -jar jenkins.war`.
 . Login to Jenkins and create a new project with an SCM Pipeline. Point it at your project's repository. Run a build.
 
 == Deployment
@@ -1462,11 +1454,9 @@ I hope you've enjoyed this in-depth tutorial on how to get started with Angular 
 
 == Bonus: Angular Material, Bootstrap 4, and Okta
 
-If you'd like to see how to integrate https://material.angular.io/[Angular Material], https://getbootstrap.com[Bootstrap 4],
-or http://developer.okta.com[authentication with Okta], this section is for you!
+If you'd like to see how to integrate https://material.angular.io/[Angular Material], https://getbootstrap.com[Bootstrap 4], or http://developer.okta.com[authentication with Okta], this section is for you!
 
-I've created branches to show how to integrate each of these libraries. Click on the links below to see each branch's
-documentation.
+I've created branches to show how to integrate each of these libraries. Click on the links below to see each branch's documentation.
 
 * https://github.com/mraible/ng-demo/tree/angular-material#bonus-angular-material[Angular Material]
 * https://github.com/mraible/ng-demo/tree/bootstrap4#bonus-bootstrap[Bootstrap 4]
