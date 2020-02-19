@@ -1,70 +1,27 @@
-import { Component } from '@angular/core';
-import { OAuthService } from 'angular-oauth2-oidc';
-import { OktaAuthWrapper } from '../shared';
+import { Component, OnInit } from '@angular/core';
+import { OktaAuthService } from '@okta/okta-angular';
 
 @Component({
-  template: `
-    <div *ngIf="givenName" class="col-12 mt-2">
-      <button (click)="logout()" class="btn btn-sm btn-outline-primary float-right">Logout</button>
-      <h2>Welcome, {{givenName}}!</h2>
-      <p><a routerLink="/search" routerLinkActive="active">Search</a></p>
-    </div>
-
-    <div class="card mt-2" *ngIf="!givenName">
-      <div class="card-body">
-        <h4 class="card-title">Login with Authorization Server</h4>
-        <button class="btn btn-primary" (click)="login()">Login</button>
-      </div>
-    </div>
-
-    <div class="card mt-2" *ngIf="!givenName">
-      <div class="card-body">
-        <h4 class="card-title">Login with Username/Password</h4>
-
-        <p class="alert alert-error" *ngIf="loginFailed">
-          Login wasn't successful.
-        </p>
-
-        <div class="form-group">
-          <label>Username</label>
-          <input class="form-control" [(ngModel)]="username">
-        </div>
-        <div class="form-group">
-          <label>Password</label>
-          <input class="form-control" type="password" [(ngModel)]="password">
-        </div>
-        <div class="form-group">
-          <button class="btn btn-primary" (click)="loginWithPassword()">Login</button>
-        </div>
-      </div>
-    </div>`
+  selector: 'app-home',
+  templateUrl: './home.component.html',
+  styleUrls: ['./home.component.css']
 })
-export class HomeComponent {
-  username;
-  password;
+export class HomeComponent implements OnInit {
+  isAuthenticated: boolean;
+  user: any;
 
-  constructor(private oauthService: OAuthService,
-              private oktaAuthWrapper: OktaAuthWrapper) {
+  constructor(public oktaAuth: OktaAuthService) {
   }
 
-  login() {
-    this.oauthService.initImplicitFlow();
-  }
-
-  loginWithPassword() {
-    this.oktaAuthWrapper.login(this.username, this.password)
-      .catch(err => console.error('error logging in', err));
-  }
-
-  logout() {
-    this.oauthService.logOut();
-  }
-
-  get givenName() {
-    const claims = this.oauthService.getIdentityClaims();
-    if (!claims) {
-      return null;
+  async ngOnInit() {
+    this.isAuthenticated = await this.oktaAuth.isAuthenticated();
+    // Subscribe to authentication state changes
+    this.oktaAuth.$authenticationState.subscribe(
+      (isAuthenticated: boolean)  => this.isAuthenticated = isAuthenticated
+    );
+    if (this.isAuthenticated) {
+      this.user = await this.oktaAuth.getUser();
+      console.log(this.user);
     }
-    return claims['name'];
   }
 }

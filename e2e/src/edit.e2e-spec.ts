@@ -1,6 +1,17 @@
-import { browser, by, element } from 'protractor';
+import { browser, by, element, ExpectedConditions as ec } from 'protractor';
+import { LoginPage } from './login.po';
 
 describe('Edit', () => {
+  let loginPage: LoginPage;
+
+  beforeAll(async () => {
+    loginPage = new LoginPage();
+    await loginPage.login();
+  });
+
+  afterAll(async () => {
+    await loginPage.logout();
+  });
 
   beforeEach(async () => {
     await browser.get('/edit/1');
@@ -11,18 +22,19 @@ describe('Edit', () => {
   const city = element(by.id('city'));
 
   it('should allow viewing a person', async () => {
-    expect(await element(by.css('h3')).getText()).toEqual('Peyton Manning');
-    expect(await name.getAttribute('value')).toEqual('Peyton Manning');
-    expect(await street.getAttribute('value')).toEqual('1234 Main Street');
-    expect(await city.getAttribute('value')).toEqual('Greenwood Village');
+    expect(await element(by.css('h3')).getText()).toEqual('Nikola Jokić');
+    expect(await name.getAttribute('value')).toEqual('Nikola Jokić');
+    expect(await street.getAttribute('value')).toEqual('2000 16th Street');
+    expect(await city.getAttribute('value')).toEqual('Denver');
   });
 
   it('should allow updating a name', async () => {
     const save = element(by.id('save'));
-    name.sendKeys(' Won!');
+    await browser.wait(ec.visibilityOf(name));
+    await name.sendKeys(' Rocks!');
     await save.click();
-    // verify one element matched this change
     const list = element.all(by.css('app-search table tbody tr'));
+    // verify one element matched this change
     expect(list.count()).toBe(1);
   });
 });
