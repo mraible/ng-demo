@@ -1470,7 +1470,7 @@ ng add @angular/localize
 
 Add `NgbModule` as an import in `app.module.ts`:
 
-[source,javascript]
+[source,typescript]
 .src/app/app.module.ts
 ----
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
