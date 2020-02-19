@@ -201,7 +201,7 @@ ERROR in src/app/search/search.component.html:3:50 - error TS2339:
 
 To fix this, add a `query` property to `src/app/search/search.component.ts`. While you're there, add a `searchResults` property and an empty `search()` method.
 
-[source,javascript]
+[source,typescript]
 .src/app/search/search.component.ts
 ----
 export class SearchComponent implements OnInit {
@@ -225,7 +225,7 @@ The https://angular.io/guide/router[Router and navigation docs] for Angular prov
 
 In `src/app/app-routing.module.ts`, modify the `routes` constant to add `SearchComponent` as the default:
 
-[source,javascript]
+[source,typescript]
 .src/app/app-routing.module.ts
 ----
 import { SearchComponent } from './search/search.component';
@@ -246,7 +246,7 @@ Can't bind to 'ngModel' since it isn't a known property of 'input'.
 
 To solve this, open `src/app/app.module.ts` and add `FormsModule` as an import in `@NgModule`:
 
-[source,javascript]
+[source,typescript]
 .src/app/app.module.ts
 ----
 import { FormsModule } from '@angular/forms';
@@ -344,7 +344,7 @@ Create `src/assets/data/people.json` to hold your data.
 Modify `src/app/shared/search/search.service.ts` and provide `HttpClient` as a dependency in its constructor.
 In this same file, create a `getAll()` method to gather all the people. Also, define the `Address` and `Person` classes that JSON will be marshalled to.
 
-[source,javascript]
+[source,typescript]
 .src/app/shared/search/search.service.ts
 ----
 import { Injectable } from '@angular/core';
@@ -393,7 +393,8 @@ export class Person {
 
 To make these classes easier to consume by your components, create `src/app/shared/index.ts` and add the following:
 
-[source,javascript]
+[source,typescript]
+.src/app/shared/index.ts
 ----
 export * from './search/search.service';
 ----
@@ -402,7 +403,7 @@ The reason for creating this file is so you can import multiple classes on a sin
 
 In `search.component.ts`, add imports for these classes.
 
-[source,javascript]
+[source,typescript]
 .src/app/search/search.component.ts
 ----
 import { Person, SearchService } from '../shared';
@@ -410,7 +411,7 @@ import { Person, SearchService } from '../shared';
 
 You can now add a proper type to the `searchResults` variable. While you're there, modify the constructor to inject the `SearchService`.
 
-[source,javascript]
+[source,typescript]
 .src/app/search/search.component.ts
 ----
 export class SearchComponent implements OnInit {
@@ -422,7 +423,7 @@ export class SearchComponent implements OnInit {
 
 Then update the `search()` method to call the service's `getAll()` method.
 
-[source,javascript]
+[source,typescript]
 .src/app/search/search.component.ts
 ----
 search(): void {
@@ -441,7 +442,7 @@ NullInjectorError: No provider for HttpClient!
 
 To fix the "No provider" error from above, update `app.module.ts` to import `HttpClientModule`.
 
-[source,javascript]
+[source,typescript]
 .src/app/app.module.ts
 ----
 import { HttpClientModule } from '@angular/common/http';
@@ -512,7 +513,7 @@ image::src/assets/images/search-results.png[Search Results, 800, scaledwidth="10
 
 But wait, you still don't have search functionality! To add a search feature, add a `search()` method to `SearchService`.
 
-[source,javascript]
+[source,typescript]
 .src/app/shared/search/search.service.ts
 ----
 import { Observable } from 'rxjs';
@@ -534,7 +535,7 @@ import { map } from 'rxjs/operators';
 
 Then refactor `SearchComponent` to call this method with its `query` variable.
 
-[source,javascript]
+[source,typescript]
 .src/app/search/search.component.ts
 ----
 search(): void {
@@ -568,7 +569,7 @@ ng g component edit
 
 Add a route for this component in `app-routing.module.ts`:
 
-[source,javascript]
+[source,typescript]
 .src/app/app-routing.module.ts
 ----
 import { EditComponent } from './edit/edit.component';
@@ -615,7 +616,7 @@ Update `src/app/edit/edit.component.html` to display an editable form. You might
 
 Modify `EditComponent` to import model and service classes and to use the `SearchService` to get data.
 
-[source,javascript]
+[source,typescript]
 .src/app/edit/edit.component.ts
 ----
 import { Component, OnInit, OnDestroy } from '@angular/core';
@@ -687,7 +688,7 @@ export class EditComponent implements OnInit, OnDestroy {
 
 Modify `SearchService` to contain functions for finding a person by their id, and saving them. While you're in there, modify the `search()` method to be aware of updated objects in `localStorage`.
 
-[source,javascript]
+[source,typescript]
 .src/app/shared/search/search.service.ts
 ----
 search(q: string): Observable<any> {
@@ -742,7 +743,7 @@ image::src/assets/images/edit-form.png[Edit form, 800, scaledwidth="100%"]
 The &lt;form> in `src/app/edit/edit.component.html` calls a `save()` function to update a person's data. You already implemented this above.
 The function calls a `gotoList()` function that appends the person's name to the URL when sending the user back to the search screen.
 
-[source,javascript]
+[source,typescript]
 .src/app/edit/edit.component.ts
 ----
 gotoList() {
@@ -756,7 +757,7 @@ gotoList() {
 
 Since the `SearchComponent` doesn't execute a search automatically when you execute this URL, add the following logic to do so in its `ngOnInit` method.
 
-[source,javascript]
+[source,typescript]
 .src/app/search/search.component.ts
 ----
 import { ActivatedRoute } from '@angular/router';
@@ -779,7 +780,7 @@ constructor(private searchService: SearchService, private route: ActivatedRoute)
 
 You'll want to implement `OnDestroy` and define the `ngOnDestroy` method to clean up this subscription.
 
-[source,javascript]
+[source,typescript]
 .src/app/search/search.component.ts
 ----
 import { Component, OnDestroy, OnInit } from '@angular/core';
@@ -905,7 +906,7 @@ Now this test should pass.
 
 Modify `src/app/shared/search/search.service.spec.ts` and setup the test's infrastructure (a.k.a. `TestBed`) using `HttpClientTestingModule` and `HttpTestingController`.
 
-[source,javascript]
+[source,typescript]
 .src/app/shared/search/search.service.spec.ts
 ----
 import { getTestBed, TestBed } from '@angular/core/testing';
@@ -946,7 +947,7 @@ NullInjectorError: R3InjectorError(DynamicTestModule)[ActivatedRoute -> Activate
 
 The test below should be on the same level as `beforeEach`.
 
-[source,javascript]
+[source,typescript]
 .src/app/shared/search/search.service.spec.ts
 ----
 it('should retrieve all search results', () => {
@@ -969,7 +970,7 @@ it('should retrieve all search results', () => {
 
 While you're there, add an `afterEach()` to verify requests.
 
-[source,javascript]
+[source,typescript]
 .src/app/shared/search/search.service.spec.ts
 ----
 afterEach(() => {
@@ -979,7 +980,7 @@ afterEach(() => {
 
 Add a couple more tests for filtering by search term and fetching by id.
 
-[source,javascript]
+[source,typescript]
 .src/app/shared/search/search.service.spec.ts
 ----
 it('should filter by search term', () => {
@@ -1017,7 +1018,7 @@ To unit test the `SearchComponent`, you can mock the methods in `SearchService` 
 
 Create `src/app/shared/search/mocks/routes.ts` to mock Angular's `Router` and `ActivatedRoute`.
 
-[source,javascript]
+[source,typescript]
 .src/app/shared/search/mocks/routes.ts
 ----
 import { ActivatedRoute, Params } from '@angular/router';
@@ -1039,7 +1040,7 @@ export class MockRouter {
 
 With this mock in place, you can `TestBed.configureTestingModule()` to setup `SearchComponent` to use it as a provider. In the second `beforeEach()`, you can see that the `search()` method is spied on and its results are mocked. The response isn't important in this case because you're just unit testing the `EditComponent`.
 
-[source,javascript]
+[source,typescript]
 .src/app/search/search.component.spec.ts
 ----
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
@@ -1087,7 +1088,7 @@ describe('SearchComponent', () => {
 
 Add two tests, one to verify a search term is used when it's set on the component, and a second to verify search is called when a term is passed in as a route parameter.
 
-[source,javascript]
+[source,typescript]
 .src/app/search/search.component.spec.ts
 ----
 it('should search when a term is set and search() is called', () => {
@@ -1105,7 +1106,7 @@ it('should search automatically when a term is on the URL', () => {
 
 Update the test for `EditComponent`, verifying fetching a single record works. Notice how you can access the component directly with `fixture.debugElement.componentInstance`, or its rendered version with `fixture.debugElement.nativeElement`.
 
-[source,javascript]
+[source,typescript]
 .src/app/edit/edit.component.spec.ts
 ----
 import { EditComponent } from './edit.component';
@@ -1229,7 +1230,7 @@ Execution time: 10 s.
 
 Create end-to-end tests in `e2e/src/search.e2e-spec.ts` to verify the search feature works. Populate it with the following code:
 
-[source,javascript]
+[source,typescript]
 .e2e/src/search.e2e-spec.ts
 ----
 import { browser, by, element } from 'protractor';
@@ -1260,7 +1261,7 @@ describe('Search', () => {
 
 Create a `e2e/src/edit.e2e-spec.ts` test to verify the `EditComponent` renders a person's information and that their information can be updated.
 
-[source,javascript]
+[source,typescript]
 .e2e/src/edit.e2e-spec.ts
 ----
 import { browser, by, element } from 'protractor';
