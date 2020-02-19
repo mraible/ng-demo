@@ -22,9 +22,9 @@ export class SearchService {
     }
     return this.getAll().pipe(
       map((data: any) => data
-          .map(item => !!localStorage['person' + item.id] ?
-            JSON.parse(localStorage['person' + item.id]) : item)
-          .filter(item => JSON.stringify(item).toLowerCase().includes(q))
+        .map(item => !!localStorage['person' + item.id] ?
+          JSON.parse(localStorage['person' + item.id]) : item)
+        .filter(item => JSON.stringify(item).toLowerCase().includes(q))
       ));
   }
 
