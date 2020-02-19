@@ -1,4 +1,4 @@
-= Bare Bones Angular and Angular CLI Tutorial 🦴
+= Bare Bones Angular and Angular CLI Tutorial &#x1F9B4;
 
 :author: Matt Raible
 :email:  matt@raibledesigns.com
