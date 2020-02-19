@@ -1420,7 +1420,7 @@ https://account.run.pivotal.io/z/uaa/sign-up[Create a Pivotal account] and https
 
 [source,bash]
 ----
-ng build --prod=true
+ng build --prod
 cd dist && touch Staticfile
 # enable pushstate so no 404s on refresh
 echo 'root: ng-demo\npushstate: enabled' > Staticfile
@@ -1438,10 +1438,9 @@ https://signup.heroku.com/[Create a Heroku account] and https://devcenter.heroku
 
    "start": "http-server-spa dist/ng-demo index.html $PORT",
 
-. Add `preinstall` and `postinstall` scripts to `package.json`:
+. Add a `heroku-postbuild` script to `package.json`:
 
-  "preinstall": "npm i -g http-server-spa",
-  "postinstall": "ng build --prod=true"
+  "heroku-postbuild": "ng build --prod && npm install -g http-server-spa"
 
 . Run `git push heroku master`
 . View the application in your browser with `heroku open`
