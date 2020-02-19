@@ -5,12 +5,11 @@
   "license": "MIT",
   "scripts": {
     "ng": "ng",
-    "start": "http-server-spa dist index.html $PORT",
+    "start": "ng start",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e",
-    "heroku-postbuild": "ng build --prod && npm install -g http-server-spa"
+    "e2e": "ng e2e"
   },
   "private": true,
   "dependencies": {
