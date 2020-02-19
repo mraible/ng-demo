@@ -218,11 +218,10 @@ export class SearchComponent implements OnInit {
 }
 ----
 
-
 .Adding a Search Route
 ****
 
-The https://angular.io/guide/router[Router & Navigation documentation] for Angular provides the information you need to setup a route to the `SearchComponent` you just generated. Here's a quick summary:
+The https://angular.io/guide/router[Router and navigation docs] for Angular provides the information you need to setup a route to the `SearchComponent` you just generated. Here's a quick summary:
 
 In `src/app/app-routing.module.ts`, modify the `routes` constant to add `SearchComponent` as the default:
 
