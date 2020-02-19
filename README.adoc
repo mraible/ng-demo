@@ -830,7 +830,7 @@ After making these changes, the name field will be required.
 .Edit form with validation
 image::src/assets/images/edit-form-validation.png[Edit form with validation, 800, scaledwidth="100%"]
 
-In this screenshot, you might notice the address fields are blank. This is explained by the error in your console.
+In this screenshot, you might notice the address fields are blank and the save button is enabled. This is explained by the error in your console.
 
 ----
 If ngModel is used within a form tag, either the name attribute must be set or the form control must be defined as 'standalone' in ngModelOptions.
@@ -852,7 +852,7 @@ To fix, add a `name` attribute to all the address fields. For example:
 </address>
 ----
 
-Now values should display in all fields and `name` should be required.
+Now values display in all fields, `name` is required, and save is enabled.
 
 [[edit-form-names]]
 .Edit form with names and validation
@@ -867,7 +867,7 @@ to automate your testing. Without tests, you'll likely be testing manually. This
 
 [TIP]
 ====
-If you didn't complete the previous section, you can clone the ng-demo repository and checkout the `test-start` branch.
+If you didn't complete the previous section, you can clone the `ng-demo` repository and checkout the `test-start` branch.
 
 ----
 git clone -b test-start https://github.com/mraible/ng-demo.git
