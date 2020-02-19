@@ -1,4 +1,4 @@
-= Bare Bones Angular and Angular CLI Tutorial
+= &#x1F9B4; Bare Bones Angular and Angular CLI Tutorial
 
 :author: Matt Raible
 :email:  matt@raibledesigns.com
@@ -30,7 +30,7 @@ endif::[]
 :toc: macro
 
 This tutorial shows you how to build a bare-bones search and edit application using https://angular.io[Angular] and
-https://github.com/angular/angular-cli[Angular CLI] version 9.0. &#x1F9B4;
+https://github.com/angular/angular-cli[Angular CLI] version 9.0.
 
 toc::[]
 
