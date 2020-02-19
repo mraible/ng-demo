@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "ng": "ng",
-    "start": "http-server-spa dist index.html $PORT",
+    "start": "http-server-spa dist/ng-demo index.html $PORT",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
