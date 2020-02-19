@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Person, SearchService } from '../shared';
-import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-search',
@@ -17,17 +17,11 @@ export class SearchComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.sub = this.route.params.subscribe(params => {
-      if (params['term']) {
-        this.query = decodeURIComponent(params['term']);
+      if (params.term) {
+        this.query = decodeURIComponent(params.term);
         this.search();
       }
     });
-  }
-
-  ngOnDestroy() {
-    if (this.sub) {
-      this.sub.unsubscribe();
-    }
   }
 
   search(): void {
@@ -37,4 +31,9 @@ export class SearchComponent implements OnInit, OnDestroy {
     );
   }
 
+  ngOnDestroy() {
+    if (this.sub) {
+      this.sub.unsubscribe();
+    }
+  }
 }

@@ -45,6 +45,6 @@
 
     <button mat-raised-button type="submit" color="primary" id="save"
             [disabled]="!editForm.form.valid">Save</button>
-    <button mat-button (click)="cancel()" id="cancel">Cancel</button>
+    <button mat-button (click)="cancel(); false" id="cancel">Cancel</button>
   </form>
 </div>
