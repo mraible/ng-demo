@@ -6,7 +6,7 @@ services:
   - xvfb
 language: node_js
 node_js:
-  - "12.13.0"
+  - "12.16.1"
 addons:
   apt:
     packages:
@@ -19,7 +19,7 @@ branches:
   only:
     - master
 before_install:
-  - npm install -g @angular/cli@9.0.0-rc.1
+  - npm install -g @angular/cli
 install:
   - npm ci
 script:
@@ -30,3 +30,10 @@ notifications:
     on_success: change
     on_failure: always
     on_start: false
+deploy:
+  provider: heroku
+  api_key:
+    secure: BhJ5UedUwQGaw4IVbSy7EHKT6B1YnHSRsJ/A/1ZWaMDC4I3p3vAQ+Db1QNhJg/Mm47JquDI1ecojTWts4ta7q2+nyuC61pENQJdYah3mCtzxJoWQ6wOfUSW+qvPuf+8ra1UnL3a8haqvC13cP6lbFi9FcGOaHtFmEo0NPXwJnzl3fPL2VPzBbhiFHsJPPFrGV/o7/F59RnTgwu3dqbIm3S5UtUNXDe0IFvoAaUxw6lUSbROmmtDG6rUXTWg7auL0uWE6mDDxvVtmuxQ8eJfMJs3KFZkOGA4DN3X3Dox8c1nBQQg4Bk76sXuFhkk/UHPRoPWqFwgrbLQ7gRLTRk05bHgPd/Cvm0k4GJxA5/R6EBRd90N4jGXhiQ3b2WtLpi7UG4hdHrw6HEbpndO/uCk/G0QDgsuAvB9gF675tMb3DjSLUv20Seq5a2P83BeDUzwGY+acIK91fncM0333gO+AqCLCGcxaDLD1CjE/JF1fSvqdcwcWpsWrAU48+OzH3jJhgzaraTS2RB5SPTQD9oZo+8oEmmi+01/cYtMdODlCEjl0OnUkBKndf0wLx+1uSvAbjxEcWVmPUUOBVr6ODsgBFjEYPkQCXMEN7ToBlDCmvEc/uLb/kByaSWOBlTsfCNj1QEYopzl5lUhzEZ/hpqMfVVFmDQ0ogRyui9Eomg3f/40=
+  app: evening-meadow-46789
+  on:
+    repo: mraible/ng-demo
