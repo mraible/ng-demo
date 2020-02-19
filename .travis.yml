@@ -1,27 +1,27 @@
 dist: bionic
 os:
-  - linux
+- linux
 services:
-  - docker
-  - xvfb
+- docker
+- xvfb
 language: node_js
 node_js:
-  - "12.16.1"
+- 12.16.1
 addons:
   apt:
     packages:
-      - dpkg
+    - dpkg
   chrome: stable
 cache:
   directories:
-    - node_modules
+  - node_modules
 before_install:
-  - npm install -g @angular/cli
+- npm install -g @angular/cli
 install:
-  - npm ci
+- npm ci
 script:
-  - ng test --watch=false
-  - ng e2e
+- ng test --watch=false
+- ng e2e
 notifications:
   webhooks:
     on_success: change
@@ -31,6 +31,11 @@ deploy:
   provider: heroku
   api_key:
     secure: BhJ5UedUwQGaw4IVbSy7EHKT6B1YnHSRsJ/A/1ZWaMDC4I3p3vAQ+Db1QNhJg/Mm47JquDI1ecojTWts4ta7q2+nyuC61pENQJdYah3mCtzxJoWQ6wOfUSW+qvPuf+8ra1UnL3a8haqvC13cP6lbFi9FcGOaHtFmEo0NPXwJnzl3fPL2VPzBbhiFHsJPPFrGV/o7/F59RnTgwu3dqbIm3S5UtUNXDe0IFvoAaUxw6lUSbROmmtDG6rUXTWg7auL0uWE6mDDxvVtmuxQ8eJfMJs3KFZkOGA4DN3X3Dox8c1nBQQg4Bk76sXuFhkk/UHPRoPWqFwgrbLQ7gRLTRk05bHgPd/Cvm0k4GJxA5/R6EBRd90N4jGXhiQ3b2WtLpi7UG4hdHrw6HEbpndO/uCk/G0QDgsuAvB9gF675tMb3DjSLUv20Seq5a2P83BeDUzwGY+acIK91fncM0333gO+AqCLCGcxaDLD1CjE/JF1fSvqdcwcWpsWrAU48+OzH3jJhgzaraTS2RB5SPTQD9oZo+8oEmmi+01/cYtMdODlCEjl0OnUkBKndf0wLx+1uSvAbjxEcWVmPUUOBVr6ODsgBFjEYPkQCXMEN7ToBlDCmvEc/uLb/kByaSWOBlTsfCNj1QEYopzl5lUhzEZ/hpqMfVVFmDQ0ogRyui9Eomg3f/40=
-  app: bare-bones-angular 
+  app: bare-bones-angular
   on:
     repo: mraible/ng-demo
+env:
+  global:
+  - secure: UWhwK3I1e5DwzPeRIFx2im3SbI53A49JuK2LXXADkFWowJQzbPTPSIxfhOgNsKJGlz5mun0ipqjnFsLx+61nrbxrOu8hqVkeuyDxVmOID0zaC1gKv8ZEvLIlAd94sN/vC8hDyogVtPy+CQw9JpGvEPKbrlXLrXn3LhEeiG/JOucWzQoYh9VebTFuY0y4VvQwg2D0+dgQY5pyEFZAUFbxV+i1YsHS0FwT2cmpZRw9NjIyqGvl4NuJQWjAZ/URsS0I0lzm21bbZkeu/fUSI6TeI+rd6TP5mvJMf/TYD9PYDrW30CtfblWAlrMXUJtgHnZG86vqjqCijbR/lZ0sCkKMSBOllintfRdSsWP6AtDdM503y//5pP8KKnqaG2oJVcNX8rqV/FRvx6CIYg8YyCvi4+ZeX6sm4vRbIU0vh1XdxpI/B0Y4X4qn1Pyw+eMqYk3A4NQBDrjMIOU2uYQNDTJKfOFFb/YZ0m6yx/DpPeSUE07SNupv5dDz+XhG59VZYQIxDdckMrECyhL1kDELo5gnub2+IRmZ7khRaMUNU9beZdSGsCCkSc/1/j3pCk2VS28XLXKXnH2suHWYPBsT565dYDkvqVtLGC6+EcKXVQY4BggGflXKHX8zROeipLRj8gsY49DIokD351YXzXOaCZ+QZ7x5h6HpnsDqjVUyhJxcDOY=
+  - secure: h4MntdbZFX0hT24J3og9S6KCFq/utXNXxVeoY9JkyqhxM6B1MxIamILgzpIOhwto7s2g9x2Aef8NBMGPZUFXbWrhKCtxM/gh/n8weDdwO4+vE1vf/8aDihT71miMhM0TGdnYOf002MM2Rn4pQ9y6/NtorHi7DpAfj3I4sb5o2VPjZduMipJmzMBHZBJaw1Y03/s6uyZxtb9ifSGyzoUi51s4ikagnJgowmfVY3KcFszIG3wN0oM0ORig8p5fmN0Sd45N4DJ4Y7DoMtbe5uKw980qHi5NPt5BevII+tNFsv9UMKVwrQcG3VwcFU50p1g/8TWxG+0K0s3/RHgPI1e88LEmKp3DjFFUFxW1H1uthSMsbLiiYA7Ehg2D6cVjtcFjHTrZpmuuaohjPcItn67MkGu6La28Yd4czHXRZkBOWVmeRexEtBqoOLvAA3O8X8eVi3+KmPi6MK/GIAMmixHJVV5wrjftY8PrxpJdwxvr7lAPVjOYPI+ihTNAJzt/c2pFbEZj3vvBPgtH4mWcaX56PogeVodaAe918BY1VmK4MdaZLd57U8tru8hVxqNs/Lo7znB4u7F2BfrldVdznzZ3tW7MjAGBfZyZ7hWmgYkI1+td/Lf4cqUiG/coqdD7/PwA8drb3iDwezFBlIPqCpyaL5g2PsGskgTapWCIof2qK+I=
+  - secure: EZ8yKb98gW878tfbDWEO7uI5D8Rbk4szf+uCTyyGopSd6+aYFIrYkx1Ek2mPBuk51ssm63isFvZlVli735j8gs0NQ/HntfAf8Pd5yOo//P2UKLcsGglhFRj/Wnuxf7vvFSX+D28bM8iSuMaSxLdopIQdq5VT0fVpVYGnLYvotjVxoHU2BlP2tbrs5o+9o2amTMWvTQOYAdMBrw10qkhhRJjNrhry+sKU+g/nOFpnXEkK8IrGff4ZMTsin2LEC2gan9aueumNgaU8ARLJt3LiHgL1UBNj6GDOKasicydkX8HkGFEvKZhnBWMu43BC+8l0UQYSr7Cxq/85maPFyXHeMF3BBcgVUtbhEcjqxCU+oc/M25tU33jShG8ixM/+ctvxutjMZJAdJzEHSXKZHA2uFhXsgMT8w4DRUf8fbGdvh12YAXajMTr+BrNHSQU3z9YooQJZcr/WMPjJtTjV7ZDQEv22js+l5eRYwR+s/H72MInf4WiAgVKNzYABWILnTv1+dIAGkEP90x1W9rQ8KEM+E8OQUBEb3bTnIzrHFfQo/1kIDh3LRO7zgCnpb18rKflkAvvF2GfLTZ/sFmcfkejxM/+Bt+T8LFrFxHpaxD8P/2Mg9RgJcqdsezNvLCAoaMRk+d7lCP8D54Ae5Hvp7jGZ0Y8psGnU6CJo2bfALezK67Q=
