@@ -27,12 +27,14 @@ ifdef::env-github[]
 :tip-caption: :bulb:
 :warning-caption: :warning:
 endif::[]
-:toc:
+:toc: macro
 
 This tutorial shows you how to build a bare-bones search and edit application using https://angular.io[Angular] and
 https://github.com/angular/angular-cli[Angular CLI] version 9.0.
 
-For older versions of Angular, please see previous versions:
+toc::[]
+
+For older versions of Angular, please see previous tutorials:
 
 * https://github.com/mraible/ng-demo/blob/6a24488ca847dea215ad70101a22f3ebf67ba79a/README.adoc[Angular 7]
 * https://github.com/mraible/ng-demo/blob/41d9526dbc0a35131118f7f101938dfe75a0e212/README.adoc[Angular 6]
