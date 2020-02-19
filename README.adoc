@@ -1505,3 +1505,9 @@ After modifying your HTML to match this branch, the edit screen will look as fol
 [[bootstrap4]]
 .Bootstrap 4
 image::src/assets/images/bootstrap4.png[Bootstrap 4, 800, scaledwidth="100%"]
+
+The HTML templates and tests in the `bootstrap4` branch have been changed to use Bootstrap. You can download them using the following command:
+
+----
+git clone -b bootstrap4 https://github.com/mraible/ng-demo.git
+----
