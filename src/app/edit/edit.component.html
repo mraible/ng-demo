@@ -1,6 +1,6 @@
 <div *ngIf="person">
   <h3>{{editName}}</h3>
-  <form #editForm="ngForm" (ngSubmit)="save()">
+  <form (ngSubmit)="save()" #editForm="ngForm">
     <div>
       <label>Id:</label>
       {{person.id}}

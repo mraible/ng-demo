@@ -1,5 +1,4 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { SearchComponent } from './search.component';
 import { MockActivatedRoute } from '../shared/search/mocks/routes';
 import { SearchService } from '../shared';
