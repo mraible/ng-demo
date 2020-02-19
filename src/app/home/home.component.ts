@@ -21,6 +21,7 @@ export class HomeComponent implements OnInit {
     );
     if (this.isAuthenticated) {
       this.user = await this.oktaAuth.getUser();
+      console.log(this.user);
     }
   }
 }

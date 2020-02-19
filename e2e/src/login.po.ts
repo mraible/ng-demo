@@ -13,8 +13,9 @@ export class LoginPage {
     await browser.get('/');
     await browser.wait(ec.visibilityOf(this.signInButton));
     await this.signInButton.click();
+    // You must set E2E_USERNAME, E2E_PASSWORD, and E2E_NAME as environment variables
     await this.loginToIdP(process.env.E2E_USERNAME, process.env.E2E_PASSWORD);
-    const welcome = /Welcome, Okta Demo/;
+    const welcome = new RegExp('Welcome, ' + process.env.E2E_NAME);
     await browser.wait(ec.visibilityOf(this.logoutButton));
     await browser.sleep(2000); // wait for user to resolve
     expect(this.welcomeMessage.getText()).toMatch(welcome);
