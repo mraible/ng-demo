@@ -1,4 +1,4 @@
-= Angular and Angular CLI Tutorial
+= Bare Bones Angular and Angular CLI Tutorial 🦴
 
 :author: Matt Raible
 :email:  matt@raibledesigns.com
@@ -29,7 +29,7 @@ ifdef::env-github[]
 endif::[]
 :toc:
 
-This tutorial shows you how to build a simple search and edit application using https://angular.io[Angular] and
+This tutorial shows you how to build a bare-bones search and edit application using https://angular.io[Angular] and
 https://github.com/angular/angular-cli[Angular CLI] version 9.0.
 
 For older versions of Angular, please see previous versions:
