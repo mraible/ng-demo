@@ -1512,4 +1512,4 @@ The HTML templates and tests in the `bootstrap4` branch have been changed to use
 git clone -b bootstrap4 https://github.com/mraible/ng-demo.git
 ----
 
-https://github.com/mraible/ng-demo/compare/master...bootstrap4[Click here to see the difference] between this branch and the main branch.
+https://github.com/mraible/ng-demo/compare/master\...bootstrap4[Click here to see the difference] between this branch and the main branch.
