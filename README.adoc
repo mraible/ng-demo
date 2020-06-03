@@ -1455,10 +1455,11 @@ I hope you've enjoyed this in-depth tutorial on how to get started with Angular 
 
 == Bonus: Angular Material, Bootstrap 4, and Okta
 
-If you'd like to see how to integrate https://material.angular.io/[Angular Material], https://getbootstrap.com[Bootstrap 4], or http://developer.okta.com[authentication with Okta], this section is for you!
+If you'd like to see how to integrate https://material.angular.io/[Angular Material], https://getbootstrap.com[Bootstrap 4], http://developer.okta.com[authentication with Okta], or https://www.electronjs.org/[Electron] this section is for you!
 
 I've created branches to show how to integrate each of these libraries. Click on the links below to see each branch's documentation.
 
 * https://github.com/mraible/ng-demo/tree/angular-material#bonus-angular-material[Angular Material]
 * https://github.com/mraible/ng-demo/tree/bootstrap4#bonus-bootstrap[Bootstrap 4]
 * https://github.com/mraible/ng-demo/tree/okta#bonus-okta[Authentication with Okta]
+* https://github.com/mraible/ng-demo/tree/electron#bonus-electron[Electron]
