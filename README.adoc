@@ -1466,7 +1466,7 @@ Login to your Okta account, or https://developer.okta.com/signup/[create one] if
 * Navigate to *Applications* > *Add Application*.
 * Select *Single-Page App (SPA)* and click *Next*.
 * Click *Create* and give your application a name (e.g., "Angular 9").
-* On the next screen, change the *Base URIs* and *Login redirect URIs*, and **Logout redirect URIs** to use `http://localhost:4200`.
+* On the next screen, change all URIs to use port `4200` and add `http://localhost:4200` as a *Login redirect URI*.
 * Select **Authorization Code** as a grant type and click *Done*.
 
 When you are finished, your settings should look similar to the screenshot below.
@@ -1515,7 +1515,7 @@ const routes: Routes = [
     component: HomeComponent
   },
   {
-    path: 'implicit/callback',
+    path: 'callback',
     component: OktaCallbackComponent
   }
 ];
