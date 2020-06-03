@@ -1453,7 +1453,7 @@ A completed project with this code in it is available on GitHub at https://githu
 
 I hope you've enjoyed this in-depth tutorial on how to get started with Angular and Angular CLI. Angular CLI takes much of the pain out of setting up an Angular project and using Typescript. I expect great things from Angular CLI, mostly because the Angular setup process can be tedious and CLI greatly simplifies things.
 
-== Bonus: Angular Material, Bootstrap 4, and Okta
+== Bonus: Angular Material, Bootstrap 4, Okta, and Electron
 
 If you'd like to see how to integrate https://material.angular.io/[Angular Material], https://getbootstrap.com[Bootstrap 4], http://developer.okta.com[authentication with Okta], or https://www.electronjs.org/[Electron] this section is for you!
 
