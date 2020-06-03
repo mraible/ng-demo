@@ -1507,4 +1507,4 @@ After modifying your HTML to match this branch, the edit screen will look as fol
 .Angular Material
 image::src/assets/images/angular-material.png[Angular Material, 800, scaledwidth="100%"]
 
-https://github.com/mraible/ng-demo/compare/master...angular-material[Click here to see the difference] between this branch and the main branch.
+https://github.com/mraible/ng-demo/compare/master\...angular-material[Click here to see the difference] between this branch and the main branch.
