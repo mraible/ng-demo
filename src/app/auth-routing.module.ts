@@ -9,7 +9,7 @@ import { AuthInterceptor } from './shared/okta/auth.interceptor';
 
 const oktaConfig = {
   issuer: 'https://dev-133320.okta.com/oauth2/default',
-  redirectUri: window.location.origin + '/implicit/callback',
+  redirectUri: window.location.origin + '/callback',
   clientId: '0oa44bt3tfrlm0e6z357',
   pkce: true,
   scopes: ['openid', 'profile']
@@ -22,7 +22,7 @@ const routes: Routes = [
     component: HomeComponent
   },
   {
-    path: 'implicit/callback',
+    path: 'callback',
     component: OktaCallbackComponent
   }
 ];
