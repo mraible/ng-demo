@@ -1572,3 +1572,5 @@ To package your app for production, use the following commands:
 NOTE: If the app doesn't start after packaging, it's likely because you don't have https://www.electron.build/code-signing[code signing] configured. To disable Code Signing when building for macOS, run `export CSC_IDENTITY_AUTO_DISCOVERY=false`. If you have an Apple Developer Account, open Xcode, go to **Preferences** > **Accounts** and make sure you're logged in, and your development certificates are downloaded.
 
 To add authentication to your Electron application, please see https://developer.okta.com/blog/2019/03/20/build-desktop-app-with-angular-electron#add-authentication-to-your-angular-electron-desktop-app[Add Authentication to Your Angular Electron Desktop App].
+
+https://github.com/mraible/ng-demo/compare/master...electron[Click here to see the difference] between this branch and the main branch.
