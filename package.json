@@ -1,7 +1,7 @@
 {
   "name": "ng-demo",
   "author": "Matt Raible <mraible@gmail.com>",
-  "version": "9.1.0",
+  "version": "9.0.0",
   "license": "MIT",
   "main": "main.js",
   "build": {
@@ -15,7 +15,7 @@
   },
   "scripts": {
     "ng": "ng",
-    "start": "http-server-spa dist/ng-demo index.html $PORT",
+    "start": "ng serve",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
@@ -23,8 +23,7 @@
     "electron": "ng build --base-href ./ && electron .",
     "pack": "ng build --prod --base-href ./ && electron-builder --dir",
     "dist": "ng build --prod --base-href ./ && electron-builder",
-    "postinstall": "electron-builder install-app-deps",
-    "heroku-postbuild": "ng build --prod && npm install -g http-server-spa"
+    "postinstall": "electron-builder install-app-deps"
   },
   "private": true,
   "dependencies": {
