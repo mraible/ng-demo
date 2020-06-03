@@ -1,9 +1,8 @@
-import { getTestBed, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { SearchService } from './search.service';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 
 describe('SearchService', () => {
-  let injector: TestBed;
   let service: SearchService;
   let httpMock: HttpTestingController;
 
@@ -13,9 +12,8 @@ describe('SearchService', () => {
       providers: [SearchService]
     });
 
-    injector = getTestBed();
-    service = injector.get(SearchService);
-    httpMock = injector.get(HttpTestingController);
+    service = TestBed.inject(SearchService);
+    httpMock = TestBed.inject(HttpTestingController);
   });
 
   afterEach(() => {
@@ -27,49 +25,47 @@ describe('SearchService', () => {
   });
 
   it('should retrieve all search results', () => {
-    const dummyData = [
-      {name: 'John Elway'},
-      {name: 'Gary Kubiak'}
+    const mockResponse = [
+      {name: 'Nikola Jokić'},
+      {name: 'Mike Malone'}
     ];
 
     service.getAll().subscribe((people: any) => {
       expect(people.length).toBe(2);
-      expect(people[0].name).toBe('John Elway');
-      expect(people).toEqual(dummyData);
+      expect(people[0].name).toBe('Nikola Jokić');
+      expect(people).toEqual(mockResponse);
     });
 
     const req = httpMock.expectOne('assets/data/people.json');
     expect(req.request.method).toBe('GET');
-    req.flush(dummyData);
+    req.flush(mockResponse);
   });
 
   it('should filter by search term', () => {
-    const dummyData = [
-      {name: 'John Elway'}
-    ];
+    const mockResponse = [{name: 'Nikola Jokić'}];
 
-    service.search('john').subscribe((people: any) => {
+    service.search('nik').subscribe((people: any) => {
       expect(people.length).toBe(1);
-      expect(people[0].name).toBe('John Elway');
+      expect(people[0].name).toBe('Nikola Jokić');
     });
 
     const req = httpMock.expectOne('assets/data/people.json');
     expect(req.request.method).toBe('GET');
-    req.flush(dummyData);
+    req.flush(mockResponse);
   });
 
   it('should fetch by id', () => {
-    const dummyData = [
-      {id: 1, name: 'John Elway'},
-      {id: 2, name: 'Gary Kubiak'}
+    const mockResponse = [
+      {id: 1, name: 'Nikola Jokić'},
+      {id: 2, name: 'Mike Malone'}
     ];
 
     service.get(2).subscribe((person: any) => {
-      expect(person.name).toBe('Gary Kubiak');
+      expect(person.name).toBe('Mike Malone');
     });
 
     const req = httpMock.expectOne('assets/data/people.json');
     expect(req.request.method).toBe('GET');
-    req.flush(dummyData);
+    req.flush(mockResponse);
   });
 });
