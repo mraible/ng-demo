@@ -1506,10 +1506,6 @@ app.on('activate', function () {
 })
 ----
 
-Change the `outputPath` in `angular.json` to put all files in the `dist` directory.
-
-
-
 Add `main.js` as the main entry point in `package.json`:
 
 [source,json]
