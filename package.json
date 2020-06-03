@@ -1,8 +1,18 @@
 {
   "name": "ng-demo",
   "author": "Matt Raible <mraible@gmail.com>",
-  "version": "9.0.0",
+  "version": "9.1.0",
   "license": "MIT",
+  "main": "main.js",
+  "build": {
+    "appId": "bare.bones.angular",
+    "productName": "Bare Bones Angular",
+    "mac": {
+      "category": "public.app-category.developer-tools",
+      "icon": "src/assets/images/angular-logo.png"
+    },
+    "files": ["**/*", "dist/ng-demo/**"]
+  },
   "scripts": {
     "ng": "ng",
     "start": "http-server-spa dist/ng-demo index.html $PORT",
@@ -10,6 +20,10 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
+    "electron": "ng build --base-href ./ && electron .",
+    "pack": "ng build --prod --base-href ./ && electron-builder --dir",
+    "dist": "ng build --prod --base-href ./ && electron-builder",
+    "postinstall": "electron-builder install-app-deps",
     "heroku-postbuild": "ng build --prod && npm install -g http-server-spa"
   },
   "private": true,
@@ -31,10 +45,12 @@
     "@angular/cli": "~9.1.7",
     "@angular/compiler-cli": "~9.1.9",
     "@angular/language-service": "~9.1.9",
-    "@types/node": "^14.0.9",
     "@types/jasmine": "~3.5.10",
     "@types/jasminewd2": "~2.0.8",
+    "@types/node": "^14.0.9",
     "codelyzer": "^5.2.2",
+    "electron": "^9.0.2",
+    "electron-builder": "^22.7.0",
     "jasmine-core": "~3.5.0",
     "jasmine-spec-reporter": "~5.0.2",
     "karma": "~5.0.9",
