@@ -1,27 +1,27 @@
 dist: bionic
 os:
-- linux
+  - linux
 services:
-- docker
-- xvfb
+  - docker
+  - xvfb
 language: node_js
 node_js:
-- 12.16.1
+  - "12.16.1"
 addons:
   apt:
     packages:
-    - dpkg
+      - dpkg
   chrome: stable
 cache:
   directories:
-  - node_modules
+    - node_modules
 before_install:
-- npm install -g @angular/cli
+  - npm install -g @angular/cli
 install:
-- npm ci
+  - npm ci
 script:
-- ng test --watch=false
-- ng e2e
+  - ng test --watch=false
+  - ng e2e
 notifications:
   webhooks:
     on_success: change

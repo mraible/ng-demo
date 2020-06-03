@@ -1615,4 +1615,4 @@ The code in this branch can be downloaded using the following command:
 git clone -b okta https://github.com/mraible/ng-demo.git
 ----
 
-https://github.com/mraible/ng-demo/compare/master...okta[Click here to see the difference] between this branch and the main branch.
+https://github.com/mraible/ng-demo/compare/master\...okta[Click here to see the difference] between this branch and the main branch.
