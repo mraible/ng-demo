@@ -9,7 +9,7 @@
       <label>Name:</label>
       <input [(ngModel)]="editName" name="name" id="name" placeholder="name" required #name="ngModel"/>
       <div [hidden]="name.valid || name.pristine" style="color: red">
-        Name is required
+      Name is required
       </div>
     </div>
     <div>
@@ -19,10 +19,10 @@
     <fieldset>
       <legend>Address:</legend>
       <address>
-        <input [(ngModel)]="editAddress.street" name="street" id="street"><br/>
-        <input [(ngModel)]="editAddress.city" name="city" id="city">,
-        <input [(ngModel)]="editAddress.state" name="state" id="state" size="2">
-        <input [(ngModel)]="editAddress.zip" name="zip" id="zip" size="5">
+        <input [(ngModel)]="editAddress.street" id="street" name="street"><br/>
+        <input [(ngModel)]="editAddress.city" id="city" name="city">,
+        <input [(ngModel)]="editAddress.state" id="state" name="state" size="2">
+        <input [(ngModel)]="editAddress.zip" id="zip" name="zip" size="5">
       </address>
     </fieldset>
     <button type="submit" id="save" [disabled]="!editForm.form.valid">Save</button>
