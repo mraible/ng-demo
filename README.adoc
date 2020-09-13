@@ -1380,7 +1380,7 @@ jobs:
 
 Check it in on a branch, create a pull request for that branch, and you should see your tests running.
 
-[Here is a build](https://github.com/mraible/ng-demo/pull/76/checks?check_run_id=1107490951) showing all unit and integration tests passing.
+https://github.com/mraible/ng-demo/pull/76/checks?check_run_id=1107490951[Here is a build] showing all unit and integration tests passing.
 
 === Travis CI
 
@@ -1423,13 +1423,13 @@ notifications:
     on_start: false
 ----
 
-https://travis-ci.org/mraible/ng-demo/builds/610233616[Here] is a build showing all unit and integration tests passing.
+https://travis-ci.org/github/mraible/ng-demo/builds/726701970[Here is a build] showing all unit and integration tests passing.
 
 === Jenkins
 
 If you've checked your project into source control, you can use Jenkins to automate testing.
 
-. Create a `Jenkinsfile` in the root directory and commit to master.
+. Create a `Jenkinsfile` in the root directory and commit/push it.
 
 ----
 node {
@@ -1460,8 +1460,8 @@ node {
 ----
 
 [start=2]
-. Download https://jenkins.io/download/[Jenkins] and install it on your local hard drive. Start it using `java -jar jenkins.war`.
-. Login to Jenkins and create a new project with an SCM Pipeline. Point it at your project's repository. Run a build.
+. Install https://jenkins.io/download/[Jenkins] on your hard drive and start it.
+. Login to Jenkins at `http://localhost:8080` and create a new project with **Pipeline** > **Pipeline script from SCM** (near the bottom). Point it at your project's repository. Run a build.
 
 == Deployment
 
@@ -1469,7 +1469,16 @@ This section shows you how to deploy an Angular app to http://run.pivotal.io[Clo
 
 === Cloud Foundry
 
-https://account.run.pivotal.io/z/uaa/sign-up[Create a Pivotal account] and https://docs.run.pivotal.io/cf-cli/install-go-cli.html[install the cf CLI]. Then run the following commands to build and deploy your application.
+https://account.run.pivotal.io/z/uaa/sign-up[Create a Pivotal account] and https://docs.run.pivotal.io/cf-cli/install-go-cli.html[install the cf CLI].
+
+Login to your account.
+
+[source,bash]
+----
+cf login -a api.run.pivotal.io
+----
+
+Then run the following commands to build and deploy your application.
 
 [source,bash]
 ----
@@ -1480,11 +1489,13 @@ echo 'root: ng-demo\npushstate: enabled' > Staticfile
 cf push ng-demo
 ----
 
-NOTE: You might need to use an app name other than `ng-demo`.
+NOTE: You might need to use an app name other than `ng-demo`. For example, `coolest-ever`.
 
 === Heroku
 
-https://signup.heroku.com/[Create a Heroku account] and https://devcenter.heroku.com/articles/heroku-cli[install the heroku CLI]. Then run the following commands to build and deploy your application.
+https://signup.heroku.com/[Create a Heroku account], https://devcenter.heroku.com/articles/heroku-cli[install the heroku CLI], and run `heroku login`.
+
+Then run the following commands to build and deploy your application.
 
 Run `heroku create` to create an app on Heroku.
 
@@ -1531,17 +1542,20 @@ Add `--prod` to the `build` script since the static buildback uses this command.
 },
 ----
 
-Commit your changes to Git, add the static buildpack, and redeploy your Angular app.
+Commit your changes to Git, add the Node.js + static buildpack, and redeploy your Angular app.
 
 [source,shell]
 ----
 git add .
 git commit -m "Configure secure headers and static buildpack"
+heroku buildpacks:add heroku/nodejs
 heroku buildpacks:add https://github.com/heroku/heroku-buildpack-static.git
-git push master heroku
+git push heroku master
 ----
 
-View the application in your browser with `heroku open`.
+View the application in your browser with `heroku open`. Try your app's URL on <https://securityheaders.com> to be pleasantly suprised.
+
+TIP: You can watch your app's logs using `heroku logs --tail`.
 
 == Source code
 
