@@ -1,12 +1,15 @@
 {
   "name": "ng-demo",
+  "author": "Matt Raible <mraible@gmail.com>",
+  "version": "10.0.0",
+  "license": "MIT",
   "main": "main.js",
-  "version": "0.0.0",
   "build": {
     "appId": "bare.bones.angular",
     "productName": "Bare Bones Angular",
     "mac": {
-      "category": "public.app-category.developer-tools"
+      "category": "public.app-category.developer-tools",
+      "icon": "src/assets/images/angular-logo.png"
     },
     "files": ["**/*", "dist/ng-demo/**"]
   },
