@@ -1,21 +1,20 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SearchComponent } from './search.component';
-import { MockActivatedRoute } from '../shared/search/mocks/routes';
 import { SearchService } from '../shared';
 import { ActivatedRoute } from '@angular/router';
-import { FormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
+import { FormsModule } from '@angular/forms';
+import { MockActivatedRoute } from '../shared/search/mocks/routes';
 import { of } from 'rxjs';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('SearchComponent', () => {
   let component: SearchComponent;
   let fixture: ComponentFixture<SearchComponent>;
-  let mockActivatedRoute: MockActivatedRoute;
   let mockSearchService: SearchService;
+  let mockActivatedRoute: MockActivatedRoute;
 
-  beforeEach(async(() => {
+  beforeEach((() => {
     mockActivatedRoute = new MockActivatedRoute({term: 'nikola'});
 
     TestBed.configureTestingModule({

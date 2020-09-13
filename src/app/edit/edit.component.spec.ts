@@ -1,7 +1,7 @@
 import { EditComponent } from './edit.component';
 import { TestBed } from '@angular/core/testing';
 import { Address, Person, SearchService } from '../shared';
-import { MockRouter, MockActivatedRoute } from '../shared/search/mocks/routes';
+import { MockActivatedRoute, MockRouter } from '../shared/search/mocks/routes';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { of } from 'rxjs';
