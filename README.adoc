@@ -1682,4 +1682,4 @@ NOTE: If the app doesn't start after packaging, it's likely because you don't ha
 
 To add authentication to your Electron application, please see https://developer.okta.com/blog/2019/03/20/build-desktop-app-with-angular-electron#add-authentication-to-your-angular-electron-desktop-app[Add Authentication to Your Angular Electron Desktop App].
 
-https://github.com/mraible/ng-demo/compare/master\...electron[Click here to see the difference] between this branch and the main branch.
+https://github.com/mraible/ng-demo/compare/main\...electron[Click here to see the difference] between this branch and the main branch.
