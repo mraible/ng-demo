@@ -18,7 +18,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
   declarations: [
     AppComponent,
     SearchComponent,
-    EditComponent,
+    EditComponent
   ],
   imports: [
     BrowserModule,

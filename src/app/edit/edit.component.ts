@@ -21,7 +21,7 @@ export class EditComponent implements OnInit, OnDestroy {
               private service: SearchService) {
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.sub = this.route.params.subscribe(params => {
       const id = + params.id; // (+) converts string 'id' to a number
       this.service.get(id).subscribe(person => {
@@ -37,7 +37,7 @@ export class EditComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     if (this.sub) {
       this.sub.unsubscribe();
     }
