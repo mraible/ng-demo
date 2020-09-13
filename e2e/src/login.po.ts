@@ -9,7 +9,7 @@ export class LoginPage {
   logoutButton = element(by.id('logout'));
   welcomeMessage = element(by.css('h2'));
 
-  async login() {
+  async login(): Promise<void> {
     await browser.get('/');
     await browser.wait(ec.visibilityOf(this.signInButton));
     await this.signInButton.click();
@@ -21,7 +21,7 @@ export class LoginPage {
     expect(this.welcomeMessage.getText()).toMatch(welcome);
   }
 
-  async loginToIdP(username: string, password: string) {
+  async loginToIdP(username: string, password: string): Promise<void> {
     // Entering non angular site, tell webdriver to switch to synchronous mode.
     await browser.waitForAngularEnabled(false);
     await browser.wait(ec.visibilityOf(this.username));
@@ -39,7 +39,7 @@ export class LoginPage {
     }
   }
 
-  async logout() {
+  async logout(): Promise<void> {
     await browser.get('/');
     await browser.wait(ec.visibilityOf(this.logoutButton));
     await this.logoutButton.click();

@@ -6,7 +6,11 @@ services:
   - xvfb
 language: node_js
 node_js:
+<<<<<<< HEAD
   - "12.16.1"
+=======
+  - "14.x"
+>>>>>>> main
 addons:
   apt:
     packages:
@@ -15,13 +19,19 @@ addons:
 cache:
   directories:
     - node_modules
+<<<<<<< HEAD
 before_install:
   - npm install -g @angular/cli
+=======
+branches:
+  only:
+    - master
+>>>>>>> main
 install:
   - npm ci
 script:
-  - ng test --watch=false
-  - ng e2e
+  - npm test -- --watch=false
+  - npm run e2e
 notifications:
   webhooks:
     on_success: change

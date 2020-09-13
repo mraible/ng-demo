@@ -8,10 +8,9 @@ import { OKTA_CONFIG, OktaAuthModule } from '@okta/okta-angular';
 import { AuthInterceptor } from './shared/okta/auth.interceptor';
 
 const oktaConfig = {
-  issuer: 'https://dev-133320.okta.com/oauth2/default',
+  issuer: 'https://dev-730036.okta.com/oauth2/default',
   redirectUri: window.location.origin + '/callback',
-  clientId: '0oa44bt3tfrlm0e6z357',
-  pkce: true,
+  clientId: '0oayfoe8b1CQoOnpi4x6',
   scopes: ['openid', 'profile']
 };
 

@@ -13,7 +13,7 @@ import { AuthRoutingModule } from './auth-routing.module';
   declarations: [
     AppComponent,
     SearchComponent,
-    EditComponent,
+    EditComponent
   ],
   imports: [
     BrowserModule,

@@ -9,7 +9,7 @@
       <label>Name:</label>
       <input [(ngModel)]="editName" name="name" id="name" placeholder="name" required #name="ngModel"/>
       <div [hidden]="name.valid || name.pristine" style="color: red">
-        Name is required
+      Name is required
       </div>
     </div>
     <div>

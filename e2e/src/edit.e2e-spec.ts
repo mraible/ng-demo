@@ -1,4 +1,4 @@
-import { browser, by, element, ExpectedConditions as ec } from 'protractor';
+import { browser, by, element } from 'protractor';
 import { LoginPage } from './login.po';
 
 describe('Edit', () => {
@@ -30,11 +30,10 @@ describe('Edit', () => {
 
   it('should allow updating a name', async () => {
     const save = element(by.id('save'));
-    await browser.wait(ec.visibilityOf(name));
-    await name.sendKeys(' Rocks!');
+    name.sendKeys(' Rocks!');
     await save.click();
-    const list = element.all(by.css('app-search table tbody tr'));
     // verify one element matched this change
+    const list = element.all(by.css('app-search table tbody tr'));
     expect(list.count()).toBe(1);
   });
 });

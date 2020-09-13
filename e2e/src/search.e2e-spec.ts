@@ -1,4 +1,4 @@
-import { browser, by, element, ExpectedConditions as ec } from 'protractor';
+import { browser, by, element } from 'protractor';
 import { LoginPage } from './login.po';
 
 describe('Search', () => {
