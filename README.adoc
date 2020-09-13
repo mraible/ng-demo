@@ -1380,7 +1380,7 @@ jobs:
 
 Check it in on a branch, create a pull request for that branch, and you should see your tests running.
 
-TODO[Here] is a build showing all unit and integration tests passing.
+[Here is a build](https://github.com/mraible/ng-demo/pull/76/checks?check_run_id=1107490951) showing all unit and integration tests passing.
 
 === Travis CI
 
