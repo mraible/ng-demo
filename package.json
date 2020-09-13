@@ -1,6 +1,8 @@
 {
   "name": "ng-demo",
-  "version": "0.0.0",
+  "author": "Matt Raible <mraible@gmail.com>",
+  "version": "10.0.0",
+  "license": "MIT",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
