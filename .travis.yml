@@ -1,42 +1,33 @@
 dist: bionic
 os:
-  - linux
+- linux
 services:
-  - docker
-  - xvfb
+- docker
+- xvfb
 language: node_js
 node_js:
-<<<<<<< HEAD
-  - "12.16.1"
-=======
-  - "14.x"
->>>>>>> main
+- 14.x
 addons:
   apt:
     packages:
-      - dpkg
+    - dpkg
   chrome: stable
 cache:
   directories:
-    - node_modules
-<<<<<<< HEAD
-before_install:
-  - npm install -g @angular/cli
-=======
+  - node_modules
 branches:
   only:
-    - master
->>>>>>> main
+  - master
 install:
-  - npm ci
+- npm ci
 script:
-  - npm test -- --watch=false
-  - npm run e2e
+- npm test -- --watch=false
+- npm run e2e
 notifications:
   webhooks:
     on_success: change
     on_failure: always
-    on_start: never
+    on_start: false
 deploy:
   provider: heroku
   api_key:
@@ -46,6 +37,6 @@ deploy:
     repo: mraible/ng-demo
 env:
   global:
-  - secure: UWhwK3I1e5DwzPeRIFx2im3SbI53A49JuK2LXXADkFWowJQzbPTPSIxfhOgNsKJGlz5mun0ipqjnFsLx+61nrbxrOu8hqVkeuyDxVmOID0zaC1gKv8ZEvLIlAd94sN/vC8hDyogVtPy+CQw9JpGvEPKbrlXLrXn3LhEeiG/JOucWzQoYh9VebTFuY0y4VvQwg2D0+dgQY5pyEFZAUFbxV+i1YsHS0FwT2cmpZRw9NjIyqGvl4NuJQWjAZ/URsS0I0lzm21bbZkeu/fUSI6TeI+rd6TP5mvJMf/TYD9PYDrW30CtfblWAlrMXUJtgHnZG86vqjqCijbR/lZ0sCkKMSBOllintfRdSsWP6AtDdM503y//5pP8KKnqaG2oJVcNX8rqV/FRvx6CIYg8YyCvi4+ZeX6sm4vRbIU0vh1XdxpI/B0Y4X4qn1Pyw+eMqYk3A4NQBDrjMIOU2uYQNDTJKfOFFb/YZ0m6yx/DpPeSUE07SNupv5dDz+XhG59VZYQIxDdckMrECyhL1kDELo5gnub2+IRmZ7khRaMUNU9beZdSGsCCkSc/1/j3pCk2VS28XLXKXnH2suHWYPBsT565dYDkvqVtLGC6+EcKXVQY4BggGflXKHX8zROeipLRj8gsY49DIokD351YXzXOaCZ+QZ7x5h6HpnsDqjVUyhJxcDOY=
-  - secure: h4MntdbZFX0hT24J3og9S6KCFq/utXNXxVeoY9JkyqhxM6B1MxIamILgzpIOhwto7s2g9x2Aef8NBMGPZUFXbWrhKCtxM/gh/n8weDdwO4+vE1vf/8aDihT71miMhM0TGdnYOf002MM2Rn4pQ9y6/NtorHi7DpAfj3I4sb5o2VPjZduMipJmzMBHZBJaw1Y03/s6uyZxtb9ifSGyzoUi51s4ikagnJgowmfVY3KcFszIG3wN0oM0ORig8p5fmN0Sd45N4DJ4Y7DoMtbe5uKw980qHi5NPt5BevII+tNFsv9UMKVwrQcG3VwcFU50p1g/8TWxG+0K0s3/RHgPI1e88LEmKp3DjFFUFxW1H1uthSMsbLiiYA7Ehg2D6cVjtcFjHTrZpmuuaohjPcItn67MkGu6La28Yd4czHXRZkBOWVmeRexEtBqoOLvAA3O8X8eVi3+KmPi6MK/GIAMmixHJVV5wrjftY8PrxpJdwxvr7lAPVjOYPI+ihTNAJzt/c2pFbEZj3vvBPgtH4mWcaX56PogeVodaAe918BY1VmK4MdaZLd57U8tru8hVxqNs/Lo7znB4u7F2BfrldVdznzZ3tW7MjAGBfZyZ7hWmgYkI1+td/Lf4cqUiG/coqdD7/PwA8drb3iDwezFBlIPqCpyaL5g2PsGskgTapWCIof2qK+I=
-  - secure: EZ8yKb98gW878tfbDWEO7uI5D8Rbk4szf+uCTyyGopSd6+aYFIrYkx1Ek2mPBuk51ssm63isFvZlVli735j8gs0NQ/HntfAf8Pd5yOo//P2UKLcsGglhFRj/Wnuxf7vvFSX+D28bM8iSuMaSxLdopIQdq5VT0fVpVYGnLYvotjVxoHU2BlP2tbrs5o+9o2amTMWvTQOYAdMBrw10qkhhRJjNrhry+sKU+g/nOFpnXEkK8IrGff4ZMTsin2LEC2gan9aueumNgaU8ARLJt3LiHgL1UBNj6GDOKasicydkX8HkGFEvKZhnBWMu43BC+8l0UQYSr7Cxq/85maPFyXHeMF3BBcgVUtbhEcjqxCU+oc/M25tU33jShG8ixM/+ctvxutjMZJAdJzEHSXKZHA2uFhXsgMT8w4DRUf8fbGdvh12YAXajMTr+BrNHSQU3z9YooQJZcr/WMPjJtTjV7ZDQEv22js+l5eRYwR+s/H72MInf4WiAgVKNzYABWILnTv1+dIAGkEP90x1W9rQ8KEM+E8OQUBEb3bTnIzrHFfQo/1kIDh3LRO7zgCnpb18rKflkAvvF2GfLTZ/sFmcfkejxM/+Bt+T8LFrFxHpaxD8P/2Mg9RgJcqdsezNvLCAoaMRk+d7lCP8D54Ae5Hvp7jGZ0Y8psGnU6CJo2bfALezK67Q=
+  - secure: JpF9WT1PO85YzG4jT9lVFgAGoq3lh2Il2VVr0ImUqo5Q5SGqZLUYsWBUT+6S6Qg26/Phq/5zT6MzlYhJcQsMH+df9w4UIajOP4k0PKS1JDCWehrEHXKKcnDJZL0H+/h1HIvK8DBqQb3M/uwjH6RmA8HYTOZhxIjtrJbznMXLSS71DFrfoDcoQ3NNeGuqIig3qvvQji2JWDu8OHiLmB4Uc/hDpK+27YnpXxbz2g25TNTT0LgQ+p9unDs42iFYz+g5rYSQLY/kmYp+2BV+ASY/QPaeTIyAJciJrnYwztshDeMdjdpNwcqBAXgdpC3o05SfyY0XOXtfuPJ+3k90GRdFaC52UNJPR5RwKhrzbcHyy/1uDYCaGNTYzLb0OA3ChY7x7OgAPM/YYCmtmpwABqc03LjsbtBGHCFzXvl5CHZBcEuL2NWT3rmNBMEF7m2Bk2gs/zDDqz64WoVVEGUSQ6Zsx+2O6e8v0ZPwtxRjheNyt4g+3yVovLJh8nAQzxJ1i2ArmUTIy+VsPbcKcVrcYSE1kkQAzuGltdXtroJbMZPAJIhXz02VIcBMh1cexEzXL8AEy5LjsooW6/Pw/CSwYhFTbF3gSzxj+lfgPIB9JG/vS6CXrFRwsHhesI9Q3E9JzyyCTaiU0Jo4+5j80AnHRRbPaWuWqmmi3eqgXMPjL5qufDc=
+  - secure: KqpnjmW/Vkyh48ohq3J31yeLDGCjPAB22Rok64AxWlcQ2nPLNk7FlyaXtVXuJWXVSPmwfdC8WYE52NHmUObQTvxaoY86ANfbPiWkuqCi4qFRX9mvLFk/KQvaMNmNCBKLfbVolgUfZ6pfOje+cAG6lU8HPXnFPyT7Ij6qWcrsa4yuNglHmOq8xttiZRBT2FXlskuJ8s1sgzYf2uVc3MSWx4nuZ7/BNyPiflFtEdV4QuW29o525HZfLMYI8N8W0/8smELUChn5ws763UCvnzhwp+E5i3L5VUuKkd2NybQJ/sVq9D6EMe9CvT8a4pk3C79fje5L10KL+y2LDlFTqjKwMlMzrPmOfxLLOgvqMrBKcEucngTyNDSVWjLg/U1PmaT2nzV4uhkj6py3iAHIN6CnC+8RjG0nXzYfXSaafiFKXUn0uEKmPMVggKy826eG8v5gR4ys7a86xkKG9vZ3MMwkI3R6cUnjgeIxMhjzu4j3ieW1WsHTA3eIVLRNIx2pR8WmJBdFC0LB0xNMK7YJiEoCAbFWsV/5/2+YfyWf9LeS6WckmbPzgOBVTcAXIWXMJl35tues5wj6G3TcxrAbzmk0vbGb/Aa+3/z6fppuVxMfOyglnYBAZzHqjsPPUbtiNu1cb4Uxz6ctQ69tunvw79LoBySVW/XLFOuTTOZULf+dltg=
+  - secure: BNRjafKSa2ctATWjAUdeU2Ghdt1CnsOd4Ve3cbzKZSwTzabVoy8mnejuEpDp11sZ0m2+YyYLQZZ1N7yKmx8nPv/FZufHTtIaRg+J3URSY9GNMy/zM7xi41ceqmwiCV6b8B9USm6Wt2JxKXVCDSeNAxU++xIK9cg2sFpRqEK3Bxuz/wDR4A6D3ve76fa1rQ7W9VDfTWkzd/1H8gHysh4mVHwY6m+vncZCbIImd9oJZkYwWfqWdsSlmsx4bRz7POwDe1Axun9uZWt67ACzA6hmBX/ICDhrAU9DSOyrSoSPcqiqeBXlzsxuWGaPfSeL+awh43AdxgteNBMeHDZlImfj2l+4h4Y9RBiEbDuuh+MhnMgWCPnbbnytk0luxrqf0eGWBpJFl8l9lMky/2wXDtwjhLOxIR3BpXzZ7QCGnMSnNp/MzPsSH/5vbWsfIK3onj9ny4lF30vkk/ZvLIJxqSaVctoG4484C+JpWWO4ohRN9RwrrLx5Fvx3phc8jwYziczLzgc0cX0VjOlULBr4vsJbZZyVibJAxqGhHCY7PgNzz545y9IcU2Y4K4d+MbftJEsCtL786MWzG8uBUHUGYP1HCCIfjpMp4LMRdQ9KbfuT5bNqexXby1rHbgLzhev3rP3WCkxuZejK6CaXp5HfU/t47K/y6H/qRTCpd95XGaWREZU=
