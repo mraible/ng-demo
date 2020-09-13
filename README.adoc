@@ -1433,7 +1433,7 @@ If you've checked your project into source control, you can use Jenkins to autom
 
 ----
 node {
-    def nodeHome = tool name: 'node-14.9.0', type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'
+    def nodeHome = tool name: 'node-14.x', type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'
     env.PATH = "${nodeHome}/bin:${env.PATH}"
 
     stage('check tools') {
@@ -1461,7 +1461,7 @@ node {
 
 [start=2]
 . Install https://jenkins.io/download/[Jenkins] on your hard drive and start it.
-. Login to Jenkins at `http://localhost:8080` and create a new project with **Pipeline** > **Pipeline script from SCM** (near the bottom). Point it at your project's repository. Run a build.
+. Login to Jenkins at `http://localhost:8080` and create a new project with **Pipeline** > **Pipeline script from SCM** (near the bottom). Point it at your project's repository. Click **Build Now**.
 
 == Deployment
 
