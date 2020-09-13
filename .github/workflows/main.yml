@@ -1,0 +1,26 @@
+name: Angular
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    name: Build and Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Use Node 12.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: '14.x'
+      - name: Install latest Chrome
+        run: |
+          sudo apt update
+          sudo apt --only-upgrade install google-chrome-stable
+          google-chrome --version
+      - name: Install dependencies
+        run: npm ci
+      - name: Run unit tests
+        run: xvfb-run npm test -- --watch=false
+      - name: Run integration tests
+        run: xvfb-run --server-args="-screen 0 1024x768x24" --auto-servernum npm run e2e
