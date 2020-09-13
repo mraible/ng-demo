@@ -11,7 +11,10 @@
       "category": "public.app-category.developer-tools",
       "icon": "src/assets/images/angular-logo.png"
     },
-    "files": ["**/*", "dist/ng-demo/**"]
+    "files": [
+      "**/*",
+      "dist/ng-demo/**"
+    ]
   },
   "scripts": {
     "ng": "ng",
