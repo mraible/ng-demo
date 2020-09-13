@@ -1461,7 +1461,10 @@ node {
 
 [start=2]
 . Install https://jenkins.io/download/[Jenkins] on your hard drive and start it.
-. Login to Jenkins at `http://localhost:8080` and create a new project with **Pipeline** > **Pipeline script from SCM** (near the bottom). Point it at your project's repository. Click **Build Now**.
+. Login to Jenkins at `http://localhost:8080` and install the Node.js plugin.
+. Go to **Manage Jenkins** > **Global Tool Configuration** > **NodeJS**. Install and configure the name of your Node.js installation to match your build script.
+. Create a new project with **Pipeline** > **Pipeline script from SCM** (near the bottom). Point it at your project's repository.
+. Click **Build Now**.
 
 == Deployment
 
