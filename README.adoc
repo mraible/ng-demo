@@ -1654,7 +1654,8 @@ Add a `build` section to your `package.json`:
   "appId": "bare.bones.angular",
   "productName": "Bare Bones Angular",
   "mac": {
-    "category": "public.app-category.developer-tools"
+    "category": "public.app-category.developer-tools",
+    "icon": "src/assets/images/angular-logo.png"
   },
   "files": ["**/*", "dist/ng-demo/**"]
 }
