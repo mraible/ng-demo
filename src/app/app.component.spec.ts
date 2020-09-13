@@ -28,6 +28,6 @@ describe('AppComponent', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement;
-    expect(compiled.querySelector('mat-toolbar').textContent).toContain('ng-demo app is running!');
+    expect(compiled.querySelector('mat-toolbar').textContent).toContain('Welcome to ng-demo!');
   });
 });
