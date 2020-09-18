@@ -2,7 +2,7 @@
 
 :author: Matt Raible
 :email:  matt@raibledesigns.com
-:revnumber: 10.0
+:revnumber: 10.1
 :revdate: {docdate}
 :subject: Angular and Angular CLI
 :keywords: Angular, Angular CLI, TypeScript, JavaScript, Node, npm, Jasmine, Protractor
@@ -30,7 +30,7 @@ endif::[]
 :toc: macro
 
 This tutorial shows you how to build a bare-bones search and edit application using https://angular.io[Angular] and
-https://github.com/angular/angular-cli[Angular CLI] version 10.1.
+https://github.com/angular/angular-cli[Angular CLI] version 10.1.2.
 
 toc::[]
 
