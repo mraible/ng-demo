@@ -29,6 +29,8 @@ ifdef::env-github[]
 endif::[]
 :toc: macro
 
+IMPORTANT: For an Angular 12 version of this tutorial, please read https://www.infoq.com/minibooks/angular-mini-book/[The Angular Mini-Book]. Its "Build an Angular App" chapter was inspired by this tutorial.
+
 This tutorial shows you how to build a bare-bones search and edit application using https://angular.io[Angular] and
 https://github.com/angular/angular-cli[Angular CLI] version 10.1.
 
