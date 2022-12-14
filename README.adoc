@@ -29,14 +29,14 @@ ifdef::env-github[]
 endif::[]
 :toc: macro
 
-IMPORTANT: For an Angular 12 version of this tutorial, please read https://www.infoq.com/minibooks/angular-mini-book/[The Angular Mini-Book]. Its "Build an Angular App" chapter was inspired by this tutorial.
+IMPORTANT: For a book of this tutorial, please check out https://www.infoq.com/minibooks/angular-mini-book/[The Angular Mini-Book]. Its "Build an Angular App" chapter was inspired by this tutorial.
 
 This tutorial shows you how to build a bare-bones search and edit application using https://angular.io[Angular] and
 https://github.com/angular/angular-cli[Angular CLI] version 15.
 
 toc::[]
 
-For older versions of Angular, please see previous tutorials: https://github.com/mraible/ng-demo/blob/bec5fdf3b3da0419b012971ab42870df03ce94ea/README.adoc[Angular 9], https://github.com/mraible/ng-demo/blob/6a24488ca847dea215ad70101a22f3ebf67ba79a/README.adoc[Angular 7], https://github.com/mraible/ng-demo/blob/41d9526dbc0a35131118f7f101938dfe75a0e212/README.adoc[Angular 6], and https://github.com/mraible/ng-demo/blob/662159470802c53f445db6393576c0926e31d642/README.adoc[Angular 5].
+For older versions of Angular, please see previous tutorials: https://github.com/mraible/ng-demo/blob/0dd604537e18b3ccf1f707d45af54b418a574954/README.adoc[Angular 10], https://github.com/mraible/ng-demo/blob/bec5fdf3b3da0419b012971ab42870df03ce94ea/README.adoc[Angular 9], https://github.com/mraible/ng-demo/blob/6a24488ca847dea215ad70101a22f3ebf67ba79a/README.adoc[Angular 7], https://github.com/mraible/ng-demo/blob/41d9526dbc0a35131118f7f101938dfe75a0e212/README.adoc[Angular 6], and https://github.com/mraible/ng-demo/blob/662159470802c53f445db6393576c0926e31d642/README.adoc[Angular 5].
 
 ifdef::env-github[]
 TIP: It appears you're reading this document on GitHub. If you want a prettier view, install https://chrome.google.com/webstore/detail/asciidoctorjs-live-previe/iaalpfgpbocpdfblpnhhgllgbdbchmia[Asciidoctor.js Live Preview for Chrome], then view the https://raw.githubusercontent.com/mraible/ng-demo/main/README.adoc?toc=left[raw document]. Another option is to use the https://gist.asciidoctor.org/?github-mraible%2Fng-demo%2Fmain%2F%2FREADME.adoc[DocGist view].
@@ -73,7 +73,7 @@ When prompted to install Angular routing, type "Y". For the stylesheet format, c
 This will create a `ng-demo` project and run `npm install` in it. It takes about a minute to complete,
 but will vary based on your internet connection speed.
 
-You can see the what version of Angular CLI you're using with `ng version`.
+You can see the version of Angular CLI you're using with `ng version`.
 
 ----
 $ ng version
@@ -86,22 +86,20 @@ $ ng version
                 |___/
 
 
-Angular CLI: 10.1.0
-Node: 14.8.0
-OS: darwin x64
+Angular CLI: 15.0.3
+Node: 16.17.0
+Package Manager: npm 8.19.3
+OS: darwin arm64
 
 Angular:
 ...
-Ivy Workspace:
 
 Package                      Version
 ------------------------------------------------------
-@angular-devkit/architect    0.1001.0
-@angular-devkit/core         10.1.0
-@angular-devkit/schematics   10.1.0
-@schematics/angular          10.1.0
-@schematics/update           0.1001.0
-rxjs                         6.6.2
+@angular-devkit/architect    0.1500.3 (cli-only)
+@angular-devkit/core         15.0.3 (cli-only)
+@angular-devkit/schematics   15.0.3 (cli-only)
+@schematics/angular          15.0.3 (cli-only)
 ----
 
 If you run this command from the `ng-demo` directory, you'll see even more information.
@@ -115,29 +113,24 @@ If you run this command from the `ng-demo` directory, you'll see even more infor
                 |___/
 
 
-Angular CLI: 10.1.0
-Node: 14.8.0
-OS: darwin x64
+Angular CLI: 15.0.3
+Node: 16.17.0
+Package Manager: npm 8.19.3
+OS: darwin arm64
 
-Angular: 10.1.0
+Angular: 15.0.3
 ... animations, cli, common, compiler, compiler-cli, core, forms
 ... platform-browser, platform-browser-dynamic, router
-Ivy Workspace: Yes
 
-Package                           Version
------------------------------------------------------------
-@angular-devkit/architect         0.1001.0
-@angular-devkit/build-angular     0.1001.0
-@angular-devkit/build-optimizer   0.1001.0
-@angular-devkit/build-webpack     0.1001.0
-@angular-devkit/core              10.1.0
-@angular-devkit/schematics        10.1.0
-@ngtools/webpack                  10.1.0
-@schematics/angular               10.1.0
-@schematics/update                0.1001.0
-rxjs                              6.6.2
-typescript                        4.0.2
-webpack                           4.44.1
+Package                         Version
+---------------------------------------------------------
+@angular-devkit/architect       0.1500.3
+@angular-devkit/build-angular   15.0.3
+@angular-devkit/core            15.0.3
+@angular-devkit/schematics      15.0.3
+@schematics/angular             15.0.3
+rxjs                            7.5.7
+typescript                      4.8.4
 ----
 
 == Run the application
@@ -159,7 +152,7 @@ You can make sure your new project's tests pass, run `ng test`:
 ----
 $ ng test
 ...
-Chrome 85.0.4183.83 (Mac OS 10.15.6): Executed 3 of 3 SUCCESS (0.156 secs / 0.118 secs)
+Chrome 108.0.0.0 (Mac OS 10.15.7): Executed 3 of 3 SUCCESS (0.057 secs / 0.051 secs)
 ----
 
 == Add a search feature
@@ -188,7 +181,7 @@ Open `src/app/search/search.component.html` and replace its default HTML with th
 <pre>{{searchResults | json}}</pre>
 ----
 
-If you try to start your app at this point, you'll receive a compilation error.
+If you try to start your app at this point, you'll receive a few compilation errors.
 
 ----
 ERROR in src/app/search/search.component.html:3:50 - error TS2339:
@@ -201,7 +194,7 @@ To fix this, add a `query` property to `src/app/search/search.component.ts`. Whi
 .src/app/search/search.component.ts
 ----
 export class SearchComponent implements OnInit {
-  query: string;
+  query: string = '';
   searchResults: any;
 
   constructor() { }
@@ -216,7 +209,7 @@ export class SearchComponent implements OnInit {
 .Adding a Search Route
 ****
 
-The https://angular.io/guide/router[Router and navigation docs] for Angular provides the information you need to setup a route to the `SearchComponent` you just generated. Here's a quick summary:
+The https://angular.io/guide/router[Router and navigation docs] for Angular provides the information you need to set up a route to the `SearchComponent` you just generated. Here's a quick summary:
 
 In `src/app/app-routing.module.ts`, modify the `routes` constant to add `SearchComponent` as the default:
 
@@ -328,13 +321,13 @@ mkdir -p src/assets/data
   },
   {
     "id": 3,
-    "name": "Gary Harris",
+    "name": "Bones Hyland",
     "phone": "(303) 323-1233",
     "address": {
-      "street": "99 Westside Way",
-      "city": "Breckenridge",
+      "street": "46 Creekside Way",
+      "city": "Winter Park",
       "state": "CO",
-      "zip": "82210"
+      "zip": "80482"
     }
   }
 ]
@@ -415,8 +408,8 @@ You can now add a proper type to the `searchResults` variable. While you're ther
 .src/app/search/search.component.ts
 ----
 export class SearchComponent implements OnInit {
-  query: string;
-  searchResults: Array<Person>;
+  query: string = '';
+  searchResults: Array<Person> = [];
 
   constructor(private searchService: SearchService) { }
 ----
@@ -427,10 +420,12 @@ Then update the `search()` method to call the service's `getAll()` method.
 .src/app/search/search.component.ts
 ----
 search(): void {
-  this.searchService.getAll().subscribe(
-    (data: any) => { this.searchResults = data; },
-    error => console.log(error)
-  );
+  this.searchService.getAll().subscribe({
+    next: (data: any) => {
+      this.searchResults = data;
+    },
+    error: error => console.log(error)
+  });
 }
 ----
 
@@ -463,7 +458,7 @@ Now clicking the search button should work. To make the results look better, rem
 [source,xml]
 .src/app/search/search.component.html
 ----
-<table *ngIf="searchResults">
+<table *ngIf="searchResults.length">
   <thead>
   <tr>
     <th>Name</th>
@@ -528,7 +523,7 @@ import { map } from 'rxjs/operators';
     }
     return this.getAll().pipe(
       map((data: any) => data
-        .filter(item => JSON.stringify(item).toLowerCase().includes(q)))
+        .filter((item: Person) => JSON.stringify(item).toLowerCase().includes(q)))
     );
   }
 ----
@@ -539,10 +534,12 @@ Then refactor `SearchComponent` to call this method with its `query` variable.
 .src/app/search/search.component.ts
 ----
 search(): void {
-  this.searchService.search(this.query).subscribe(
-    (data: any) => { this.searchResults = data; },
-    error => console.log(error)
-  );
+  this.searchService.search(this.query).subscribe({
+    next: (data: any) => {
+      this.searchResults = data;
+    },
+    error: error => console.log(error)
+  });
 }
 ----
 
