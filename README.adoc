@@ -2,7 +2,7 @@
 
 :author: Matt Raible
 :email:  matt@raibledesigns.com
-:revnumber: 10.0
+:revnumber: 15.0
 :revdate: {docdate}
 :subject: Angular and Angular CLI
 :keywords: Angular, Angular CLI, TypeScript, JavaScript, Node, npm, Jasmine, Protractor
@@ -32,7 +32,7 @@ endif::[]
 IMPORTANT: For an Angular 12 version of this tutorial, please read https://www.infoq.com/minibooks/angular-mini-book/[The Angular Mini-Book]. Its "Build an Angular App" chapter was inspired by this tutorial.
 
 This tutorial shows you how to build a bare-bones search and edit application using https://angular.io[Angular] and
-https://github.com/angular/angular-cli[Angular CLI] version 10.1.
+https://github.com/angular/angular-cli[Angular CLI] version 15.
 
 toc::[]
 
@@ -58,7 +58,7 @@ You'll build a simple web application with Angular CLI, a tool for Angular devel
 * About 30 minutes.
 * A favorite text editor or IDE. I recommend https://www.jetbrains.com/idea/[IntelliJ IDEA].
 * http://nodejs.org/[Node.js] and npm installed.
-* https://github.com/angular/angular-cli[Angular CLI] installed. If you don't have Angular CLI installed, install it using `npm install -g @angular/cli@10.1.0`.
+* https://github.com/angular/angular-cli[Angular CLI] installed. If you don't have Angular CLI installed, install it using `npm install -g @angular/cli@15`.
 
 == Create your project
 
