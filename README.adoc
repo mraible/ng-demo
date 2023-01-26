@@ -58,7 +58,13 @@ You'll build a simple web application with Angular CLI, a tool for Angular devel
 * About 30 minutes.
 * A favorite text editor or IDE. I recommend https://www.jetbrains.com/idea/[IntelliJ IDEA].
 * http://nodejs.org/[Node.js] and npm installed.
-* https://github.com/angular/angular-cli[Angular CLI] installed. If you don't have Angular CLI installed, install it using `npm install -g @angular/cli@15`.
+* https://github.com/angular/angular-cli[Angular CLI] installed.
+
+If you don't have Angular CLI installed, install it:
+
+----
+npm install -g @angular/cli@15
+----
 
 == Create your project
 
@@ -86,8 +92,8 @@ $ ng version
                 |___/
 
 
-Angular CLI: 15.0.3
-Node: 16.17.0
+Angular CLI: 15.1.3
+Node: 18.13.0
 Package Manager: npm 8.19.3
 OS: darwin arm64
 
@@ -96,41 +102,31 @@ Angular:
 
 Package                      Version
 ------------------------------------------------------
-@angular-devkit/architect    0.1500.3 (cli-only)
-@angular-devkit/core         15.0.3 (cli-only)
-@angular-devkit/schematics   15.0.3 (cli-only)
-@schematics/angular          15.0.3 (cli-only)
+@angular-devkit/architect    0.1501.3 (cli-only)
+@angular-devkit/core         15.1.3 (cli-only)
+@angular-devkit/schematics   15.1.3 (cli-only)
+@schematics/angular          15.1.3 (cli-only)
 ----
 
 If you run this command from the `ng-demo` directory, you'll see even more information.
 
 ----
-     _                      _                 ____ _     ___
-    / \   _ __   __ _ _   _| | __ _ _ __     / ___| |   |_ _|
-   / △ \ | '_ \ / _` | | | | |/ _` | '__|   | |   | |    | |
-  / ___ \| | | | (_| | |_| | | (_| | |      | |___| |___ | |
- /_/   \_\_| |_|\__, |\__,_|_|\__,_|_|       \____|_____|___|
-                |___/
+....
 
-
-Angular CLI: 15.0.3
-Node: 16.17.0
-Package Manager: npm 8.19.3
-OS: darwin arm64
-
-Angular: 15.0.3
-... animations, cli, common, compiler, compiler-cli, core, forms
+Angular: 15.1.2
+... animations, common, compiler, compiler-cli, core, forms
 ... platform-browser, platform-browser-dynamic, router
 
 Package                         Version
 ---------------------------------------------------------
-@angular-devkit/architect       0.1500.3
-@angular-devkit/build-angular   15.0.3
-@angular-devkit/core            15.0.3
-@angular-devkit/schematics      15.0.3
-@schematics/angular             15.0.3
-rxjs                            7.5.7
-typescript                      4.8.4
+@angular-devkit/architect       0.1501.3
+@angular-devkit/build-angular   15.1.3
+@angular-devkit/core            15.1.3
+@angular-devkit/schematics      15.1.3
+@angular/cli                    15.1.3
+@schematics/angular             15.1.3
+rxjs                            7.8.0
+typescript                      4.9.4
 ----
 
 == Run the application
@@ -152,7 +148,7 @@ You can make sure your new project's tests pass, run `ng test`:
 ----
 $ ng test
 ...
-Chrome 108.0.0.0 (Mac OS 10.15.7): Executed 3 of 3 SUCCESS (0.057 secs / 0.051 secs)
+...: Executed 3 of 3 SUCCESS (0.061 secs / 0.055 secs)
 ----
 
 == Add a search feature
@@ -181,14 +177,7 @@ Open `src/app/search/search.component.html` and replace its default HTML with th
 <pre>{{searchResults | json}}</pre>
 ----
 
-If you try to start your app at this point, you'll receive a few compilation errors.
-
-----
-ERROR in src/app/search/search.component.html:3:50 - error TS2339:
- Property 'query' does not exist on type 'SearchComponent'.
-----
-
-To fix this, add a `query` property to `src/app/search/search.component.ts`. While you're there, add a `searchResults` property and an empty `search()` method.
+Add a `query` property to `src/app/search/search.component.ts`. While you're there, add a `searchResults` property and an empty `search()` method.
 
 [source,typescript]
 .src/app/search/search.component.ts
@@ -206,11 +195,6 @@ export class SearchComponent implements OnInit {
 }
 ----
 
-.Adding a Search Route
-****
-
-The https://angular.io/guide/router[Router and navigation docs] for Angular provides the information you need to set up a route to the `SearchComponent` you just generated. Here's a quick summary:
-
 In `src/app/app-routing.module.ts`, modify the `routes` constant to add `SearchComponent` as the default:
 
 [source,typescript]
@@ -223,7 +207,6 @@ const routes: Routes = [
   { path: '', redirectTo: '/search', pathMatch: 'full' }
 ];
 ----
-****
 
 Run `ng serve` again you will see a compilation error.
 
@@ -321,7 +304,7 @@ mkdir -p src/assets/data
   },
   {
     "id": 3,
-    "name": "Bones Hyland",
+    "name": "Aaron Gordon",
     "phone": "(303) 323-1233",
     "address": {
       "street": "46 Creekside Way",
@@ -511,8 +494,7 @@ But wait, you still don't have search functionality! To add a search feature, ad
 [source,typescript]
 .src/app/shared/search/search.service.ts
 ----
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, Observable } from 'rxjs';
 ...
 
   search(q: string): Observable<any> {
@@ -627,12 +609,12 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrls: ['./edit.component.css']
 })
 export class EditComponent implements OnInit, OnDestroy {
-  person: Person;
-  editName: string;
-  editPhone: string;
-  editAddress: Address;
+  person!: Person;
+  editName!: string;
+  editPhone!: string;
+  editAddress!: Address;
 
-  sub: Subscription;
+  sub!: Subscription;
 
   constructor(private route: ActivatedRoute,
               private router: Router,
@@ -641,7 +623,7 @@ export class EditComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.sub = this.route.params.subscribe(params => {
-      const id = + params.id; // (+) converts string 'id' to a number
+      const id = + params['id']; // (+) converts string 'id' to a number
       this.service.get(id).subscribe(person => {
         if (person) {
           this.editName = person.name;
@@ -696,9 +678,9 @@ search(q: string): Observable<any> {
   }
   return this.getAll().pipe(
     map((data: any) => data
-        .map(item => !!localStorage['person' + item.id] ?
-          JSON.parse(localStorage['person' + item.id]) : item)
-        .filter(item => JSON.stringify(item).toLowerCase().includes(q))
+      .map((item: any) => !!localStorage['person' + item.id] ?
+        JSON.parse(localStorage['person' + item.id]) : item)
+      .filter((item: any) => JSON.stringify(item).toLowerCase().includes(q))
     ));
 }
 
@@ -707,7 +689,7 @@ get(id: number) {
     if (localStorage['person' + id]) {
       return JSON.parse(localStorage['person' + id]);
     }
-    return all.find(e => e.id === id);
+    return all.find((e: any) => e.id === id);
   }));
 }
 
@@ -761,14 +743,14 @@ import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 ...
 
-sub: Subscription;
+  sub!: Subscription;
 
-constructor(private searchService: SearchService, private route: ActivatedRoute) { }
+  constructor(private searchService: SearchService, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
     this.sub = this.route.params.subscribe(params => {
-      if (params.term) {
-        this.query = decodeURIComponent(params.term);
+      if (params['term']) {
+        this.query = decodeURIComponent(params['term']);
         this.search();
       }
     });
