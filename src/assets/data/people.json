@@ -23,13 +23,13 @@
   },
   {
     "id": 3,
-    "name": "Gary Harris",
+    "name": "Aaron Gordon",
     "phone": "(303) 323-1233",
     "address": {
-      "street": "99 Westside Way",
-      "city": "Breckenridge",
+      "street": "46 Creekside Way",
+      "city": "Winter Park",
       "state": "CO",
-      "zip": "82210"
+      "zip": "80482"
     }
   }
 ]
