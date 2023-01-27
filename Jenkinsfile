@@ -1,5 +1,5 @@
 node {
-    def nodeHome = tool name: 'node-14.x', type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'
+    def nodeHome = tool name: 'node-18', type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'
     env.PATH = "${nodeHome}/bin:${env.PATH}"
 
     stage('check tools') {
@@ -19,7 +19,8 @@ node {
         sh "npm test -- --watch=false"
     }
 
-    stage('protractor tests') {
-        sh "npm run e2e"
+    stage('cypress tests') {
+        sh "npm start &"
+        sh "npm run cypress:run"
     }
 }

@@ -33,7 +33,7 @@ describe('EditComponent', () => {
   it('should fetch a single record', () => {
     const fixture = TestBed.createComponent(EditComponent);
 
-    const person = new Person({id: 1, name: 'Gary Harris'});
+    const person = new Person({id: 1, name: 'Michael Porter Jr.'});
     person.address = new Address({city: 'Denver'});
 
     // mock response
@@ -51,6 +51,6 @@ describe('EditComponent', () => {
 
     // verify HTML renders as expected
     const compiled = fixture.debugElement.nativeElement;
-    expect(compiled.querySelector('h3').innerHTML).toBe('Gary Harris');
+    expect(compiled.querySelector('h3').innerHTML).toBe('Michael Porter Jr.');
   });
 });
