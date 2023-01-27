@@ -1,5 +1,6 @@
 {
   "name": "ng-demo",
+  "main": "main.js",
   "author": "Matt Raible <mraible@gmail.com>",
   "version": "15.0.0",
   "license": "MIT",
@@ -12,7 +13,11 @@
     "e2e": "ng e2e",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",
-    "cy:run": "concurrently \"ng serve\" \"cypress run\""
+    "cy:run": "concurrently \"ng serve\" \"cypress run\"",
+    "electron": "ng build --base-href ./ && electron .",
+    "pack": "ng build --base-href ./ && electron-builder --dir",
+    "dist": "ng build --base-href ./ && electron-builder",
+    "postinstall": "electron-builder install-app-deps"
   },
   "private": true,
   "dependencies": {
@@ -36,6 +41,8 @@
     "@types/jasmine": "~4.3.0",
     "concurrently": "^7.6.0",
     "cypress": "latest",
+    "electron": "^22.1.0",
+    "electron-builder": "^23.6.0",
     "jasmine-core": "~4.5.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.1.0",
@@ -43,5 +50,13 @@
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.0.0",
     "typescript": "~4.9.4"
+  },
+  "build": {
+    "appId": "bare.bones.angular",
+    "productName": "Bare Bones Angular",
+    "mac": {
+      "category": "public.app-category.developer-tools"
+    },
+    "files": ["**/*", "dist/ng-demo/**"]
   }
 }

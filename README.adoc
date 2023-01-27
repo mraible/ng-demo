@@ -1510,13 +1510,120 @@ A completed project with this code in it is available on GitHub at https://githu
 
 I hope you've enjoyed this in-depth tutorial on how to get started with Angular and Angular CLI. Angular CLI takes much of the pain out of setting up an Angular project and using Typescript. I expect great things from Angular CLI, mostly because the Angular setup process can be tedious and CLI greatly simplifies things.
 
-== Bonus: Angular Material, Bootstrap, Auth0, and Electron
+== Bonus: Electron
 
-If you'd like to see how to integrate https://material.angular.io/[Angular Material], https://getbootstrap.com[Bootstrap], http://developer.auth0.com[authentication with Auth0], or https://www.electronjs.org/[Electron] this section is for you!
+To make your Angular app into an Electron app, complete the following steps.
 
-I've created branches to show how to integrate each of these libraries. Click on the links below to see each branch's documentation.
+----
+npm i -D electron
+----
 
-* https://github.com/mraible/ng-demo/tree/angular-material#bonus-angular-material[Angular Material]
-* https://github.com/mraible/ng-demo/tree/bootstrap#bonus-bootstrap[Bootstrap]
-* https://github.com/mraible/ng-demo/tree/auth0#bonus-auth0[Authentication with Auth0]
-* https://github.com/mraible/ng-demo/tree/electron#bonus-electron[Electron]
+Create a `main.js` file with the following code:
+
+[source,javascript]
+----
+const { app, BrowserWindow } = require('electron')
+const url = require('url');
+const path = require('path');
+
+let mainWindow
+
+function createWindow () {
+  mainWindow = new BrowserWindow({
+    width: 800,
+    height: 600,
+    webPreferences: {
+      nodeIntegration: true
+    }
+  })
+
+  mainWindow.loadURL(
+    url.format({
+      pathname: path.join(__dirname, `/dist/ng-demo/index.html`),
+      protocol: "file:",
+      slashes: true
+    })
+  );
+  // Uncomment if you want to open Chrome DevTools by default
+  // mainWindow.webContents.openDevTools()
+
+  mainWindow.on('closed', function () {
+    mainWindow = null
+  })
+}
+
+app.on('ready', createWindow)
+
+app.on('window-all-closed', function () {
+  if (process.platform !== 'darwin') app.quit()
+})
+
+app.on('activate', function () {
+  if (mainWindow === null) createWindow()
+})
+----
+
+Add `main.js` as the main entry point in `package.json`:
+
+[source,json]
+----
+"name": "ng-demo",
+"main": "main.js",
+----
+
+Add an `electron` script in `package.json` to start the Electron app after building the Angular project:
+
+[source,shell]
+----
+"electron": "ng build --base-href ./ && electron ."
+----
+
+Running `npm run electron` should yield a result like the screenshot below.
+
+[[angular-electron]]
+.Angular in Electron
+image::src/assets/images/electron.png[Angular Electron, 800, scaledwidth="100%"]
+
+=== Package Electron for Distribution
+
+To package this app for production distribution, you can use https://www.electron.build/[electron-builder].
+
+[source,shell]
+----
+npm i -D electron-builder
+----
+
+Add a `build` section to your `package.json`:
+
+[source,json]
+----
+"build": {
+  "appId": "bare.bones.angular",
+  "productName": "Bare Bones Angular",
+  "mac": {
+    "category": "public.app-category.developer-tools"
+  },
+  "files": ["**/*", "dist/ng-demo/**"]
+}
+----
+
+Then add `pack`, `dist`, and `postinstall` scripts.
+
+[source,json]
+----
+"scripts": {
+  ...
+  "pack": "ng build --base-href ./ && electron-builder --dir",
+  "dist": "ng build --base-href ./ && electron-builder",
+  "postinstall": "electron-builder install-app-deps"
+}
+----
+
+To package your app for production, use the following commands:
+
+* `npm run pack` will generate the package directory and app.
+* `npm run dist` will package in a distributable format (e.g., dmg, Windows installer, deb package).
+
+NOTE: If the app doesn't start after packaging, it's likely because you don't have https://www.electron.build/code-signing[code signing] configured. To disable Code Signing when building for macOS, run `export CSC_IDENTITY_AUTO_DISCOVERY=false`. If you have an Apple Developer Account, open Xcode, go to **Preferences** > **Accounts** and make sure you're logged in, and your development certificates are downloaded.
+
+https://github.com/mraible/ng-demo/compare/main\...electron[Click here to see the difference] between this branch and the main branch.
