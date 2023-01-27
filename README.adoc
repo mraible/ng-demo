@@ -1510,13 +1510,45 @@ A completed project with this code in it is available on GitHub at https://githu
 
 I hope you've enjoyed this in-depth tutorial on how to get started with Angular and Angular CLI. Angular CLI takes much of the pain out of setting up an Angular project and using Typescript. I expect great things from Angular CLI, mostly because the Angular setup process can be tedious and CLI greatly simplifies things.
 
-== Bonus: Angular Material, Bootstrap, Auth0, and Electron
+== Bonus: Angular Material
 
-If you'd like to see how to integrate https://material.angular.io/[Angular Material], https://getbootstrap.com[Bootstrap], http://developer.auth0.com[authentication with Auth0], or https://www.electronjs.org/[Electron] this section is for you!
+To integrate Angular Material into your Angular CLI-generated app, complete the following steps.
 
-I've created branches to show how to integrate each of these libraries. Click on the links below to see each branch's documentation.
+----
+ng add @angular/material
+----
 
-* https://github.com/mraible/ng-demo/tree/angular-material#bonus-angular-material[Angular Material]
-* https://github.com/mraible/ng-demo/tree/bootstrap#bonus-bootstrap[Bootstrap]
-* https://github.com/mraible/ng-demo/tree/auth0#bonus-auth0[Authentication with Auth0]
-* https://github.com/mraible/ng-demo/tree/electron#bonus-electron[Electron]
+When prompted for the theme, pick the one you prefer, using the links to preview them. Accept the defaults for the other questions.
+
+Add the relevant Material modules as imports in `app.module.ts`:
+
+[source,javascript]
+.src/app/app.module.ts
+----
+import { MatButtonModule } from '@angular/material/button';
+import { MatListModule } from '@angular/material/list';
+import { MatInputModule } from '@angular/material/input';
+import { MatIconModule } from '@angular/material/icon';
+import { MatToolbarModule } from '@angular/material/toolbar';
+
+@NgModule({
+  ...
+  imports: [
+    ...
+    MatButtonModule,
+    MatIconModule,
+    MatInputModule,
+    MatListModule,
+    MatToolbarModule
+  ]
+----
+
+Change HTML to use Material components. For example, change `<h1>` in `app.component.html` to be `<mat-toolbar>`.
+
+After modifying your HTML to match this branch, the edit screen will look as follows.
+
+[[angular-material]]
+.Angular Material
+image::src/assets/images/angular-material.png[Angular Material, 800, scaledwidth="100%"]
+
+https://github.com/mraible/ng-demo/compare/main\...angular-material[Click here to see the difference] between this branch and the main branch.

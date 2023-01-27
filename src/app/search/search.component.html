@@ -1,23 +1,19 @@
 <h2>Search</h2>
 <form>
-  <input type="search" name="query" [(ngModel)]="query" (keyup.enter)="search()">
-  <button type="button" (click)="search()">Search</button>
+  <mat-form-field>
+    <input matInput type="search" name="query" placeholder="Search" [(ngModel)]="query" (keyup.enter)="search()">
+  </mat-form-field>
+  <button mat-mini-fab (click)="search()">
+    <mat-icon>search</mat-icon>
+  </button>
 </form>
-<table *ngIf="searchResults.length">
-  <thead>
-  <tr>
-    <th>Name</th>
-    <th>Phone</th>
-    <th>Address</th>
-  </tr>
-  </thead>
-  <tbody>
-  <tr *ngFor="let person of searchResults; let i=index">
-    <td><a [routerLink]="['/edit', person.id]">{{person.name}}</a></td>
-    <td>{{person.phone}}</td>
-    <td>{{person.address.street}}<br/>
-      {{person.address.city}}, {{person.address.state}} {{person.address.zip}}
-    </td>
-  </tr>
-  </tbody>
-</table>
+<mat-list *ngIf="searchResults.length" flex>
+  <mat-list-item *ngFor="let person of searchResults; let i=index">
+    <div>
+      <a matListItemTitle [routerLink]="['/edit', person.id]">{{person.name}}</a>
+      <span matListItemLine>{{person.phone}}</span>
+      <span matListItemLine>{{person.address.street}}<br/>
+        {{person.address.city}}, {{person.address.state}} {{person.address.zip}}</span>
+    </div>
+  </mat-list-item>
+</mat-list>
