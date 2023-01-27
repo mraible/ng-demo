@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -22,21 +21,21 @@ export class SearchService {
     }
     return this.getAll().pipe(
       map((data: any) => data
-          .map(item => !!localStorage['person' + item.id] ?
-            JSON.parse(localStorage['person' + item.id]) : item)
-          .filter(item => JSON.stringify(item).toLowerCase().includes(q))
+        .map((item: any) => !!localStorage['person' + item.id] ?
+          JSON.parse(localStorage['person' + item.id]) : item)
+        .filter((item: any) => JSON.stringify(item).toLowerCase().includes(q))
       ));
   }
-  
+
   get(id: number) {
     return this.getAll().pipe(map((all: any) => {
       if (localStorage['person' + id]) {
         return JSON.parse(localStorage['person' + id]);
       }
-      return all.find(e => e.id === id);
+      return all.find((e: any) => e.id === id);
     }));
   }
-  
+
   save(person: Person) {
     localStorage['person' + person.id] = JSON.stringify(person);
   }
