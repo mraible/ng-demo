@@ -1,9 +1,17 @@
 {
   "name": "ng-demo",
-  "main": "main.js",
   "author": "Matt Raible <mraible@gmail.com>",
   "version": "15.0.0",
   "license": "MIT",
+  "main": "main.js",
+  "build": {
+    "appId": "bare.bones.angular",
+    "productName": "Bare Bones Angular",
+    "mac": {
+      "category": "public.app-category.developer-tools"
+    },
+    "files": ["**/*", "dist/ng-demo/**"]
+  },
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -50,13 +58,5 @@
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.0.0",
     "typescript": "~4.9.4"
-  },
-  "build": {
-    "appId": "bare.bones.angular",
-    "productName": "Bare Bones Angular",
-    "mac": {
-      "category": "public.app-category.developer-tools"
-    },
-    "files": ["**/*", "dist/ng-demo/**"]
   }
 }
