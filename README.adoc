@@ -1510,13 +1510,208 @@ A completed project with this code in it is available on GitHub at https://githu
 
 I hope you've enjoyed this in-depth tutorial on how to get started with Angular and Angular CLI. Angular CLI takes much of the pain out of setting up an Angular project and using Typescript. I expect great things from Angular CLI, mostly because the Angular setup process can be tedious and CLI greatly simplifies things.
 
-== Bonus: Angular Material, Bootstrap, Auth0, and Electron
+== Bonus: Auth0
 
-If you'd like to see how to integrate https://material.angular.io/[Angular Material], https://getbootstrap.com[Bootstrap], http://developer.auth0.com[authentication with Auth0], or https://www.electronjs.org/[Electron] this section is for you!
+To integrate http://developer.auth0.com[Auth0] for user authentication, you'll first need to https://auth0.com/signup[register] and create an OpenID Connect application.
 
-I've created branches to show how to integrate each of these libraries. Click on the links below to see each branch's documentation.
+=== Create an OpenID Connect App in Auth0
 
-* https://github.com/mraible/ng-demo/tree/angular-material#bonus-angular-material[Angular Material]
-* https://github.com/mraible/ng-demo/tree/bootstrap#bonus-bootstrap[Bootstrap]
-* https://github.com/mraible/ng-demo/tree/auth0#bonus-auth0[Authentication with Auth0]
-* https://github.com/mraible/ng-demo/tree/electron#bonus-electron[Electron]
+OpenID Connect is built on top of the OAuth 2.0 protocol. It allows clients to verify the identity of the user and, as well as to obtain their basic user information.
+
+Install the https://github.com/auth0/auth0-cli#installation[Auth0 CLI] and run `auth0 login` to register your account. Then, run `auth0 apps create`. Specify a name and description of your choosing. Choose **Single Page Web Application** and use `\http://localhost:4200/home` for the Callback URL. Specify `\http://localhost:4200` for the rest of the URLs.
+
+=== Add OIDC Authentication with OktaDev Schematics
+
+Use https://github.com/oktadev/schematics[OktaDev Schematics] to add OAuth 2.0 and OpenID Connect (OIDC) support.
+
+----
+ng add @oktadev/schematics --auth0
+----
+
+You'll be prompted for an issuer and client ID. You should have these from the OIDC app you just created.
+
+This process will perform the following steps for you:
+
+1. Install the https://github.com/auth0/auth0-angular[Auth0 Angular SDK].
+2. Add `src/app/auth-routing.module.ts` with your OIDC configuration and initialization logic.
+3. Configure an `AuthHttpInterceptor` that adds an `Authorization` header with an access token to outbound requests.
+4. Create a `HomeComponent` and configure it with authentication logic.
+5. Update unit tests for `AppComponent` and `HomeComponent` to mock Auth0.
+
+In addition to these changes, remove the default route from `app-routing.ts` and add a route guard to the `/search` and `/edit` routes.
+
+[source,typescript]
+.src/app/app-routing.ts
+----
+import { AuthGuard } from '@auth0/auth0-angular';
+
+const routes: Routes = [
+  { path: 'search', component: SearchComponent, canActivate: [AuthGuard] },
+  { path: 'edit/:id', component: EditComponent, canActivate: [AuthGuard] }
+];
+----
+
+This is necessary because the `HomeComponent` has a default route configured in `src/app/auth-routing.ts`. The `AuthGuard` makes authentication required.
+
+[source,typescript]
+----
+const routes: Routes = [
+  { path: '', redirectTo: '/home', pathMatch: 'full' },
+  {
+    path: 'home',
+    component: HomeComponent
+  }
+];
+----
+
+You'll also need to update the `app.component.spec.ts` file's last test to look for the correct welcome message.
+
+[source,typescript]
+----
+it('should render title', () => {
+  const fixture = TestBed.createComponent(AppComponent);
+  fixture.detectChanges();
+  const compiled = fixture.nativeElement as HTMLElement;
+  expect(compiled.querySelector('h1')?.textContent).toContain('Welcome to ng-demo!');
+});
+----
+
+After making these changes, you should be able to run `ng serve` and see a login button at `http://localhost:4200/home`.
+
+.Auth0 login button
+image::src/assets/images/auth0-login-button.png[Login button, 800, scaledwidth="100%", align=center]
+
+Click the *Login* button and sign in with one of the users that's configured in your Auth0 application or sign up as a new user.
+
+.Auth0 login form
+image::src/assets/images/auth0-login-form.png[Auth0 login form, 800, scaledwidth="100%", align=center]
+
+==== Display Authenticated User's Name
+
+To display the authenticated user's name, you can use the `user$` observable on the `AuthService` instance.
+
+Modify `home.component.html` to display a welcome message to the user and provide them with a link to search.
+
+[source,html]
+.src/app/home/home.component.html
+----
+<div>
+  <button *ngIf="(auth.isAuthenticated$ | async) === false" (click)="login()" id="login">Login</button>
+  <div *ngIf="auth.user$ | async as user">
+    <h2>Welcome, {{user?.name}}!</h2>
+    <p><a routerLink="/search" routerLinkActive="active">Search</a></p>
+  </div>
+  <button *ngIf="auth.isAuthenticated$ | async" (click)="logout()" id="logout">Logout</button>
+</div>
+----
+
+Refresh your app, and you should see your name with a link to *Search*.
+
+.View after login
+image::src/assets/images/auth0-post-login.png[View after login, 800, scaledwidth="100%", align=center]
+
+If you log out and manually navigate to `http://localhost:4200/search`, you'll be required to log in.
+
+If everything works—congrats!
+
+==== Add Authentication to Cypress tests
+
+To make it so you can run your e2e tests with authentication, add a `signIn()` Cypress command in `cypress/support/commands.ts`.
+
+[source,typescript]
+----
+Cypress.Commands.add('signIn', (username, password) => {
+  cy.get('input[name=username]').type(username);
+  cy.get('input[name=password]').type(password);
+  cy.get('button[type=submit]').first().click();
+})
+----
+
+Then, in `cypress/support/e2e.ts`, uncomment the import for `commands` and specify `before()` and `after()` functions that log in and log out before each test.
+
+[source,typescript]
+----
+import './commands';
+
+beforeEach(() => {
+  cy.visit('/')
+  cy.get('#login').click()
+  cy.signIn(
+    Cypress.env('E2E_USERNAME'),
+    Cypress.env('E2E_PASSWORD')
+  )
+})
+
+afterEach(() => {
+  cy.visit('/')
+  cy.get('#logout').click()
+})
+----
+
+Modify `cypress/e2e/home.cy.ts` to remove the line with `cy.visit('/')`.
+
+Next, configure your credentials in `cypress.json` and turn off Chrome's security.
+
+[source,json]
+----
+"env": {
+  "E2E_USERNAME": "YOUR_AUTH0_USERNAME",
+  "E2E_PASSWORD": "YOUR_AUTH0_PASSWORD"
+},
+"chromeWebSecurity": false
+----
+
+Then, start your app (with `ng serve`) and run its Cypress tests in a separate terminal window.
+
+[source,shell]
+----
+npm run cypress:run
+----
+
+=== Don't Store Credentials in Source Control
+
+In this example, I recommended you store your username and password in `cypress.config.ts`. This is convenient, but a bad practice.
+
+You can solve it by using https://docs.cypress.io/guides/guides/environment-variables#Option-2-cypressenvjson[`cypress.env.json`].
+
+Create a `cypress.env.json` file in your project's root folder with your Auth0 credentials in it.
+
+[source,json]
+----
+{
+  "E2E_USERNAME": "<your username>",
+  "E2E_PASSWORD": "<your password>"
+}
+
+----
+
+Add `*.env.json` to your `.gitignore` file to prevent this file from being checked in.
+
+Then, remove the `env` key from `cypress.config.ts`.
+
+Now, `npm run cypress:run` should work the same as before.
+
+=== Cypress Web Security
+
+You might've noticed I turned off Chrome's web security in `cypress.config.ts`.
+
+[source,json]
+----
+"chromeWebSecurity": false
+----
+
+This configuration allows Chrome to navigate between domains and sign in to Auth0. Unfortunately, this ties the e2e tests to Chrome as this setting doesn't exist for other browsers.
+
+A better solution is to hit Auth0's APIs directly for authentication. https://www.jhipster.tech[JHipster] uses this technique for its Cypress tests. However, it also benefits from doing the OAuth flow on the server-side (with Spring Boot). This makes it easy to capture Auth0's authorization endpoint with all its parameters.
+
+See Cypress' https://docs.cypress.io/guides/guides/web-security[Web Security documentation] for more information.
+
+If you encountered issues, please post a question to Stack Overflow with an http://stackoverflow.com/questions/tagged/auth0[auth0 tag], or hit me up on Twitter https://twitter.com/mraible[@mraible].
+
+The code in this branch can be downloaded using the following command:
+
+----
+git clone -b auth0 https://github.com/mraible/ng-demo.git
+----
+
+https://github.com/mraible/ng-demo/compare/main\...auth0[Click here to see the difference] between this branch and the main branch.

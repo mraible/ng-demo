@@ -14,6 +14,6 @@ export default defineConfig({
       bundler: 'webpack',
     },
     specPattern: '**/*.cy.ts'
-  }
-
+  },
+  "chromeWebSecurity": false
 })
