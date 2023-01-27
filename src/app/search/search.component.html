@@ -3,15 +3,17 @@
   <mat-form-field>
     <input matInput type="search" name="query" placeholder="Search" [(ngModel)]="query" (keyup.enter)="search()">
   </mat-form-field>
-  <button mat-mini-fab (click)="search()"><mat-icon>search</mat-icon></button>
+  <button mat-mini-fab (click)="search()">
+    <mat-icon>search</mat-icon>
+  </button>
 </form>
-<mat-list *ngIf="searchResults" flex>
+<mat-list *ngIf="searchResults.length" flex>
   <mat-list-item *ngFor="let person of searchResults; let i=index">
-    <div class="mat-list-item-text">
-      <div mat-line><a [routerLink]="['/edit', person.id]">{{person.name}}</a></div>
-      <div mat-line>{{person.phone}}</div>
-      <div mat-line>{{person.address.street}}<br/>
-        {{person.address.city}}, {{person.address.state}} {{person.address.zip}}</div>
+    <div>
+      <a matListItemTitle [routerLink]="['/edit', person.id]">{{person.name}}</a>
+      <span matListItemLine>{{person.phone}}</span>
+      <span matListItemLine>{{person.address.street}}<br/>
+        {{person.address.city}}, {{person.address.state}} {{person.address.zip}}</span>
     </div>
   </mat-list-item>
 </mat-list>

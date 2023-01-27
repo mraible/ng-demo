@@ -2,7 +2,7 @@
 
 :author: Matt Raible
 :email:  matt@raibledesigns.com
-:revnumber: 10.0
+:revnumber: 15.0
 :revdate: {docdate}
 :subject: Angular and Angular CLI
 :keywords: Angular, Angular CLI, TypeScript, JavaScript, Node, npm, Jasmine, Protractor
@@ -28,13 +28,16 @@ ifdef::env-github[]
 :warning-caption: :warning:
 endif::[]
 :toc: macro
+:source-highlighter: highlight.js
+
+IMPORTANT: For a book of this tutorial, please check out https://www.infoq.com/minibooks/angular-mini-book/[The Angular Mini-Book]. Its "Build an Angular App" chapter was inspired by this tutorial.
 
 This tutorial shows you how to build a bare-bones search and edit application using https://angular.io[Angular] and
-https://github.com/angular/angular-cli[Angular CLI] version 10.1.
+https://github.com/angular/angular-cli[Angular CLI] version 15.
 
 toc::[]
 
-For older versions of Angular, please see previous tutorials: https://github.com/mraible/ng-demo/blob/bec5fdf3b3da0419b012971ab42870df03ce94ea/README.adoc[Angular 9], https://github.com/mraible/ng-demo/blob/6a24488ca847dea215ad70101a22f3ebf67ba79a/README.adoc[Angular 7], https://github.com/mraible/ng-demo/blob/41d9526dbc0a35131118f7f101938dfe75a0e212/README.adoc[Angular 6], and https://github.com/mraible/ng-demo/blob/662159470802c53f445db6393576c0926e31d642/README.adoc[Angular 5].
+// For older versions of Angular, please see previous tutorials: https://github.com/mraible/ng-demo/blob/0dd604537e18b3ccf1f707d45af54b418a574954/README.adoc[Angular 10], https://github.com/mraible/ng-demo/blob/bec5fdf3b3da0419b012971ab42870df03ce94ea/README.adoc[Angular 9], https://github.com/mraible/ng-demo/blob/6a24488ca847dea215ad70101a22f3ebf67ba79a/README.adoc[Angular 7], https://github.com/mraible/ng-demo/blob/41d9526dbc0a35131118f7f101938dfe75a0e212/README.adoc[Angular 6], and https://github.com/mraible/ng-demo/blob/662159470802c53f445db6393576c0926e31d642/README.adoc[Angular 5].
 
 ifdef::env-github[]
 TIP: It appears you're reading this document on GitHub. If you want a prettier view, install https://chrome.google.com/webstore/detail/asciidoctorjs-live-previe/iaalpfgpbocpdfblpnhhgllgbdbchmia[Asciidoctor.js Live Preview for Chrome], then view the https://raw.githubusercontent.com/mraible/ng-demo/main/README.adoc?toc=left[raw document]. Another option is to use the https://gist.asciidoctor.org/?github-mraible%2Fng-demo%2Fmain%2F%2FREADME.adoc[DocGist view].
@@ -56,7 +59,13 @@ You'll build a simple web application with Angular CLI, a tool for Angular devel
 * About 30 minutes.
 * A favorite text editor or IDE. I recommend https://www.jetbrains.com/idea/[IntelliJ IDEA].
 * http://nodejs.org/[Node.js] and npm installed.
-* https://github.com/angular/angular-cli[Angular CLI] installed. If you don't have Angular CLI installed, install it using `npm install -g @angular/cli@10.1.0`.
+* https://github.com/angular/angular-cli[Angular CLI] installed.
+
+If you don't have Angular CLI installed, install it:
+
+----
+npm install -g @angular/cli@15
+----
 
 == Create your project
 
@@ -71,7 +80,7 @@ When prompted to install Angular routing, type "Y". For the stylesheet format, c
 This will create a `ng-demo` project and run `npm install` in it. It takes about a minute to complete,
 but will vary based on your internet connection speed.
 
-You can see the what version of Angular CLI you're using with `ng version`.
+You can see the version of Angular CLI you're using with `ng version`.
 
 ----
 $ ng version
@@ -84,58 +93,41 @@ $ ng version
                 |___/
 
 
-Angular CLI: 10.1.0
-Node: 14.8.0
-OS: darwin x64
+Angular CLI: 15.1.3
+Node: 18.13.0
+Package Manager: npm 8.19.3
+OS: darwin arm64
 
 Angular:
 ...
-Ivy Workspace:
 
 Package                      Version
 ------------------------------------------------------
-@angular-devkit/architect    0.1001.0
-@angular-devkit/core         10.1.0
-@angular-devkit/schematics   10.1.0
-@schematics/angular          10.1.0
-@schematics/update           0.1001.0
-rxjs                         6.6.2
+@angular-devkit/architect    0.1501.3 (cli-only)
+@angular-devkit/core         15.1.3 (cli-only)
+@angular-devkit/schematics   15.1.3 (cli-only)
+@schematics/angular          15.1.3 (cli-only)
 ----
 
 If you run this command from the `ng-demo` directory, you'll see even more information.
 
 ----
-     _                      _                 ____ _     ___
-    / \   _ __   __ _ _   _| | __ _ _ __     / ___| |   |_ _|
-   / △ \ | '_ \ / _` | | | | |/ _` | '__|   | |   | |    | |
-  / ___ \| | | | (_| | |_| | | (_| | |      | |___| |___ | |
- /_/   \_\_| |_|\__, |\__,_|_|\__,_|_|       \____|_____|___|
-                |___/
+....
 
-
-Angular CLI: 10.1.0
-Node: 14.8.0
-OS: darwin x64
-
-Angular: 10.1.0
-... animations, cli, common, compiler, compiler-cli, core, forms
+Angular: 15.1.2
+... animations, common, compiler, compiler-cli, core, forms
 ... platform-browser, platform-browser-dynamic, router
-Ivy Workspace: Yes
 
-Package                           Version
------------------------------------------------------------
-@angular-devkit/architect         0.1001.0
-@angular-devkit/build-angular     0.1001.0
-@angular-devkit/build-optimizer   0.1001.0
-@angular-devkit/build-webpack     0.1001.0
-@angular-devkit/core              10.1.0
-@angular-devkit/schematics        10.1.0
-@ngtools/webpack                  10.1.0
-@schematics/angular               10.1.0
-@schematics/update                0.1001.0
-rxjs                              6.6.2
-typescript                        4.0.2
-webpack                           4.44.1
+Package                         Version
+---------------------------------------------------------
+@angular-devkit/architect       0.1501.3
+@angular-devkit/build-angular   15.1.3
+@angular-devkit/core            15.1.3
+@angular-devkit/schematics      15.1.3
+@angular/cli                    15.1.3
+@schematics/angular             15.1.3
+rxjs                            7.8.0
+typescript                      4.9.4
 ----
 
 == Run the application
@@ -157,7 +149,7 @@ You can make sure your new project's tests pass, run `ng test`:
 ----
 $ ng test
 ...
-Chrome 85.0.4183.83 (Mac OS 10.15.6): Executed 3 of 3 SUCCESS (0.156 secs / 0.118 secs)
+...: Executed 3 of 3 SUCCESS (0.061 secs / 0.055 secs)
 ----
 
 == Add a search feature
@@ -186,20 +178,13 @@ Open `src/app/search/search.component.html` and replace its default HTML with th
 <pre>{{searchResults | json}}</pre>
 ----
 
-If you try to start your app at this point, you'll receive a compilation error.
-
-----
-ERROR in src/app/search/search.component.html:3:50 - error TS2339:
- Property 'query' does not exist on type 'SearchComponent'.
-----
-
-To fix this, add a `query` property to `src/app/search/search.component.ts`. While you're there, add a `searchResults` property and an empty `search()` method.
+Add a `query` property to `src/app/search/search.component.ts`. While you're there, add a `searchResults` property and an empty `search()` method.
 
 [source,typescript]
 .src/app/search/search.component.ts
 ----
 export class SearchComponent implements OnInit {
-  query: string;
+  query: string = '';
   searchResults: any;
 
   constructor() { }
@@ -210,11 +195,6 @@ export class SearchComponent implements OnInit {
 
 }
 ----
-
-.Adding a Search Route
-****
-
-The https://angular.io/guide/router[Router and navigation docs] for Angular provides the information you need to setup a route to the `SearchComponent` you just generated. Here's a quick summary:
 
 In `src/app/app-routing.module.ts`, modify the `routes` constant to add `SearchComponent` as the default:
 
@@ -228,7 +208,6 @@ const routes: Routes = [
   { path: '', redirectTo: '/search', pathMatch: 'full' }
 ];
 ----
-****
 
 Run `ng serve` again you will see a compilation error.
 
@@ -326,13 +305,13 @@ mkdir -p src/assets/data
   },
   {
     "id": 3,
-    "name": "Gary Harris",
+    "name": "Aaron Gordon",
     "phone": "(303) 323-1233",
     "address": {
-      "street": "99 Westside Way",
-      "city": "Breckenridge",
+      "street": "46 Creekside Way",
+      "city": "Winter Park",
       "state": "CO",
-      "zip": "82210"
+      "zip": "80482"
     }
   }
 ]
@@ -413,8 +392,8 @@ You can now add a proper type to the `searchResults` variable. While you're ther
 .src/app/search/search.component.ts
 ----
 export class SearchComponent implements OnInit {
-  query: string;
-  searchResults: Array<Person>;
+  query: string = '';
+  searchResults: Array<Person> = [];
 
   constructor(private searchService: SearchService) { }
 ----
@@ -425,10 +404,12 @@ Then update the `search()` method to call the service's `getAll()` method.
 .src/app/search/search.component.ts
 ----
 search(): void {
-  this.searchService.getAll().subscribe(
-    (data: any) => { this.searchResults = data; },
-    error => console.log(error)
-  );
+  this.searchService.getAll().subscribe({
+    next: (data: any) => {
+      this.searchResults = data;
+    },
+    error: error => console.log(error)
+  });
 }
 ----
 
@@ -461,7 +442,7 @@ Now clicking the search button should work. To make the results look better, rem
 [source,xml]
 .src/app/search/search.component.html
 ----
-<table *ngIf="searchResults">
+<table *ngIf="searchResults.length">
   <thead>
   <tr>
     <th>Name</th>
@@ -514,8 +495,7 @@ But wait, you still don't have search functionality! To add a search feature, ad
 [source,typescript]
 .src/app/shared/search/search.service.ts
 ----
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, Observable } from 'rxjs';
 ...
 
   search(q: string): Observable<any> {
@@ -526,7 +506,7 @@ import { map } from 'rxjs/operators';
     }
     return this.getAll().pipe(
       map((data: any) => data
-        .filter(item => JSON.stringify(item).toLowerCase().includes(q)))
+        .filter((item: Person) => JSON.stringify(item).toLowerCase().includes(q)))
     );
   }
 ----
@@ -537,10 +517,12 @@ Then refactor `SearchComponent` to call this method with its `query` variable.
 .src/app/search/search.component.ts
 ----
 search(): void {
-  this.searchService.search(this.query).subscribe(
-    (data: any) => { this.searchResults = data; },
-    error => console.log(error)
-  );
+  this.searchService.search(this.query).subscribe({
+    next: (data: any) => {
+      this.searchResults = data;
+    },
+    error: error => console.log(error)
+  });
 }
 ----
 
@@ -628,12 +610,12 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrls: ['./edit.component.css']
 })
 export class EditComponent implements OnInit, OnDestroy {
-  person: Person;
-  editName: string;
-  editPhone: string;
-  editAddress: Address;
+  person!: Person;
+  editName!: string;
+  editPhone!: string;
+  editAddress!: Address;
 
-  sub: Subscription;
+  sub!: Subscription;
 
   constructor(private route: ActivatedRoute,
               private router: Router,
@@ -642,7 +624,7 @@ export class EditComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.sub = this.route.params.subscribe(params => {
-      const id = + params.id; // (+) converts string 'id' to a number
+      const id = + params['id']; // (+) converts string 'id' to a number
       this.service.get(id).subscribe(person => {
         if (person) {
           this.editName = person.name;
@@ -697,9 +679,9 @@ search(q: string): Observable<any> {
   }
   return this.getAll().pipe(
     map((data: any) => data
-        .map(item => !!localStorage['person' + item.id] ?
-          JSON.parse(localStorage['person' + item.id]) : item)
-        .filter(item => JSON.stringify(item).toLowerCase().includes(q))
+      .map((item: any) => !!localStorage['person' + item.id] ?
+        JSON.parse(localStorage['person' + item.id]) : item)
+      .filter((item: any) => JSON.stringify(item).toLowerCase().includes(q))
     ));
 }
 
@@ -708,7 +690,7 @@ get(id: number) {
     if (localStorage['person' + id]) {
       return JSON.parse(localStorage['person' + id]);
     }
-    return all.find(e => e.id === id);
+    return all.find((e: any) => e.id === id);
   }));
 }
 
@@ -762,14 +744,14 @@ import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 ...
 
-sub: Subscription;
+  sub!: Subscription;
 
-constructor(private searchService: SearchService, private route: ActivatedRoute) { }
+  constructor(private searchService: SearchService, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
     this.sub = this.route.params.subscribe(params => {
-      if (params.term) {
-        this.query = decodeURIComponent(params.term);
+      if (params['term']) {
+        this.query = decodeURIComponent(params['term']);
         this.search();
       }
     });
@@ -864,17 +846,7 @@ To learn more about forms and validation, see https://angular.io/guide/form-vali
 Now that you've built an application, it's important to test it to ensure it works. The best reason for writing tests is
 to automate your testing. Without tests, you'll likely be testing manually. This manual testing will take longer and longer as your application grows.
 
-[TIP]
-====
-If you didn't complete the previous section, you can clone the `ng-demo` repository and checkout the `test-start` branch.
-
-----
-git clone -b test-start https://github.com/mraible/ng-demo.git
-cd ng-demo && npm i
-----
-====
-
-In this section, you'll learn to use http://jasmine.github.io/[Jasmine] for unit testing controllers and http://www.protractortest.org/[Protractor] for integration testing. Angular's testing documentation lists https://angular.io/guide/testing[good reasons] to test, but doesn't currently have many examples.
+In this section, you'll learn to use http://jasmine.github.io/[Jasmine] for unit testing controllers and https://www.cypress.io/[Cypress] for integration testing. Angular's testing documentation lists https://angular.io/guide/testing[good reasons] to test, but doesn't currently have many examples.
 
 === Fix the Tests
 
@@ -887,13 +859,13 @@ TIP: You can use `x` and `f` prefixes Jasmine's `describe` and `it` functions to
 If you changed the `app.component.html` template like I did, you'll need to modify `app.component.spec.ts` to account for the change in HTML. Change its last test to look for an `<h1>` element and the welcome message inside it.
 
 [source,ts]
-.src/app/app/app.component.spec.ts
+.src/app/app.component.spec.ts
 ----
 it('should render title', () => {
   const fixture = TestBed.createComponent(AppComponent);
   fixture.detectChanges();
-  const compiled = fixture.nativeElement;
-  expect(compiled.querySelector('h1').textContent).toContain('Welcome to ng-demo!');
+  const compiled = fixture.nativeElement as HTMLElement;
+  expect(compiled.querySelector('h1')?.textContent).toContain('Welcome to ng-demo!');
 });
 ----
 
@@ -1018,14 +990,14 @@ Create `src/app/shared/search/mocks/routes.ts` to mock Angular's `Router` and `A
 [source,typescript]
 .src/app/shared/search/mocks/routes.ts
 ----
-import { ActivatedRoute, Params } from '@angular/router';
-import { Observable, of } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
+import { of } from 'rxjs';
 
 export class MockActivatedRoute extends ActivatedRoute {
-  params: Observable<Params>;
 
   constructor(parameters?: { [key: string]: any; }) {
     super();
+    // @ts-ignore
     this.params = of(parameters);
   }
 }
@@ -1035,7 +1007,7 @@ export class MockRouter {
 }
 ----
 
-With this mock in place, you can `TestBed.configureTestingModule()` to setup `SearchComponent` to use it as a provider. In the second `beforeEach()`, you can see that the `search()` method is spied on and its results are mocked. The response isn't important in this case because you're just unit testing the `SearchComponent`.
+With this mock in place, you can `TestBed.configureTestingModule()` to set up `SearchComponent` to use it as a provider. In the second `beforeEach()`, you can see that the `search()` method is spied on and its results are mocked. The response isn't important in this case because you're just unit testing the `SearchComponent`.
 
 [source,typescript]
 .src/app/search/search.component.spec.ts
@@ -1141,7 +1113,7 @@ describe('EditComponent', () => {
   it('should fetch a single record', () => {
     const fixture = TestBed.createComponent(EditComponent);
 
-    const person = new Person({id: 1, name: 'Gary Harris'});
+    const person = new Person({id: 1, name: 'Michael Porter Jr.'});
     person.address = new Address({city: 'Denver'});
 
     // mock response
@@ -1159,167 +1131,183 @@ describe('EditComponent', () => {
 
     // verify HTML renders as expected
     const compiled = fixture.debugElement.nativeElement;
-    expect(compiled.querySelector('h3').innerHTML).toBe('Gary Harris');
+    expect(compiled.querySelector('h3').innerHTML).toBe('Michael Porter Jr.');
   });
 });
 ----
 
-You should see "Executed 11 of 11 [green]#SUCCESS# (0.118 secs / 0.096 secs)" in the shell window that's running `ng test`. If you don't, try cancelling the command and restarting.
+You should see "Executed 11 of 11 [green]#SUCCESS#" in the shell window that's running `ng test`. If you don't, try cancelling the command and restarting.
 
 === Integration test the search UI
 
-To test if the application works end-to-end, you can write tests with http://www.protractortest.org/[Protractor]. These are also known as integration tests, since they test the _integration_ between all layers of your application.
+To test if the application works end-to-end, you can write tests with http://www.cypress.io/[Cypress]. These are also known as integration tests since they test the _integration_ between all layers of your application.
 
-To verify end-to-end tests work in the project before you begin, run the following command in a terminal window.
-
-----
-ng e2e
-----
-
-You'll likely see the following error:
+You can use the official https://www.npmjs.com/package/@cypress/schematic[Cypress Angular Schematic] to add Cypress to your Angular project.
 
 ----
-1) workspace-project App should display welcome message
-  - Failed: No element found using locator: By(css selector, app-root .content span)
+ng add @cypress/schematic
 ----
 
-This happens because you changed the HTML structure of `app.component.html`. To fix it, change the selector in `app.po.ts` to look for the `<h1>` element.
+When prompted to proceed and use Cypress for `ng e2e`, answer "`Yes`".
 
-[source,ts]
-.e2e/src/app.po.ts
+This will add Cypress as a dependency and create configuration files to work with Angular and TypeScript. Rename `cypress/e2e/spec.cy.ts` to `home.cy.ts` and change it to look for the title of your app.
+
+[source,typescript]
+.cypress/integration/home.spec.ts
 ----
-getTitleText(): Promise<string> {
-  return element(by.css('app-root h1')).getText() as Promise<string>;
+describe('Home', () => {
+  it('Visits the initial project page', () => {
+    cy.visit('/')
+    cy.contains('Welcome to ng-demo!')
+    cy.contains('Search')
+  })
+})
+----
+
+Then, run `ng e2e`. This will compile your app, start in on `http://localhost:4200`, and launch the Cypress Electron app.
+
+.Cypress Electron App
+image::ng-demo/cypress-electron-app.png[Cypress Electron App, 800, scaledwidth="100%", align=center]
+
+If you click on the file name, it'll launch a browser and run the test. You can use this feature to step through your tests, find selectors for elements, and much more. You can learn more about Cypress' features at https://armno.in.th/2020/02/26/cypress-angular-integration-testing/[Setting up Cypress for an Angular Project].
+
+Personally, I prefer the Protractor experience where you could just run the command, it'd run all the tests, and the user doesn't need to interact. You can do this with Cypress too!
+
+The Cypress Angular Schematic added a few scripts to your `package.json`:
+
+[source,json]
+----
+"scripts": {
+  ...
+  "e2e": "ng e2e",
+  "cypress:open": "cypress open",
+  "cypress:run": "cypress run"
 }
 ----
 
-You'll also need to change the test in `app.e2e-spec.ts` to use the new welcome message.
-
-[source,ts]
-.e2e/src/app.e2e-spec.ts
-----
-it('should display welcome message', () => {
-  page.navigateTo();
-  expect(page.getTitleText()).toEqual('Welcome to ng-demo!');
-});
-----
-
-Now you should be able to run `ng e2e` and have everything pass.
+To use the no-interaction approach, you'll need to start your app:
 
 ----
-$ ng e2e
-[23:47:29] I/update - chromedriver: file exists /Users/mraible/ng-demo/node_modules/protractor/node_modules/webdriver-manager/selenium/chromedriver_85.0.4183.87.zip
-[23:47:29] I/update - chromedriver: unzipping chromedriver_85.0.4183.87.zip
-[23:47:29] I/update - chromedriver: setting permissions to 0755 for /Users/mraible/ng-demo/node_modules/protractor/node_modules/webdriver-manager/selenium/chromedriver_85.0.4183.87
-[23:47:29] I/update - chromedriver: chromedriver_85.0.4183.87 up to date
-
-chunk {main} main.js, main.js.map (main) 41.5 kB [initial] [rendered]
-chunk {polyfills} polyfills.js, polyfills.js.map (polyfills) 141 kB [initial] [rendered]
-chunk {runtime} runtime.js, runtime.js.map (runtime) 6.15 kB [entry] [rendered]
-chunk {styles} styles.js, styles.js.map (styles) 12.5 kB [initial] [rendered]
-chunk {vendor} vendor.js, vendor.js.map (vendor) 2.99 MB [initial] [rendered]
-Date: 2020-09-05T05:47:35.554Z - Hash: 1f37ff085dda89695218 - Time: 4956ms
-** Angular Live Development Server is listening on localhost:4200, open your browser on http://localhost:4200/ **
-: Compiled successfully.
-[23:47:35] I/launcher - Running 1 instances of WebDriver
-[23:47:35] I/direct - Using ChromeDriver directly...
-Jasmine started
-
-  workspace-project App
-    ✓ should display welcome message
-
-Executed 1 of 1 spec SUCCESS in 0.315 sec.
-[23:47:38] I/launcher - 0 instance(s) of WebDriver still running
-[23:47:38] I/launcher - chrome #01 passed
-Execution time: 11 s.
+npm start
 ----
+
+Then, run the Cypress tests for it in another window:
+
+----
+npm run cypress:run
+----
+
+[TIP]
+====
+You might notice Cypress creates a video. You can disable this by adding `video: false` to your `cypress.config.ts` file.
+
+[source,typescript]
+----
+export default defineConfig({
+  e2e: { ... },
+  video: false,
+  component: { ... }
+})
+----
+====
+
+The `npm run cypress:run` command will run a headless browser, so you won't see anything happening on your screen.
+
+If you want to see the tests run, append `-- --browser chrome --headed` to the command. Add this to your `package.json` if you want to make it the default. See Cypress' https://docs.cypress.io/guides/guides/launching-browsers[launching browsers] documentation to see a list of supported browsers.
+
+You can also install https://www.npmjs.com/package/concurrently[concurrently] so you can run multiple tasks with one command.
+
+[source,shell]
+----
+npm install -D concurrently
+----
+
+Then, add a `cy:run` script to your `package.json`:
+
+[source,json]
+----
+"scripts": {
+  ...
+  "cy:run": "concurrently \"ng serve\" \"cypress run\""
+}
+----
+
+Then, you can run `npm run cy:run` to start your app and continuously run end-to-end tests on it when you change files.
 
 === Testing the search feature
 
-Create end-to-end tests in `e2e/src/search.e2e-spec.ts` to verify the search feature works. Populate it with the following code:
+Create another end-to-end test in `cypress/e2e/search.cy.ts` to verify the search feature works. Populate it with the following code:
 
 [source,typescript]
-.e2e/src/search.e2e-spec.ts
+.cypress/e2e/search.cy.ts
 ----
-import { browser, by, element } from 'protractor';
-
 describe('Search', () => {
 
-  beforeEach(async () => {
-    await browser.get('/search');
+  beforeEach(() => {
+    cy.visit('/search')
   });
 
   it('should have an input and search button', () => {
-    expect(element(by.css('app-root app-search form input')).isPresent()).toEqual(true);
-    expect(element(by.css('app-root app-search form button')).isPresent()).toEqual(true);
+    cy.get('app-root app-search form input').should('exist');
+    cy.get('app-root app-search form button').should('exist');
   });
 
-  it('should allow searching', async () => {
-    const searchButton = element(by.css('button'));
-    const searchBox = element(by.css('input'));
-    await searchBox.sendKeys('A');
-    await searchButton.click();
-    const list = element.all(by.css('app-search table tbody tr'));
-    expect(list.count()).toBe(3);
+  it('should allow searching', () => {
+    cy.get('input').type('A');
+    cy.get('button').click();
+    const list = cy.get('app-search table tbody tr');
+    list.should('have.length', 3);
   });
 });
 ----
 
 === Testing the edit feature
 
-Create a `e2e/src/edit.e2e-spec.ts` test to verify the `EditComponent` renders a person's information and that their information can be updated.
+Create a `cypress/e2e/edit.cy.ts` test to verify the `EditComponent` renders a person's information and that their information can be updated.
 
 [source,typescript]
-.e2e/src/edit.e2e-spec.ts
+.cypress/e2e/edit.cy.ts
 ----
-import { browser, by, element } from 'protractor';
-
 describe('Edit', () => {
 
-  beforeEach(async () => {
-    await browser.get('/edit/1');
+  beforeEach(() => {
+    cy.visit('/edit/1')
   });
 
-  const name = element(by.id('name'));
-  const street = element(by.id('street'));
-  const city = element(by.id('city'));
-
-  it('should allow viewing a person', async () => {
-    expect(await element(by.css('h3')).getText()).toEqual('Nikola Jokić');
-    expect(await name.getAttribute('value')).toEqual('Nikola Jokić');
-    expect(await street.getAttribute('value')).toEqual('2000 16th Street');
-    expect(await city.getAttribute('value')).toEqual('Denver');
+  it('should allow viewing a person',  () => {
+    cy.get('h3').should('have.text', 'Nikola Jokić');
+    cy.get('#name').should('have.value', 'Nikola Jokić');
+    cy.get('#street').should('have.value', '2000 16th Street');
+    cy.get('#city').should('have.value', 'Denver');
   });
 
-  it('should allow updating a name', async () => {
-    const save = element(by.id('save'));
-    name.sendKeys(' Rocks!');
-    await save.click();
+  it('should allow updating a name', () => {
+    cy.get('#name').type(' Rocks!');
+    cy.get('#save').click();
     // verify one element matched this change
-    const list = element.all(by.css('app-search table tbody tr'));
-    expect(list.count()).toBe(1);
+    const list = cy.get('app-search table tbody tr');
+    list.should('have.length', 1);
   });
 });
 ----
 
-Run `ng e2e` to verify all your end-to-end tests pass. You should see a success message similar to the one below in your terminal window.
+With your app running, execute `npm run cypress:run` to verify all your end-to-end tests pass. You should see a success message similar to the one below in your terminal window.
 
-[[protractor-success]]
-.Protractor success
-image::src/assets/images/protractor-success.png[Protractor success, 800, scaledwidth="100%"]
+.Cypress success
+image::src/assets/images/cypress-success.png[Cypress success, 800, scaledwidth="100%", align=center]
 
 If you made it this far and have all your specs passing - congratulations! You're well on your way to writing quality code with Angular and verifying it works.
 
-You can see the test coverage of your project by running `ng test --codeCoverage=true`.
+You can see the test coverage of your project by running `ng test --no-watch --code-coverage`.
 
 You'll see a print out of code coverage in your terminal window.
 
 ----
 =============================== Coverage summary ===============================
-Statements   : 80.56% ( 58/72 )
-Branches     : 71.43% ( 30/42 )
-Functions    : 82.76% ( 24/29 )
-Lines        : 78.79% ( 52/66 )
+Statements   : 79.41% ( 54/68 )
+Branches     : 76.31% ( 29/38 )
+Functions    : 83.33% ( 25/30 )
+Lines        : 78.46% ( 51/65 )
 ================================================================================
 ----
 
@@ -1333,9 +1321,7 @@ image::src/assets/images/test-coverage.png[Test coverage, 800, scaledwidth="100%
 
 == Continuous Integration
 
-At the time of this writing, Angular CLI did not have any continuous integration support. This section shows you how to setup continuous integration with https://github.com/features/actions[GitHub Actions], https://travis-ci.org/[Travis CI] and https://jenkins.io/[Jenkins].
-
-CAUTION: In the commands below, I use `master` as the branch name. I use this because it's the default. I recommend you https://www.hanselman.com/blog/EasilyRenameYourGitDefaultBranchFromMasterToMain.aspx[change your default branch name to `main`].
+At the time of this writing, Angular CLI did not have any continuous integration support. This section shows you how to set up continuous integration with https://github.com/features/actions[GitHub Actions] and https://jenkins.io/[Jenkins].
 
 === GitHub Actions
 
@@ -1355,11 +1341,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
-      - name: Use Node 12.x
-        uses: actions/setup-node@v1
+        uses: actions/checkout@v3
+      - name: Use Node 18
+        uses: actions/setup-node@v3
         with:
-          node-version: '14.x'
+          node-version: 18
       - name: Install latest Chrome
         run: |
           sudo apt update
@@ -1370,55 +1356,16 @@ jobs:
       - name: Run unit tests
         run: xvfb-run npm test -- --watch=false
       - name: Run integration tests
-        run: xvfb-run --server-args="-screen 0 1024x768x24" --auto-servernum npm run e2e
+        uses: cypress-io/github-action@v5
+        with:
+          start: npm start
+          install: false
+          wait-on: http://[::1]:4200
 ----
+
+TIP: See https://github.com/cypress-io/github-action/issues/634[issue #634] for more information on the strange syntax for `wait-on`.
 
 Check it in on a branch, create a pull request for that branch, and you should see your tests running.
-
-https://github.com/mraible/ng-demo/pull/76/checks?check_run_id=1107490951[Here is a build] showing all unit and integration tests passing.
-
-=== Travis CI
-
-If you've checked in your project to GitHub, you can use Travis CI.
-
-. Login to https://travis-ci.org/[Travis CI] and enable builds for the GitHub repo you published the project to.
-. Add the following `.travis.yml` in your root directory and `git commit/push` it. This will trigger the first build.
-
-[source,yaml]
-----
-dist: bionic
-os:
-  - linux
-services:
-  - docker
-  - xvfb
-language: node_js
-node_js:
-  - "14.x"
-addons:
-  apt:
-    packages:
-      - dpkg
-  chrome: stable
-cache:
-  directories:
-  - node_modules
-branches:
-  only:
-  - master
-install:
-  - npm ci
-script:
-  - npm test -- --watch=false
-  - npm run e2e
-notifications:
-  webhooks:
-    on_success: change
-    on_failure: always
-    on_start: false
-----
-
-https://travis-ci.org/github/mraible/ng-demo/builds/726701970[Here is a build] showing all unit and integration tests passing.
 
 === Jenkins
 
@@ -1428,7 +1375,7 @@ If you've checked your project into source control, you can use Jenkins to autom
 
 ----
 node {
-    def nodeHome = tool name: 'node-14.x', type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'
+    def nodeHome = tool name: 'node-18', type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'
     env.PATH = "${nodeHome}/bin:${env.PATH}"
 
     stage('check tools') {
@@ -1448,8 +1395,9 @@ node {
         sh "npm test -- --watch=false"
     }
 
-    stage('protractor tests') {
-        sh "npm run e2e"
+    stage('cypress tests') {
+        sh "npm start &"
+        sh "npm run cypress:run"
     }
 }
 ----
@@ -1463,31 +1411,7 @@ node {
 
 == Deployment
 
-This section shows you how to deploy an Angular app to http://run.pivotal.io[Cloud Foundry] and https://heroku.com[Heroku].
-
-=== Cloud Foundry
-
-https://account.run.pivotal.io/z/uaa/sign-up[Create a Pivotal account] and https://docs.run.pivotal.io/cf-cli/install-go-cli.html[install the cf CLI].
-
-Login to your account.
-
-[source,bash]
-----
-cf login -a api.run.pivotal.io
-----
-
-Then run the following commands to build and deploy your application.
-
-[source,bash]
-----
-ng build --prod
-cd dist && touch Staticfile
-# enable pushstate so no 404s on refresh
-echo 'root: ng-demo\npushstate: enabled' > Staticfile
-cf push ng-demo
-----
-
-NOTE: You might need to use an app name other than `ng-demo`. For example, `coolest-ever`.
+This section shows you how to deploy an Angular app to https://heroku.com[Heroku].
 
 === Heroku
 
@@ -1497,58 +1421,83 @@ Then run the following commands to build and deploy your application.
 
 Run `heroku create` to create an app on Heroku.
 
-Create a `static.json` file with the configuration for secure headers and redirect all HTTP requests to HTTPS.
+Create a `config/nginx.conf.erb` file with the configuration for secure headers and redirect all HTTP requests to HTTPS.
 
-[source,json]
+[source,ruby]
 ----
-{
-  "headers": {
-    "/**": {
-      "Content-Security-Policy": "default-src 'self'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; frame-ancestors 'none'; connect-src 'self' https://*.okta.com https://*.herokuapp.com",
-      "Referrer-Policy": "no-referrer, strict-origin-when-cross-origin",
-      "Strict-Transport-Security": "max-age=63072000; includeSubDomains",
-      "X-Content-Type-Options": "nosniff",
-      "X-Frame-Options": "DENY",
-      "X-XSS-Protection": "1; mode=block",
-      "Feature-Policy": "accelerometer 'none'; camera 'none'; microphone 'none'"
-    }
-  },
-  "https_only": true,
-  "root": "dist/ng-demo/",
-  "routes": {
-    "/**": "index.html"
-  }
+daemon off;
+# Heroku dynos have at least 4 cores.
+worker_processes <%= ENV['NGINX_WORKERS'] || 4 %>;
+
+events {
+	use epoll;
+	accept_mutex on;
+	worker_connections <%= ENV['NGINX_WORKER_CONNECTIONS'] || 1024 %>;
+}
+
+http {
+	gzip on;
+	gzip_comp_level 2;
+	gzip_min_length 512;
+	gzip_proxied any; # Heroku router sends Via header
+
+	server_tokens off;
+
+	log_format l2met 'measure#nginx.service=$request_time request_id=$http_x_request_id';
+	access_log <%= ENV['NGINX_ACCESS_LOG_PATH'] || 'logs/nginx/access.log' %> l2met;
+	error_log <%= ENV['NGINX_ERROR_LOG_PATH'] || 'logs/nginx/error.log' %>;
+
+	include mime.types;
+	default_type application/octet-stream;
+	sendfile on;
+
+	# Must read the body in 5 seconds.
+	client_body_timeout <%= ENV['NGINX_CLIENT_BODY_TIMEOUT'] || 5 %>;
+
+	server {
+		listen <%= ENV["PORT"] %>;
+		server_name _;
+		keepalive_timeout 5;
+		client_max_body_size <%= ENV['NGINX_CLIENT_MAX_BODY_SIZE'] || 1 %>M;
+
+		root dist/ng-demo;
+		index index.html;
+
+		location / {
+			try_files $uri /index.html;
+		}
+
+		add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; frame-ancestors 'none'; connect-src 'self' https://*.auth0.com https://*.herokuapp.com";
+		add_header Referrer-Policy "no-referrer, strict-origin-when-cross-origin";
+		add_header Strict-Transport-Security "max-age=63072000; includeSubDomains";
+		add_header X-Content-Type-Options nosniff;
+		add_header X-Frame-Options DENY;
+		add_header X-XSS-Protection "1; mode=block";
+		add_header Permissions-Policy "geolocation=(self), microphone=(), accelerometer=(), camera=()";
+	}
 }
 ----
 
 NOTE: In this code, you might notice that some https URLs are allowed in the content security policy. Those are there this app can make XHR requests to those domains when that functionality is added.
 
-For `static.json` to be read, you have to use the https://github.com/heroku/heroku-buildpack-static[Heroku static buildpack].
+For this file to be read, you have to use the https://elements.heroku.com/buildpacks/heroku/heroku-buildpack-nginx[Heroku NGINX buildpack].
 
-Add `--prod` to the `build` script since the static buildback uses this command.
+Add a `Procfile` to the root of your project.
 
-[source,json]
-.package.json
+[source,shell]
 ----
-"scripts": {
-  "ng": "ng",
-  "start": "ng serve",
-  "build": "ng build --prod",
-  "test": "ng test",
-  "lint": "ng lint",
-  "e2e": "ng e2e"
-},
+web: bin/start-nginx-solo
 ----
 
-Commit your changes to Git, add the Node.js + static buildpack, and redeploy your Angular app.
+Commit your changes to Git, add the Node.js + NGINX buildpack, and redeploy your Angular app.
 
 [source,shell]
 ----
 git add .
-git commit -m "Configure secure headers and static buildpack"
+git commit -m "Configure secure headers and nginx buildpack"
 heroku buildpacks:add heroku/nodejs
-heroku buildpacks:add https://github.com/heroku/heroku-buildpack-static.git
-git push heroku master
+heroku buildpacks:add heroku-community/nginx
+git push heroku main
 ----
 
 View the application in your browser with `heroku open`. Try your app's URL on <https://securityheaders.com> to be pleasantly suprised.
@@ -1578,7 +1527,6 @@ Add the relevant Material modules as imports in `app.module.ts`:
 [source,javascript]
 .src/app/app.module.ts
 ----
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatButtonModule } from '@angular/material/button';
 import { MatListModule } from '@angular/material/list';
 import { MatInputModule } from '@angular/material/input';
@@ -1589,7 +1537,6 @@ import { MatToolbarModule } from '@angular/material/toolbar';
   ...
   imports: [
     ...
-    BrowserAnimationsModule,
     MatButtonModule,
     MatIconModule,
     MatInputModule,

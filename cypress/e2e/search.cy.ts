@@ -12,7 +12,7 @@ describe('Search', () => {
   it('should allow searching', () => {
     cy.get('input').type('A');
     cy.get('button').click();
-    const list = cy.get('app-search table tbody tr');
+    const list = cy.get('app-search mat-list mat-list-item');
     list.should('have.length', 3);
   });
 });

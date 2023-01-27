@@ -5,10 +5,12 @@ import { MatListModule } from '@angular/material/list';
 import { MatToolbarModule } from '@angular/material/toolbar';
 
 describe('AppComponent', () => {
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      declarations: [AppComponent],
-      imports: [RouterTestingModule, MatListModule, MatToolbarModule]
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [RouterTestingModule, MatListModule, MatToolbarModule],
+      declarations: [
+        AppComponent
+      ],
     }).compileComponents();
   });
 
@@ -27,7 +29,7 @@ describe('AppComponent', () => {
   it('should render title', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
-    const compiled = fixture.nativeElement;
-    expect(compiled.querySelector('mat-toolbar').textContent).toContain('Welcome to ng-demo!');
+    const compiled = fixture.nativeElement as HTMLElement;
+    expect(compiled.querySelector('mat-toolbar')?.textContent).toContain('Welcome to ng-demo!');
   });
 });
