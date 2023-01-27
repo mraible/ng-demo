@@ -1345,7 +1345,7 @@ jobs:
       - name: Use Node 18
         uses: actions/setup-node@v3
         with:
-          node-version: '18'
+          node-version: 18
       - name: Install latest Chrome
         run: |
           sudo apt update
@@ -1358,10 +1358,12 @@ jobs:
       - name: Run integration tests
         uses: cypress-io/github-action@v5
         with:
-          build: npm run build
           start: npm start
-          wait-on: http://localhost:4200
+          install: false
+          wait-on: http://[::1]:4200
 ----
+
+TIP: See https://github.com/cypress-io/github-action/issues/634[issue #634] for more information on the strange syntax for `wait-on`.
 
 Check it in on a branch, create a pull request for that branch, and you should see your tests running.
 
