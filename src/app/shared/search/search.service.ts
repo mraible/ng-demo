@@ -9,30 +9,30 @@ export class SearchService {
 
   constructor(private http: HttpClient) { }
 
-  getAll() {
-    return this.http.get('assets/data/people.json');
+  getAll(): Observable<Person[]> {
+    return this.http.get<Person[]>('assets/data/people.json');
   }
 
-  search(q: string): Observable<any> {
+  search(q: string): Observable<Person[]> {
     if (!q || q === '*') {
       q = '';
     } else {
       q = q.toLowerCase();
     }
     return this.getAll().pipe(
-      map((data: any) => data
-        .map((item: any) => !!localStorage['person' + item.id] ?
+      map((data: Person[]) => data
+        .map((item: Person) => !!localStorage['person' + item.id] ?
           JSON.parse(localStorage['person' + item.id]) : item)
-        .filter((item: any) => JSON.stringify(item).toLowerCase().includes(q))
+        .filter((item: Person) => JSON.stringify(item).toLowerCase().includes(q))
       ));
   }
 
-  get(id: number) {
-    return this.getAll().pipe(map((all: any) => {
+  get(id: number): Observable<Person> {
+    return this.getAll().pipe(map((all: Person[]) => {
       if (localStorage['person' + id]) {
         return JSON.parse(localStorage['person' + id]);
       }
-      return all.find((e: any) => e.id === id);
+      return all.find((e: Person) => e.id === id);
     }));
   }
 
@@ -48,10 +48,10 @@ export class Address {
   zip: string;
 
   constructor(obj?: any) {
-    this.street = obj && obj.street || null;
-    this.city = obj && obj.city || null;
-    this.state = obj && obj.state || null;
-    this.zip = obj && obj.zip || null;
+    this.street = obj?.street || null;
+    this.city = obj?.city || null;
+    this.state = obj?.state || null;
+    this.zip = obj?.zip || null;
   }
 }
 
@@ -62,9 +62,9 @@ export class Person {
   address: Address;
 
   constructor(obj?: any) {
-    this.id = obj && Number(obj.id) || null;
-    this.name = obj && obj.name || null;
-    this.phone = obj && obj.phone || null;
-    this.address = obj && obj.address || null;
+    this.id = obj?.id || null;
+    this.name = obj?.name || null;
+    this.phone = obj?.phone || null;
+    this.address = obj?.address || null;
   }
 }

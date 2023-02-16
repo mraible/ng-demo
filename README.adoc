@@ -397,7 +397,7 @@ You can now add a proper type to the `searchResults` variable. While you're ther
 ----
 export class SearchComponent implements OnInit {
   query: string = '';
-  searchResults: Array<Person> = [];
+  searchResults: Person[] = [];
 
   constructor(private searchService: SearchService) { }
 ----
@@ -446,7 +446,7 @@ Now clicking the search button should work. To make the results look better, rem
 [source,xml]
 .src/app/search/search.component.html
 ----
-<table *ngIf="searchResults.length">
+<table *ngIf="searchResults?.length">
   <thead>
   <tr>
     <th>Name</th>
@@ -880,8 +880,8 @@ describe('SearchService', () => {
   let service: SearchService;
   let httpMock: HttpTestingController;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
       providers: [SearchService]
     });
@@ -1089,11 +1089,11 @@ describe('EditComponent', () => {
   let mockActivatedRoute: MockActivatedRoute;
   let mockRouter: MockRouter;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     mockActivatedRoute = new MockActivatedRoute({id: 1});
     mockRouter = new MockRouter();
 
-    TestBed.configureTestingModule({
+    await TestBed.configureTestingModule({
       declarations: [EditComponent],
       providers: [
         {provide: ActivatedRoute, useValue: mockActivatedRoute},
