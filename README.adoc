@@ -1353,6 +1353,7 @@ jobs:
       - name: Run integration tests
         uses: cypress-io/github-action@v5
         with:
+          browser: chrome
           start: npm start
           install: false
           wait-on: http://[::1]:4200
