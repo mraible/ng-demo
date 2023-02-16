@@ -1542,12 +1542,20 @@ import { MatToolbarModule } from '@angular/material/toolbar';
     MatInputModule,
     MatListModule,
     MatToolbarModule
-  ]
+  ],
+  ...
+})
 ----
 
-Change HTML to use Material components. For example, change `<h1>` in `app.component.html` to be `<mat-toolbar>`.
+Change HTML templates to use Material components. For example, change `<h1>` in `app.component.html` to be `<mat-toolbar>`.
 
-After modifying your HTML to match this branch, the edit screen will look as follows.
+[source,html]
+.src/app/app.component.html
+----
+<mat-toolbar>Welcome to {{ title }}!</mat-toolbar>
+----
+
+After modifying your templates to match this branch, the edit screen will look as follows.
 
 [[angular-material]]
 .Angular Material
