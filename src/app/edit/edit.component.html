@@ -1,5 +1,5 @@
 <div *ngIf="person">
-  <h3>{{editName}}</h3>
+  <h3>{{person.name}}</h3>
   <form (ngSubmit)="save()" #editForm="ngForm">
     <div>
       <label>Id:</label>
@@ -7,31 +7,31 @@
     </div>
     <p>
       <mat-form-field>
-        <input matInput [(ngModel)]="editName" name="name" id="name" placeholder="name" required/>
+        <input matInput [(ngModel)]="person.name" name="name" id="name" placeholder="name" required/>
       </mat-form-field>
     </p>
     <p>
       <mat-form-field>
-        <input matInput [(ngModel)]="editPhone" name="phone" id="phone" placeholder="Phone"/>
+        <input matInput [(ngModel)]="person.phone" name="phone" id="phone" placeholder="Phone"/>
       </mat-form-field>
     </p>
     <table>
       <tr>
         <td>
           <mat-form-field>
-            <input matInput placeholder="Address" [(ngModel)]="editAddress.street" name="street" id="street">
+            <input matInput placeholder="Address" [(ngModel)]="person.address.street" name="street" id="street">
           </mat-form-field>
         </td>
         <td>
           <mat-form-field>
-            <input matInput placeholder="City" [(ngModel)]="editAddress.city" name="city" id="city">
+            <input matInput placeholder="City" [(ngModel)]="person.address.city" name="city" id="city">
           </mat-form-field>
         </td>
       </tr>
       <tr>
         <td>
           <mat-form-field>
-            <input matInput placeholder="State" #state [(ngModel)]="editAddress.state" name="state" id="state" maxlength="2">
+            <input matInput placeholder="State" #state [(ngModel)]="person.address.state" name="state" id="state" maxlength="2">
           </mat-form-field>
         </td>
         <td>

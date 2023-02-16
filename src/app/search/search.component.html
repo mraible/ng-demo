@@ -7,7 +7,7 @@
     <mat-icon>search</mat-icon>
   </button>
 </form>
-<mat-list *ngIf="searchResults.length" flex>
+<mat-list *ngIf="searchResults?.length" flex>
   <mat-list-item *ngFor="let person of searchResults; let i=index">
     <div>
       <a matListItemTitle [routerLink]="['/edit', person.id]">{{person.name}}</a>
