@@ -1539,7 +1539,7 @@ Change HTML to use Bootstrap classes. For example, change `app.component.html` t
 
 After modifying your HTML to match this branch, the edit screen will look as follows.
 
-[[bootstrap4]]
+[[bootstrap]]
 .Bootstrap
 image::src/assets/images/bootstrap.png[Bootstrap, 800, scaledwidth="100%"]
 
