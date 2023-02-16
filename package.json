@@ -10,7 +10,10 @@
     "mac": {
       "category": "public.app-category.developer-tools"
     },
-    "files": ["**/*", "dist/ng-demo/**"]
+    "files": [
+      "**/*",
+      "dist/ng-demo/**"
+    ]
   },
   "scripts": {
     "ng": "ng",
@@ -42,14 +45,14 @@
     "zone.js": "~0.12.0"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^15.1.3",
-    "@angular/cli": "~15.1.3",
+    "@angular-devkit/build-angular": "^15.1.6",
+    "@angular/cli": "~15.1.6",
     "@angular/compiler-cli": "^15.1.0",
     "@cypress/schematic": "^2.5.0",
     "@types/jasmine": "~4.3.0",
     "concurrently": "^7.6.0",
     "cypress": "latest",
-    "electron": "^22.1.0",
+    "electron": "^22.3.0",
     "electron-builder": "^23.6.0",
     "jasmine-core": "~4.5.0",
     "karma": "~6.4.0",
