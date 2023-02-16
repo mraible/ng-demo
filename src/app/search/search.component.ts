@@ -9,8 +9,8 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./search.component.css']
 })
 export class SearchComponent implements OnInit, OnDestroy {
-  query: string = '';
-  searchResults: Array<Person> = [];
+  query!: string;
+  searchResults: Person[] = [];
   sub!: Subscription;
 
   constructor(private searchService: SearchService, private route: ActivatedRoute) { }
@@ -32,11 +32,8 @@ export class SearchComponent implements OnInit, OnDestroy {
 
   search(): void {
     this.searchService.search(this.query).subscribe({
-      next: (data: any) => {
-        this.searchResults = data;
-      },
-      error: error => console.log(error)
+      next: (data: Person[]) => { this.searchResults = data },
+      error: (e) => console.log(e)
     });
   }
-
 }
