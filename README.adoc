@@ -1615,9 +1615,20 @@ To make it so you can run your e2e tests with authentication, add a `signIn()` C
 [source,typescript]
 ----
 Cypress.Commands.add('signIn', (username, password) => {
-  cy.get('input[name=username]').type(username);
-  cy.get('input[name=password]').type(password);
-  cy.get('button[type=submit]').first().click();
+  Cypress.log({
+    message: [`🔐 Authenticating: ${username}`],
+    autoEnd: false,
+  })
+
+  cy.origin(Cypress.env('E2E_DOMAIN'), {args: {username, password}},
+    ({username, password}) => {
+      cy.get('input[name=username]').type(username);
+      cy.get('input[name=password]').type(password, {log: false});
+      cy.get('button[type=submit]').first().click();
+    }
+  )
+
+  cy.url().should('equal', 'http://localhost:4200/home')
 })
 ----
 
@@ -1644,15 +1655,15 @@ afterEach(() => {
 
 Modify `cypress/e2e/home.cy.ts` to remove the line with `cy.visit('/')`.
 
-Next, configure your credentials in `cypress.json` and turn off Chrome's security.
+Next, configure your credentials in `cypress.config.ts` and turn off Chrome's security.
 
 [source,json]
 ----
 "env": {
+  "E2E_DOMAIN": "YOUR_AUTH0_DOMAIN",
   "E2E_USERNAME": "YOUR_AUTH0_USERNAME",
   "E2E_PASSWORD": "YOUR_AUTH0_PASSWORD"
 },
-"chromeWebSecurity": false
 ----
 
 Then, start your app (with `ng serve`) and run its Cypress tests in a separate terminal window.
@@ -1673,6 +1684,7 @@ Create a `cypress.env.json` file in your project's root folder with your Auth0 c
 [source,json]
 ----
 {
+  "E2E_DOMAIN": "<your domain>",
   "E2E_USERNAME": "<your username>",
   "E2E_PASSWORD": "<your password>"
 }
@@ -1697,28 +1709,27 @@ If you're using GitHub Actions to test your project, you'll need to update the C
     install: false
     wait-on: http://[::1]:4200
   env:
+    CYPRESS_E2E_DOMAIN: ${{ secrets.E2E_DOMAIN }}
     CYPRESS_E2E_USERNAME: ${{ secrets.E2E_USERNAME }}
     CYPRESS_E2E_PASSWORD: ${{ secrets.E2E_PASSWORD }}
 ----
 
-Then, create repository secrets on GitHub for `E2E_USERNAME` and `E2E_PASSWORD`.
+Then, create repository secrets on GitHub for `E2E_DOMAIN`, `E2E_USERNAME` and `E2E_PASSWORD`.
 
-=== Cypress Web Security
+You also might find it useful to upload screenshots of your test failures to GitHub. Add the following to your workflow.
 
-You might've noticed I turned off Chrome's web security in `cypress.config.ts`.
-
-[source,json]
+[source,yaml]
 ----
-"chromeWebSecurity": false
+- uses: actions/upload-artifact@v3
+  if: failure()
+  with:
+    name: cypress-screenshots
+    path: cypress/screenshots
 ----
 
-This configuration allows Chrome to navigate between domains and sign in to Auth0. Unfortunately, this ties the e2e tests to Chrome as this setting doesn't exist for other browsers.
+You can then download the screenshots by going to a job's summary. From there, scroll down to the *Artifacts* section and click on the *cypress-screenshots* artifact.
 
-A better solution is to hit Auth0's APIs directly for authentication. https://www.jhipster.tech[JHipster] uses this technique for its Cypress tests. However, it also benefits from doing the OAuth flow on the server-side (with Spring Boot). This makes it easy to capture Auth0's authorization endpoint with all its parameters.
-
-See Cypress' https://docs.cypress.io/guides/guides/web-security[Web Security documentation] for more information.
-
-If you encountered issues, please post a question to Stack Overflow with an http://stackoverflow.com/questions/tagged/auth0[auth0 tag], or hit me up on Twitter https://twitter.com/mraible[@mraible].
+If you encounter any issues, please post a question to Stack Overflow with an http://stackoverflow.com/questions/tagged/auth0[auth0 tag], or hit me up on Twitter https://twitter.com/mraible[@mraible].
 
 The code in this branch can be downloaded using the following command:
 

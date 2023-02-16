@@ -1,14 +1,10 @@
 Cypress.Commands.add('signIn', (username, password) => {
-  const log = Cypress.log({
-    displayName: 'AUTH0 LOGIN',
-    message: [`🔐 Authenticating | ${username}`],
-    // @ts-ignore
+  Cypress.log({
+    message: [`🔐 Authenticating: ${username}`],
     autoEnd: false,
   })
 
-  cy.origin(
-    Cypress.env('E2E_DOMAIN'),
-    {args: {username, password}},
+  cy.origin(Cypress.env('E2E_DOMAIN'), {args: {username, password}},
     ({username, password}) => {
       cy.get('input[name=username]').type(username);
       cy.get('input[name=password]').type(password, {log: false});
