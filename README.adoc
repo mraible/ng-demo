@@ -1676,7 +1676,6 @@ Create a `cypress.env.json` file in your project's root folder with your Auth0 c
   "E2E_USERNAME": "<your username>",
   "E2E_PASSWORD": "<your password>"
 }
-
 ----
 
 Add `*.env.json` to your `.gitignore` file to prevent this file from being checked in.
@@ -1684,6 +1683,25 @@ Add `*.env.json` to your `.gitignore` file to prevent this file from being check
 Then, remove the `env` key from `cypress.config.ts`.
 
 Now, `npm run cypress:run` should work the same as before.
+
+=== Update GitHub Actions
+
+If you're using GitHub Actions to test your project, you'll need to update the Cypress workflow to include your credentials.
+
+[source,yaml]
+----
+- name: Run integration tests
+  uses: cypress-io/github-action@v5
+  with:
+    start: npm start
+    install: false
+    wait-on: ${{ matrix.node-version == 18 && 'http://[::1]:4200' || 'http://localhost:4200' }}
+  env:
+    E2E_USERNAME: ${{ secrets.E2E_USERNAME }}
+    E2E_PASSWORD: ${{ secrets.E2E_PASSWORD }}
+----
+
+Then, create repository secrets on GitHub for `E2E_USERNAME` and `E2E_PASSWORD`.
 
 === Cypress Web Security
 
