@@ -15,5 +15,4 @@ export default defineConfig({
     },
     specPattern: '**/*.cy.ts'
   },
-  "chromeWebSecurity": false
 })

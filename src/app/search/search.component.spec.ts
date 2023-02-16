@@ -14,17 +14,17 @@ describe('SearchComponent', () => {
   let mockSearchService: SearchService;
   let mockActivatedRoute: MockActivatedRoute;
 
-  beforeEach((() => {
+  beforeEach(async () => {
     mockActivatedRoute = new MockActivatedRoute({term: 'nikola'});
 
-    TestBed.configureTestingModule({
+    await TestBed.configureTestingModule({
       declarations: [SearchComponent],
       providers: [
         {provide: ActivatedRoute, useValue: mockActivatedRoute}
       ],
       imports: [FormsModule, RouterTestingModule, HttpClientTestingModule]
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     // mock response
@@ -42,7 +42,7 @@ describe('SearchComponent', () => {
   });
 
   it('should search when a term is set and search() is called', () => {
-    component = fixture.debugElement.componentInstance;
+    component = fixture.componentInstance;
     component.query = 'J';
     component.search();
     expect(mockSearchService.search).toHaveBeenCalledWith('J');
