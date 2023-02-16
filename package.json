@@ -10,7 +10,10 @@
     "mac": {
       "category": "public.app-category.developer-tools"
     },
-    "files": ["**/*", "dist/ng-demo/**"]
+    "files": [
+      "**/*",
+      "dist/ng-demo/**"
+    ]
   },
   "scripts": {
     "ng": "ng",
@@ -49,7 +52,7 @@
     "@types/jasmine": "~4.3.0",
     "concurrently": "^7.6.0",
     "cypress": "latest",
-    "electron": "^22.1.0",
+    "electron": "^22.3.0",
     "electron-builder": "^23.6.0",
     "jasmine-core": "~4.5.0",
     "karma": "~6.4.0",
