@@ -1,5 +1,5 @@
 <div *ngIf="person">
-  <h3>{{editName}}</h3>
+  <h3>{{person.name}}</h3>
   <form (ngSubmit)="save()" #editForm="ngForm">
     <div>
       <label>Id:</label>
@@ -7,22 +7,22 @@
     </div>
     <div>
       <label>Name:</label>
-      <input [(ngModel)]="editName" name="name" id="name" placeholder="name" required #name="ngModel"/>
+      <input [(ngModel)]="person.name" name="name" id="name" placeholder="name" required #name="ngModel"/>
       <div [hidden]="name.valid || name.pristine" style="color: red">
         Name is required
       </div>
     </div>
     <div>
       <label>Phone:</label>
-      <input [(ngModel)]="editPhone" name="phone" id="phone" placeholder="Phone"/>
+      <input [(ngModel)]="person.phone" name="phone" id="phone" placeholder="Phone"/>
     </div>
     <fieldset>
       <legend>Address:</legend>
       <address>
-        <input [(ngModel)]="editAddress.street" name="street" id="street"><br/>
-        <input [(ngModel)]="editAddress.city" name="city" id="city">,
-        <input [(ngModel)]="editAddress.state" name="state" id="state" size="2">
-        <input [(ngModel)]="editAddress.zip" name="zip" id="zip" size="5">
+        <input [(ngModel)]="person.address.street" name="street" id="street"><br/>
+        <input [(ngModel)]="person.address.city" name="city" id="city">,
+        <input [(ngModel)]="person.address.state" name="state" id="state" size="2">
+        <input [(ngModel)]="person.address.zip" name="zip" id="zip" size="5">
       </address>
     </fieldset>
     <button type="submit" id="save" [disabled]="!editForm.form.valid">Save</button>
