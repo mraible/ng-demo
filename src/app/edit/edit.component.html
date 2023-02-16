@@ -36,7 +36,7 @@
         </td>
         <td>
           <mat-form-field>
-            <input matInput placeholder="Zip" #postalCode maxlength="5" [(ngModel)]="editAddress.zip" name="zip" id="zip">
+            <input matInput placeholder="Zip" #postalCode maxlength="5" [(ngModel)]="person.address.zip" name="zip" id="zip">
             <mat-hint align="end">{{postalCode.value.length}} / 5</mat-hint>
           </mat-form-field>
         </td>
