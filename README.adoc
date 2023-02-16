@@ -1656,7 +1656,7 @@ afterEach(() => {
 
 Modify `cypress/e2e/home.cy.ts` to remove the line with `cy.visit('/')`.
 
-Next, configure your credentials in `cypress.config.ts` and turn off Chrome's security.
+Next, configure your domain and credentials in `cypress.config.ts`.
 
 [source,json]
 ----
@@ -1699,13 +1699,14 @@ Now, `npm run cypress:run` should work the same as before.
 
 === Update GitHub Actions
 
-If you're using GitHub Actions to test your project, you'll need to update the Cypress workflow to include your credentials.
+If you're using GitHub Actions to test your project, you'll need to update the Cypress workflow to include your domain and credentials.
 
 [source,yaml]
 ----
 - name: Run integration tests
   uses: cypress-io/github-action@v5
   with:
+    browser: chrome
     start: npm start
     install: false
     wait-on: http://[::1]:4200
