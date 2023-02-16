@@ -1695,10 +1695,10 @@ If you're using GitHub Actions to test your project, you'll need to update the C
   with:
     start: npm start
     install: false
-    wait-on: ${{ matrix.node-version == 18 && 'http://[::1]:4200' || 'http://localhost:4200' }}
+    wait-on: http://[::1]:4200
   env:
-    E2E_USERNAME: ${{ secrets.E2E_USERNAME }}
-    E2E_PASSWORD: ${{ secrets.E2E_PASSWORD }}
+    CYPRESS_E2E_USERNAME: ${{ secrets.E2E_USERNAME }}
+    CYPRESS_E2E_PASSWORD: ${{ secrets.E2E_PASSWORD }}
 ----
 
 Then, create repository secrets on GitHub for `E2E_USERNAME` and `E2E_PASSWORD`.
