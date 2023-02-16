@@ -32,5 +32,5 @@ jobs:
           install: false
           wait-on: ${{ matrix.node-version == 18 && 'http://[::1]:4200' || 'http://localhost:4200' }}
         env:
-          E2E_USERNAME: ${{ secrets.E2E_USERNAME }}
-          E2E_PASSWORD: ${{ secrets.E2E_PASSWORD }}
+          CYPRESS_E2E_USERNAME: ${{ secrets.E2E_USERNAME }}
+          CYPRESS_E2E_PASSWORD: ${{ secrets.E2E_PASSWORD }}
