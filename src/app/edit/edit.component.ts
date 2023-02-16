@@ -1,5 +1,5 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Address, Person, SearchService } from '../shared';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Person, SearchService } from '../shared';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -10,10 +10,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class EditComponent implements OnInit, OnDestroy {
   person!: Person;
-  editName!: string;
-  editPhone!: string;
-  editAddress!: Address;
-
   sub!: Subscription;
 
   constructor(private route: ActivatedRoute,
@@ -21,14 +17,11 @@ export class EditComponent implements OnInit, OnDestroy {
               private service: SearchService) {
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.sub = this.route.params.subscribe(params => {
       const id = + params['id']; // (+) converts string 'id' to a number
       this.service.get(id).subscribe(person => {
         if (person) {
-          this.editName = person.name;
-          this.editPhone = person.phone;
-          this.editAddress = person.address;
           this.person = person;
         } else {
           this.gotoList();
@@ -43,23 +36,20 @@ export class EditComponent implements OnInit, OnDestroy {
     }
   }
 
-  cancel() {
-    this.router.navigate(['/search']);
+  async cancel() {
+    await this.router.navigate(['/search']);
   }
 
-  save() {
-    this.person.name = this.editName;
-    this.person.phone = this.editPhone;
-    this.person.address = this.editAddress;
+  async save() {
     this.service.save(this.person);
-    this.gotoList();
+    await this.gotoList();
   }
 
-  gotoList() {
+  async gotoList() {
     if (this.person) {
-      this.router.navigate(['/search', {term: this.person.name} ]);
+      await this.router.navigate(['/search', {term: this.person.name}]);
     } else {
-      this.router.navigate(['/search']);
+      await this.router.navigate(['/search']);
     }
   }
 }

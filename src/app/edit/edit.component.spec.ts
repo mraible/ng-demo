@@ -12,11 +12,11 @@ describe('EditComponent', () => {
   let mockActivatedRoute: MockActivatedRoute;
   let mockRouter: MockRouter;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     mockActivatedRoute = new MockActivatedRoute({id: 1});
     mockRouter = new MockRouter();
 
-    TestBed.configureTestingModule({
+    await TestBed.configureTestingModule({
       declarations: [EditComponent],
       providers: [
         {provide: ActivatedRoute, useValue: mockActivatedRoute},
@@ -44,11 +44,11 @@ describe('EditComponent', () => {
     expect(mockSearchService.get).toHaveBeenCalledWith(1);
 
     // verify data was set on component when initialized
-    const editComponent = fixture.debugElement.componentInstance;
-    expect(editComponent.editAddress.city).toBe('Denver');
+    const editComponent = fixture.componentInstance;
+    expect(editComponent.person.address.city).toBe('Denver');
 
     // verify HTML renders as expected
-    const compiled = fixture.debugElement.nativeElement;
+    const compiled = fixture.nativeElement;
     expect(compiled.querySelector('h3').innerHTML).toBe('Michael Porter Jr.');
   });
 });
