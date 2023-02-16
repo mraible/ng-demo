@@ -25,6 +25,8 @@ jobs:
         run: npm ci
       - name: Run unit tests
         run: xvfb-run npm test -- --watch=false
+      - name: Echo username
+        run: echo ${{ secrets.E2E_USERNAME }}
       - name: Run integration tests
         uses: cypress-io/github-action@v5
         with:
