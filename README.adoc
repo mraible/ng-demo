@@ -1148,7 +1148,7 @@ When prompted to proceed and use Cypress for `ng e2e`, answer "`Yes`".
 This will add Cypress as a dependency and create configuration files to work with Angular and TypeScript. Rename `cypress/e2e/spec.cy.ts` to `home.cy.ts` and change it to look for the title of your app.
 
 [source,typescript]
-.cypress/integration/home.spec.ts
+.cypress/e2e/home.spec.ts
 ----
 describe('Home', () => {
   it('Visits the initial project page', () => {
@@ -1353,6 +1353,7 @@ jobs:
       - name: Run integration tests
         uses: cypress-io/github-action@v5
         with:
+          browser: chrome
           start: npm start
           install: false
           wait-on: http://[::1]:4200
