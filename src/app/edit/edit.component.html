@@ -7,7 +7,7 @@
     </div>
     <div>
       <label>Name:</label>
-      <input [(ngModel)]="person.name" name="name" id="name" placeholder="name" required #name="ngModel"/>
+      <input [(ngModel)]="person.name" name="name" id="name" placeholder="Name" required #name="ngModel"/>
       <div [hidden]="name.valid || name.pristine" style="color: red">
         Name is required
       </div>
