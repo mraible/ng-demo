@@ -595,7 +595,7 @@ Update `src/app/edit/edit.component.html` to display an editable form. You might
   </div>
   <div>
     <label>Name:</label>
-    <input [(ngModel)]="person.name" name="name" id="name" placeholder="name"/>
+    <input [(ngModel)]="person.name" name="name" id="name" placeholder="Name"/>
   </div>
   <div>
     <label>Phone:</label>
