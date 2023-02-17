@@ -185,7 +185,7 @@ Add a `query` property to `src/app/search/search.component.ts`. While you're the
 .src/app/search/search.component.ts
 ----
 export class SearchComponent implements OnInit {
-  query: string = '';
+  query: string | undefined;
   searchResults: any;
 
   constructor() { }
@@ -396,7 +396,7 @@ You can now add a proper type to the `searchResults` variable. While you're ther
 .src/app/search/search.component.ts
 ----
 export class SearchComponent implements OnInit {
-  query: string = | undefined;
+  query: string | undefined;
   searchResults: Person[] = [];
 
   constructor(private searchService: SearchService) { }
@@ -529,6 +529,23 @@ search(): void {
   });
 }
 ----
+
+This won't compile right away.
+
+[source,shell]
+----
+Error: src/app/search/search.component.ts:19:31 - error TS2345:
+ Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+----
+
+Since `query` will always be assigned (even if it's empty), change its variable declaration to:
+
+[source,typescript]
+----
+query!: string; // query: string = ''; will also work
+----
+
+This is called a https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-7.html#definite-assignment-assertions[definite assignment assertion]. It's a way to tell TypeScript "`I know what I'm doing, the variable will be assigned.`"
 
 Now search results will be filtered by the query value you type in.
 
