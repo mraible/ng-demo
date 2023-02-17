@@ -7,7 +7,7 @@
     </div>
     <div class="form-group">
       <label for="name">Name:</label>
-      <input [(ngModel)]="person.name" name="name" id="name" placeholder="name" required class="form-control" #name="ngModel" [ngClass]="{'is-invalid': name.touched && name.invalid,  'is-valid': name.touched && name.valid}"/>
+      <input [(ngModel)]="person.name" name="name" id="name" placeholder="Name" required class="form-control" #name="ngModel" [ngClass]="{'is-invalid': name.touched && name.invalid,  'is-valid': name.touched && name.valid}"/>
       <div [hidden]="name.valid || name.pristine" style="display: block" class="invalid-feedback">
         Name is required
       </div>

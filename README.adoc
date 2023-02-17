@@ -595,7 +595,7 @@ Update `src/app/edit/edit.component.html` to display an editable form. You might
   </div>
   <div>
     <label>Name:</label>
-    <input [(ngModel)]="person.name" name="name" id="name" placeholder="name"/>
+    <input [(ngModel)]="person.name" name="name" id="name" placeholder="Name"/>
   </div>
   <div>
     <label>Phone:</label>
@@ -798,7 +798,7 @@ To make name required, modify `edit.component.html` to add a `required` attribut
 [source,html]
 .src/app/edit/edit.component.html
 ----
-<input [(ngModel)]="person.name" name="name" id="name" placeholder="name" required #name="ngModel"/>
+<input [(ngModel)]="person.name" name="name" id="name" placeholder="Name" required #name="ngModel"/>
 <div [hidden]="name.valid || name.pristine" style="color: red">
   Name is required
 </div>
