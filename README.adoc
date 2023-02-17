@@ -1159,7 +1159,7 @@ describe('Home', () => {
 })
 ----
 
-Then, run `ng e2e`. This will compile your app, start in on `http://localhost:4200`, and launch the Cypress Electron app.
+Then, run `ng e2e`. This will compile your app, start it on `http://localhost:4200`, and launch the Cypress Electron app.
 
 .Cypress Electron App
 image::ng-demo/cypress-electron-app.png[Cypress Electron App, 800, scaledwidth="100%", align=center]
@@ -1471,9 +1471,9 @@ http {
 }
 ----
 
-NOTE: In this code, you might notice that some https URLs are allowed in the content security policy. Those are there this app can make XHR requests to those domains when that functionality is added.
+NOTE: In this code, you might notice that some https URLs are allowed in the content security policy. Those are there so this app can make XHR requests to those domains when that functionality is added.
 
-For this file to be read, you have to use the https://elements.heroku.com/buildpacks/heroku/heroku-buildpack-nginx[Heroku NGINX buildpack].
+For `config/nginx.conf.erb` to be read, you have to use the https://elements.heroku.com/buildpacks/heroku/heroku-buildpack-nginx[Heroku NGINX buildpack].
 
 Add a `Procfile` to the root of your project.
 
