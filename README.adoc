@@ -94,9 +94,9 @@ $ ng version
                 |___/
 
 
-Angular CLI: 15.1.3
-Node: 18.13.0
-Package Manager: npm 8.19.3
+Angular CLI: 15.1.6
+Node: 18.14.0
+Package Manager: npm 9.3.1
 OS: darwin arm64
 
 Angular:
@@ -104,10 +104,10 @@ Angular:
 
 Package                      Version
 ------------------------------------------------------
-@angular-devkit/architect    0.1501.3 (cli-only)
-@angular-devkit/core         15.1.3 (cli-only)
-@angular-devkit/schematics   15.1.3 (cli-only)
-@schematics/angular          15.1.3 (cli-only)
+@angular-devkit/architect    0.1501.6 (cli-only)
+@angular-devkit/core         15.1.6 (cli-only)
+@angular-devkit/schematics   15.1.6 (cli-only)
+@schematics/angular          15.1.6 (cli-only)
 ----
 
 If you run this command from the `ng-demo` directory, you'll see even more information.
@@ -115,20 +115,20 @@ If you run this command from the `ng-demo` directory, you'll see even more infor
 ----
 ....
 
-Angular: 15.1.2
+Angular: 15.1.5
 ... animations, common, compiler, compiler-cli, core, forms
 ... platform-browser, platform-browser-dynamic, router
 
 Package                         Version
 ---------------------------------------------------------
-@angular-devkit/architect       0.1501.3
-@angular-devkit/build-angular   15.1.3
-@angular-devkit/core            15.1.3
-@angular-devkit/schematics      15.1.3
-@angular/cli                    15.1.3
-@schematics/angular             15.1.3
+@angular-devkit/architect       0.1501.6
+@angular-devkit/build-angular   15.1.6
+@angular-devkit/core            15.1.6
+@angular-devkit/schematics      15.1.6
+@angular/cli                    15.1.6
+@schematics/angular             15.1.6
 rxjs                            7.8.0
-typescript                      4.9.4
+typescript                      4.9.5
 ----
 
 == Run the application
@@ -396,7 +396,7 @@ You can now add a proper type to the `searchResults` variable. While you're ther
 .src/app/search/search.component.ts
 ----
 export class SearchComponent implements OnInit {
-  query: string = '';
+  query: string = | undefined;
   searchResults: Person[] = [];
 
   constructor(private searchService: SearchService) { }
@@ -409,7 +409,7 @@ Then update the `search()` method to call the service's `getAll()` method.
 ----
 search(): void {
   this.searchService.getAll().subscribe({
-    next: (data: any) => {
+    next: (data: Person[]) => {
       this.searchResults = data;
     },
     error: error => console.log(error)
@@ -1159,7 +1159,7 @@ describe('Home', () => {
 })
 ----
 
-Then, run `ng e2e`. This will compile your app, start in on `http://localhost:4200`, and launch the Cypress Electron app.
+Then, run `ng e2e`. This will compile your app, start it on `http://localhost:4200`, and launch the Cypress Electron app.
 
 .Cypress Electron App
 image::ng-demo/cypress-electron-app.png[Cypress Electron App, 800, scaledwidth="100%", align=center]
@@ -1471,9 +1471,9 @@ http {
 }
 ----
 
-NOTE: In this code, you might notice that some https URLs are allowed in the content security policy. Those are there this app can make XHR requests to those domains when that functionality is added.
+NOTE: In this code, you might notice that some https URLs are allowed in the content security policy. Those are there so this app can make XHR requests to those domains when that functionality is added.
 
-For this file to be read, you have to use the https://elements.heroku.com/buildpacks/heroku/heroku-buildpack-nginx[Heroku NGINX buildpack].
+For `config/nginx.conf.erb` to be read, you have to use the https://elements.heroku.com/buildpacks/heroku/heroku-buildpack-nginx[Heroku NGINX buildpack].
 
 Add a `Procfile` to the root of your project.
 
