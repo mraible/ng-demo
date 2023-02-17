@@ -28,6 +28,7 @@ jobs:
       - name: Run integration tests
         uses: cypress-io/github-action@v5
         with:
+          browser: chrome
           start: npm start
           install: false
           wait-on: ${{ matrix.node-version == 18 && 'http://[::1]:4200' || 'http://localhost:4200' }}
