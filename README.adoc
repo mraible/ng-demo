@@ -2,7 +2,7 @@
 
 :author: Matt Raible
 :email:  matt@raibledesigns.com
-:revnumber: 15.1
+:revnumber: 17
 :revdate: {docdate}
 :subject: Angular and Angular CLI
 :keywords: Angular, Angular CLI, TypeScript, JavaScript, Node, npm, Jasmine, Protractor
@@ -33,11 +33,9 @@ endif::[]
 IMPORTANT: For a book of this tutorial, please check out https://www.infoq.com/minibooks/angular-mini-book/[The Angular Mini-Book]. Its "Build an Angular App" chapter was inspired by this tutorial.
 
 This tutorial shows you how to build a bare-bones search and edit application using https://angular.io[Angular] and
-https://github.com/angular/angular-cli[Angular CLI] version 15.
+https://github.com/angular/angular-cli[Angular CLI] version 17.
 
 toc::[]
-
-// For older versions of Angular, please see previous tutorials: https://github.com/mraible/ng-demo/blob/0dd604537e18b3ccf1f707d45af54b418a574954/README.adoc[Angular 10], https://github.com/mraible/ng-demo/blob/bec5fdf3b3da0419b012971ab42870df03ce94ea/README.adoc[Angular 9], https://github.com/mraible/ng-demo/blob/6a24488ca847dea215ad70101a22f3ebf67ba79a/README.adoc[Angular 7], https://github.com/mraible/ng-demo/blob/41d9526dbc0a35131118f7f101938dfe75a0e212/README.adoc[Angular 6], and https://github.com/mraible/ng-demo/blob/662159470802c53f445db6393576c0926e31d642/README.adoc[Angular 5].
 
 ifdef::env-github[]
 TIP: It appears you're reading this document on GitHub. If you want a prettier view, install https://chrome.google.com/webstore/detail/asciidoctorjs-live-previe/iaalpfgpbocpdfblpnhhgllgbdbchmia[Asciidoctor.js Live Preview for Chrome], then view the https://raw.githubusercontent.com/mraible/ng-demo/main/README.adoc?toc=left[raw document]. Another option is to use the https://gist.asciidoctor.org/?github-mraible%2Fng-demo%2Fmain%2F%2FREADME.adoc[DocGist view].
@@ -64,7 +62,8 @@ You'll build a simple web application with Angular CLI, a tool for Angular devel
 If you don't have Angular CLI installed, install it:
 
 ----
-npm install -g @angular/cli@15
+npm install -g @angular/cli@17.0.0-rc.0
+# todo: change to @17 when it's released
 ----
 
 NOTE: IntelliJ IDEA Ultimate Edition has the best support for TypeScript. If you'd rather not pay for your IDE, checkout https://code.visualstudio.com/[Visual Studio Code].
@@ -77,7 +76,7 @@ Create a new project using the `ng new` command:
 ng new ng-demo
 ----
 
-When prompted to install Angular routing, type "`Y`". For the stylesheet format, choose "`CSS`" (the default).
+When prompted for the stylesheet format, choose "`CSS`" (the default). Accept the default (No) for SSR (Server-Side Rendering) and SSG (Static Site Generation).
 
 This will create a `ng-demo` project and run `npm install` in it. It takes about a minute to complete, but will vary based on your internet connection speed.
 
@@ -94,9 +93,9 @@ $ ng version
                 |___/
 
 
-Angular CLI: 15.1.6
-Node: 18.14.0
-Package Manager: npm 9.3.1
+Angular CLI: 17.0.0-rc.0
+Node: 18.18.2
+Package Manager: npm 9.8.1
 OS: darwin arm64
 
 Angular:
@@ -104,10 +103,10 @@ Angular:
 
 Package                      Version
 ------------------------------------------------------
-@angular-devkit/architect    0.1501.6 (cli-only)
-@angular-devkit/core         15.1.6 (cli-only)
-@angular-devkit/schematics   15.1.6 (cli-only)
-@schematics/angular          15.1.6 (cli-only)
+@angular-devkit/architect    0.1700.0-rc.0 (cli-only)
+@angular-devkit/core         17.0.0-rc.0 (cli-only)
+@angular-devkit/schematics   17.0.0-rc.0 (cli-only)
+@schematics/angular          17.0.0-rc.0 (cli-only)
 ----
 
 If you run this command from the `ng-demo` directory, you'll see even more information.
@@ -115,20 +114,20 @@ If you run this command from the `ng-demo` directory, you'll see even more infor
 ----
 ....
 
-Angular: 15.1.5
-... animations, common, compiler, compiler-cli, core, forms
+Angular: 17.0.0-rc.0
+... animations, cli, common, compiler, compiler-cli, core, forms
 ... platform-browser, platform-browser-dynamic, router
 
 Package                         Version
 ---------------------------------------------------------
-@angular-devkit/architect       0.1501.6
-@angular-devkit/build-angular   15.1.6
-@angular-devkit/core            15.1.6
-@angular-devkit/schematics      15.1.6
-@angular/cli                    15.1.6
-@schematics/angular             15.1.6
-rxjs                            7.8.0
-typescript                      4.9.5
+@angular-devkit/architect       0.1700.0-rc.0
+@angular-devkit/build-angular   17.0.0-rc.0
+@angular-devkit/core            17.0.0-rc.0
+@angular-devkit/schematics      17.0.0-rc.0
+@schematics/angular             17.0.0-rc.0
+rxjs                            7.8.1
+typescript                      5.2.2
+zone.js                         0.14.0
 ----
 
 == Run the application
@@ -141,6 +140,8 @@ ng serve
 
 You should see a screen like the one below at http://localhost:4200.
 
+// todo: update screenshots
+
 [[default-homepage]]
 .Default homepage
 image::src/assets/images/default-homepage.png[Default Homepage, 800, scaledwidth="100%"]
@@ -150,7 +151,7 @@ You can make sure your new project's tests pass, run `ng test`:
 ----
 $ ng test
 ...
-...: Executed 3 of 3 SUCCESS (0.061 secs / 0.055 secs)
+...: Executed 3 of 3 SUCCESS (0.061 secs / 0.05 secs)
 ----
 
 == Add a search feature
