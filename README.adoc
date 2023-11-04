@@ -62,8 +62,7 @@ You'll build a simple web application with Angular CLI, a tool for Angular devel
 If you don't have Angular CLI installed, install it:
 
 ----
-npm install -g @angular/cli@17.0.0-rc.0
-# todo: change to @17 when it's released
+npm install -g @angular/cli@17
 ----
 
 NOTE: IntelliJ IDEA Ultimate Edition has the best support for TypeScript. If you'd rather not pay for your IDE, checkout https://code.visualstudio.com/[Visual Studio Code].
@@ -93,7 +92,7 @@ $ ng version
                 |___/
 
 
-Angular CLI: 17.0.0-rc.0
+Angular CLI: 17.0.0-rc.3
 Node: 18.18.2
 Package Manager: npm 9.8.1
 OS: darwin arm64
@@ -103,10 +102,10 @@ Angular:
 
 Package                      Version
 ------------------------------------------------------
-@angular-devkit/architect    0.1700.0-rc.0 (cli-only)
-@angular-devkit/core         17.0.0-rc.0 (cli-only)
-@angular-devkit/schematics   17.0.0-rc.0 (cli-only)
-@schematics/angular          17.0.0-rc.0 (cli-only)
+@angular-devkit/architect    0.1700.0-rc.3 (cli-only)
+@angular-devkit/core         17.0.0-rc.3 (cli-only)
+@angular-devkit/schematics   17.0.0-rc.3 (cli-only)
+@schematics/angular          17.0.0-rc.3 (cli-only)
 ----
 
 If you run this command from the `ng-demo` directory, you'll see even more information.
@@ -114,20 +113,21 @@ If you run this command from the `ng-demo` directory, you'll see even more infor
 ----
 ....
 
-Angular: 17.0.0-rc.0
-... animations, cli, common, compiler, compiler-cli, core, forms
+Angular: 17.0.0-rc.2
+... animations, common, compiler, compiler-cli, core, forms
 ... platform-browser, platform-browser-dynamic, router
 
 Package                         Version
 ---------------------------------------------------------
-@angular-devkit/architect       0.1700.0-rc.0
-@angular-devkit/build-angular   17.0.0-rc.0
-@angular-devkit/core            17.0.0-rc.0
-@angular-devkit/schematics      17.0.0-rc.0
-@schematics/angular             17.0.0-rc.0
+@angular-devkit/architect       0.1700.0-rc.3
+@angular-devkit/build-angular   17.0.0-rc.3
+@angular-devkit/core            17.0.0-rc.3
+@angular-devkit/schematics      17.0.0-rc.3
+@angular/cli                    17.0.0-rc.3
+@schematics/angular             17.0.0-rc.3
 rxjs                            7.8.1
 typescript                      5.2.2
-zone.js                         0.14.0
+zone.js                         0.14.2
 ----
 
 == Run the application
