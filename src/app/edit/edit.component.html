@@ -1,31 +1,31 @@
-<div *ngIf="person">
-  <h3>{{person.name}}</h3>
-  <form (ngSubmit)="save()" #editForm="ngForm">
-    <div>
-      <label>Id:</label>
-      {{person.id}}
+@if (person) {
+<h3>{{person.name}}</h3>
+<form (ngSubmit)="save()" #editForm="ngForm">
+  <div>
+    <label>Id:</label>
+    {{person.id}}
+  </div>
+  <div>
+    <label>Name:</label>
+    <input [(ngModel)]="person.name" name="name" id="name" placeholder="Name" required #name="ngModel"/>
+    <div [hidden]="name.valid || name.pristine" style="color: red">
+      Name is required
     </div>
-    <div>
-      <label>Name:</label>
-      <input [(ngModel)]="person.name" name="name" id="name" placeholder="Name" required #name="ngModel"/>
-      <div [hidden]="name.valid || name.pristine" style="color: red">
-        Name is required
-      </div>
-    </div>
-    <div>
-      <label>Phone:</label>
-      <input [(ngModel)]="person.phone" name="phone" id="phone" placeholder="Phone"/>
-    </div>
-    <fieldset>
-      <legend>Address:</legend>
-      <address>
-        <input [(ngModel)]="person.address.street" name="street" id="street"><br/>
-        <input [(ngModel)]="person.address.city" name="city" id="city">,
-        <input [(ngModel)]="person.address.state" name="state" id="state" size="2">
-        <input [(ngModel)]="person.address.zip" name="zip" id="zip" size="5">
-      </address>
-    </fieldset>
-    <button type="submit" id="save" [disabled]="!editForm.form.valid">Save</button>
-    <button (click)="cancel()" id="cancel">Cancel</button>
-  </form>
-</div>
+  </div>
+  <div>
+    <label>Phone:</label>
+    <input [(ngModel)]="person.phone" name="phone" id="phone" placeholder="Phone"/>
+  </div>
+  <fieldset>
+    <legend>Address:</legend>
+    <address>
+      <input [(ngModel)]="person.address.street" name="street" id="street"><br/>
+      <input [(ngModel)]="person.address.city" name="city" id="city">,
+      <input [(ngModel)]="person.address.state" name="state" id="state" size="2">
+      <input [(ngModel)]="person.address.zip" name="zip" id="zip" size="5">
+    </address>
+  </fieldset>
+  <button type="submit" id="save" [disabled]="!editForm.form.valid">Save</button>
+  <button (click)="cancel()" id="cancel">Cancel</button>
+</form>
+}
