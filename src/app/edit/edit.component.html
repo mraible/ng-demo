@@ -1,4 +1,5 @@
-<div *ngIf="person" class="col-8">
+@if (person) {
+<div class="col-8">
   <h3 class="mt-2">{{person.name}}</h3>
   <form (ngSubmit)="save()" #editForm="ngForm">
     <div>
@@ -37,3 +38,4 @@
     <button (click)="cancel()" id="cancel" class="btn btn-light">Cancel</button>
   </form>
 </div>
+}
