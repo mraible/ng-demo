@@ -1641,8 +1641,7 @@ Cypress.Commands.add('signIn', (username, password) => {
   cy.origin(Cypress.env('E2E_DOMAIN'), {args: {username, password}},
     ({username, password}) => {
       cy.get('input[name=username]').type(username);
-      cy.get('input[name=password]').type(password, {log: false});
-      cy.get('button[type=submit]').first().click();
+      cy.get('input[name=password]').type(`${password}{enter}`, {log: false});
     }
   )
 
@@ -1679,7 +1678,7 @@ Don't store your username and password in `cypress.config.ts`. This is convenien
 
 You can solve it by using https://docs.cypress.io/guides/guides/environment-variables#Option-2-cypressenvjson[`cypress.env.json`].
 
-Create a `cypress.env.json` file in your project's root folder with your Auth0 credentials in it.
+Create a `cypress.env.json` file in your project's root folder with your Auth0 credentials in it. If prompted, do NOT add this file to source control.
 
 [source,json]
 ----
