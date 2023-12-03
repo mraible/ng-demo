@@ -8,9 +8,7 @@ describe('AppComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [RouterTestingModule, MatListModule, MatToolbarModule],
-      declarations: [
-        AppComponent
-      ],
+      declarations: [],
     }).compileComponents();
   });
 
@@ -20,7 +18,7 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have as title 'ng-demo'`, () => {
+  it(`should have the 'ng-demo' title`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
     expect(app.title).toEqual('ng-demo');
