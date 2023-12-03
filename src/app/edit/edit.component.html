@@ -1,50 +1,49 @@
-<div *ngIf="person">
-  <h3>{{person.name}}</h3>
-  <form (ngSubmit)="save()" #editForm="ngForm">
-    <div>
-      <label>Id:</label>
-      {{person.id}}
-    </div>
-    <p>
-      <mat-form-field>
-        <input matInput [(ngModel)]="person.name" name="name" id="name" placeholder="Name" required/>
-      </mat-form-field>
-    </p>
-    <p>
-      <mat-form-field>
-        <input matInput [(ngModel)]="person.phone" name="phone" id="phone" placeholder="Phone"/>
-      </mat-form-field>
-    </p>
-    <table>
-      <tr>
-        <td>
-          <mat-form-field>
-            <input matInput placeholder="Address" [(ngModel)]="person.address.street" name="street" id="street">
-          </mat-form-field>
-        </td>
-        <td>
-          <mat-form-field>
-            <input matInput placeholder="City" [(ngModel)]="person.address.city" name="city" id="city">
-          </mat-form-field>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <mat-form-field>
-            <input matInput placeholder="State" #state [(ngModel)]="person.address.state" name="state" id="state" maxlength="2">
-          </mat-form-field>
-        </td>
-        <td>
-          <mat-form-field>
-            <input matInput placeholder="Zip" #postalCode maxlength="5" [(ngModel)]="person.address.zip" name="zip" id="zip">
-            <mat-hint align="end">{{postalCode.value.length}} / 5</mat-hint>
-          </mat-form-field>
-        </td>
-      </tr>
-    </table>
-
-    <button mat-raised-button type="submit" color="primary" id="save"
-            [disabled]="!editForm.form.valid">Save</button>
-    <button mat-button (click)="cancel(); false" id="cancel">Cancel</button>
-  </form>
-</div>
+@if (person) {
+<h3>{{person.name}}</h3>
+<form (ngSubmit)="save()" #editForm="ngForm">
+  <div>
+    <label>Id:</label>
+    {{person.id}}
+  </div>
+  <<p>
+  <mat-form-field>
+    <input matInput [(ngModel)]="person.name" name="name" id="name" placeholder="Name" required/>
+  </mat-form-field>
+  </p>
+  <p>
+    <mat-form-field>
+      <input matInput [(ngModel)]="person.phone" name="phone" id="phone" placeholder="Phone"/>
+    </mat-form-field>
+  </p>
+  <table>
+    <tr>
+      <td>
+        <mat-form-field>
+          <input matInput placeholder="Address" [(ngModel)]="person.address.street" name="street" id="street">
+        </mat-form-field>
+      </td>
+      <td>
+        <mat-form-field>
+          <input matInput placeholder="City" [(ngModel)]="person.address.city" name="city" id="city">
+        </mat-form-field>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <mat-form-field>
+          <input matInput placeholder="State" #state [(ngModel)]="person.address.state" name="state" id="state" maxlength="2">
+        </mat-form-field>
+      </td>
+      <td>
+        <mat-form-field>
+          <input matInput placeholder="Zip" #postalCode maxlength="5" [(ngModel)]="person.address.zip" name="zip" id="zip">
+          <mat-hint align="end">{{postalCode.value.length}} / 5</mat-hint>
+        </mat-form-field>
+      </td>
+    </tr>
+  </table>
+  <button mat-raised-button type="submit" color="primary" id="save"
+          [disabled]="!editForm.form.valid">Save</button>
+  <button mat-button (click)="cancel(); false" id="cancel">Cancel</button>
+</form>
+}

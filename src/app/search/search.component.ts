@@ -1,12 +1,16 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { JsonPipe } from '@angular/common';
 import { Person, SearchService } from '../shared';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-search',
+  standalone: true,
+  imports: [FormsModule, JsonPipe, RouterLink],
   templateUrl: './search.component.html',
-  styleUrls: ['./search.component.css']
+  styleUrl: './search.component.css'
 })
 export class SearchComponent implements OnInit, OnDestroy {
   query!: string;
@@ -32,8 +36,11 @@ export class SearchComponent implements OnInit, OnDestroy {
 
   search(): void {
     this.searchService.search(this.query).subscribe({
-      next: (data: Person[]) => { this.searchResults = data },
-      error: (e) => console.log(e)
+      next: (data: Person[]) => {
+        this.searchResults = data;
+      },
+      error: error => console.log(error)
     });
   }
+
 }
