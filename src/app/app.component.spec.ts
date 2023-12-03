@@ -1,10 +1,22 @@
 import { TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
+import { AuthService } from '@auth0/auth0-angular';
 import { AppComponent } from './app.component';
 
 describe('AppComponent', () => {
+  let authServiceSpy: unknown;
+
   beforeEach(async () => {
+    authServiceSpy = jasmine.createSpyObj('AuthService', ['loginWithRedirect']);
     await TestBed.configureTestingModule({
-      imports: [AppComponent],
+      imports: [RouterTestingModule],
+      declarations: [],
+      providers: [
+        {
+          provide: AuthService,
+          useValue: authServiceSpy,
+        },
+      ],
     }).compileComponents();
   });
 
@@ -14,7 +26,7 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have the 'ng-demo' title`, () => {
+  it(`should have as title 'ng-demo'`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
     expect(app.title).toEqual('ng-demo');
