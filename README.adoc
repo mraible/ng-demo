@@ -1530,13 +1530,41 @@ A completed project with this code in it is available on GitHub at https://githu
 
 I hope you've enjoyed this in-depth tutorial on how to get started with Angular and Angular CLI. Angular CLI takes much of the pain out of setting up an Angular project and using Typescript. I expect great things from Angular CLI, mostly because the Angular setup process can be tedious and CLI greatly simplifies things.
 
-== Bonus: Angular Material, Bootstrap, Auth0, and Electron
+== Bonus: Bootstrap
 
-If you'd like to see how to integrate https://material.angular.io/[Angular Material], https://getbootstrap.com[Bootstrap], https://developer.auth0.com[Auth0], or https://www.electronjs.org/[Electron] this section is for you!
+To integrate Bootstrap and Bootstrap widgets into your Angular CLI-generated app, complete the following steps.
 
-I've created branches to show how to integrate each of these libraries. Click on the links below to see each branch's documentation.
+----
+ng add @ng-bootstrap/ng-bootstrap
+----
 
-* https://github.com/mraible/ng-demo/tree/angular-material#bonus-angular-material[Angular Material]
-* https://github.com/mraible/ng-demo/tree/bootstrap#bonus-bootstrap[Bootstrap]
-* https://github.com/mraible/ng-demo/tree/auth0#bonus-auth0[Auth0]
-* https://github.com/mraible/ng-demo/tree/electron#bonus-electron[Electron]
+This will install Bootstrap, NG Bootstrap, and `@angular/localize`. It will also configure Angular to use Bootstrap for CSS and import `NgbModule` in `app.module.ts`.
+
+Change HTML to use Bootstrap classes. For example, change `app.component.html` to be the following:
+
+[source,html]
+.src/app/app.component.html
+----
+<nav class="navbar navbar-light bg-secondary">
+  <div class="container-fluid">
+    <a class="navbar-brand text-light" href="#">Welcome to {{ title }}!</a>
+  </div>
+</nav>
+<div class="container-fluid">
+  <router-outlet></router-outlet>
+</div>
+----
+
+After modifying your HTML to match this branch, the edit screen will look as follows.
+
+[[bootstrap]]
+.Bootstrap
+image::src/assets/images/bootstrap.png[Bootstrap, 800, scaledwidth="100%"]
+
+The HTML templates and tests in the `bootstrap` branch have been changed to use Bootstrap. You can download them using the following command:
+
+----
+git clone -b bootstrap https://github.com/mraible/ng-demo.git
+----
+
+https://github.com/mraible/ng-demo/compare/main\...bootstrap[Click here to see the difference] between this branch and the main branch.
