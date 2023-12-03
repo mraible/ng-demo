@@ -1,12 +1,15 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Person, SearchService } from '../shared';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-edit',
+  standalone: true,
+  imports: [FormsModule],
   templateUrl: './edit.component.html',
-  styleUrls: ['./edit.component.css']
+  styleUrl: './edit.component.css'
 })
 export class EditComponent implements OnInit, OnDestroy {
   person!: Person;
@@ -47,7 +50,7 @@ export class EditComponent implements OnInit, OnDestroy {
 
   async gotoList() {
     if (this.person) {
-      await this.router.navigate(['/search', {term: this.person.name}]);
+      await this.router.navigate(['/search', {term: this.person.name} ]);
     } else {
       await this.router.navigate(['/search']);
     }
