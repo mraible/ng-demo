@@ -1700,7 +1700,7 @@ If you're using GitHub Actions to test your project, you'll need to update the C
 [source,yaml]
 ----
 - name: Run integration tests
-  uses: cypress-io/github-action@v5
+  uses: cypress-io/github-action@v6
   with:
     browser: chrome
     start: npm start
