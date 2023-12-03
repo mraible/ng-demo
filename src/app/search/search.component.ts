@@ -4,30 +4,24 @@ import { JsonPipe } from '@angular/common';
 import { Person, SearchService } from '../shared';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatButtonModule } from '@angular/material/button';
-import { MatInputModule } from '@angular/material/input';
 
 @Component({
-  imports: [FormsModule, JsonPipe, RouterLink, MatButtonModule,
-    MatIconModule,
-    MatInputModule,
-    MatListModule,
-    MatToolbarModule],
   selector: 'app-search',
   standalone: true,
-  styleUrl: './search.component.css',
-  templateUrl: './search.component.html'
+  imports: [FormsModule, JsonPipe, RouterLink, MatFormFieldModule, MatInputModule, MatIconModule, MatListModule],
+  templateUrl: './search.component.html',
+  styleUrl: './search.component.css'
 })
 export class SearchComponent implements OnInit, OnDestroy {
   query!: string;
   searchResults: Person[] = [];
   sub!: Subscription;
 
-  constructor(private searchService: SearchService, private route: ActivatedRoute) {
-  }
+  constructor(private searchService: SearchService, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
     this.sub = this.route.params.subscribe(params => {
@@ -52,5 +46,4 @@ export class SearchComponent implements OnInit, OnDestroy {
       error: error => console.log(error)
     });
   }
-
 }
