@@ -452,6 +452,7 @@ Now clicking the search button should work. To make the results look better, rem
   }
   </tbody>
 </table>
+}
 ----
 
 Then add some additional CSS to `search.component.css` to improve its table layout.
