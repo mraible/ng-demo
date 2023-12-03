@@ -1,11 +1,11 @@
 <div>
-  @if (auth.user$ | async; as user) {
+@if (auth.user$ | async; as user) {
   <h2>Welcome, {{user?.name}}!</h2>
-    <p><a routerLink="/search" routerLinkActive="active">Search</a></p>
-  }
-  @if ((auth.isAuthenticated$ | async) === false) {
-  <button (click)="login()">Login</button>
-  } @else {
-  <button (click)="logout()">Logout</button>
-  }
+  <p><a routerLink="/search" routerLinkActive="active">Search</a></p>
+}
+@if ((auth.isAuthenticated$ | async) === false) {
+  <button (click)="login()" id="login">Login</button>
+} @else {
+  <button (click)="logout()" id="logout">Logout</button>
+}
 </div>
