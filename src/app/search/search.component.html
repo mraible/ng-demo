@@ -8,7 +8,8 @@
     <button type="button" (click)="search()" class="btn btn-primary">Search</button>
   </div>
 </form>
-<table *ngIf="searchResults?.length" class="table">
+@if (searchResults.length) {
+<table class="table">
   <thead>
   <tr>
     <th>Name</th>
@@ -17,12 +18,15 @@
   </tr>
   </thead>
   <tbody>
-  <tr *ngFor="let person of searchResults; let i=index">
+  @for (person of searchResults; track person; let i = $index) {
+  <tr>
     <td><a [routerLink]="['/edit', person.id]">{{person.name}}</a></td>
     <td>{{person.phone}}</td>
     <td>{{person.address.street}}<br/>
       {{person.address.city}}, {{person.address.state}} {{person.address.zip}}
     </td>
   </tr>
+  }
   </tbody>
 </table>
+}

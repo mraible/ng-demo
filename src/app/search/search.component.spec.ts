@@ -18,7 +18,7 @@ describe('SearchComponent', () => {
     mockActivatedRoute = new MockActivatedRoute({term: 'nikola'});
 
     await TestBed.configureTestingModule({
-      declarations: [SearchComponent],
+      declarations: [],
       providers: [
         {provide: ActivatedRoute, useValue: mockActivatedRoute}
       ],
