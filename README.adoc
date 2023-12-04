@@ -676,7 +676,7 @@ export class EditComponent implements OnInit, OnDestroy {
 
   async gotoList() {
     if (this.person) {
-      await this.router.navigate(['/search', {term: this.person.name} ]);
+      await this.router.navigate(['/search', {term: this.person.name}]);
     } else {
       await this.router.navigate(['/search']);
     }
@@ -1539,37 +1539,27 @@ ng add @angular/material
 
 When prompted for the theme, pick the one you prefer, using the links to preview them. Accept the defaults for the other questions.
 
-Add the relevant Material modules as imports in `app.module.ts`:
-
-[source,javascript]
-.src/app/app.module.ts
-----
-import { MatButtonModule } from '@angular/material/button';
-import { MatListModule } from '@angular/material/list';
-import { MatInputModule } from '@angular/material/input';
-import { MatIconModule } from '@angular/material/icon';
-import { MatToolbarModule } from '@angular/material/toolbar';
-
-@NgModule({
-  ...
-  imports: [
-    ...
-    MatButtonModule,
-    MatIconModule,
-    MatInputModule,
-    MatListModule,
-    MatToolbarModule
-  ],
-  ...
-})
-----
-
-Change HTML templates to use Material components. For example, change `<h1>` in `app.component.html` to be `<mat-toolbar>`.
+Change your HTML templates to use Material components. For example, change `<h1>` in `app.component.html` to be `<mat-toolbar>`.
 
 [source,html]
 .src/app/app.component.html
 ----
 <mat-toolbar>Welcome to {{ title }}!</mat-toolbar>
+----
+
+You'll need to import the `MatToolbarModule` in `app.component.ts` for it to compile.
+
+[source,typescript]
+----
+import { MatToolbarModule } from '@angular/material/toolbar';
+
+@Component({
+  selector: 'app-root',
+  standalone: true,
+  imports: [CommonModule, RouterOutlet, MatToolbarModule],
+  templateUrl: './app.component.html',
+  styleUrl: './app.component.css'
+})
 ----
 
 After modifying your templates to match this branch, the edit screen will look as follows.

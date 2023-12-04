@@ -5,10 +5,10 @@
     <label>Id:</label>
     {{person.id}}
   </div>
-  <<p>
-  <mat-form-field>
-    <input matInput [(ngModel)]="person.name" name="name" id="name" placeholder="Name" required/>
-  </mat-form-field>
+  <p>
+    <mat-form-field>
+      <input matInput [(ngModel)]="person.name" name="name" id="name" placeholder="Name" required/>
+    </mat-form-field>
   </p>
   <p>
     <mat-form-field>
@@ -42,6 +42,7 @@
       </td>
     </tr>
   </table>
+
   <button mat-raised-button type="submit" color="primary" id="save"
           [disabled]="!editForm.form.valid">Save</button>
   <button mat-button (click)="cancel(); false" id="cancel">Cancel</button>
