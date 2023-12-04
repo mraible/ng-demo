@@ -34,6 +34,7 @@
     "@angular/cli": "^17.0.5",
     "@angular/compiler-cli": "^17.0.0",
     "@cypress/schematic": "^2.5.1",
+    "@oktadev/schematics": "^7.0.0",
     "@types/jasmine": "~5.1.0",
     "concurrently": "^8.2.2",
     "cypress": "latest",

@@ -1556,7 +1556,7 @@ This process will perform the following steps for you:
 2. Update `src/app/app.config.ts` with your OIDC configuration and initialization logic.
 3. Configure an `AuthHttpInterceptor` that adds an `Authorization` header with an access token to outbound requests.
 4. Create a `HomeComponent` and configure it with authentication logic.
-5. Update unit tests for `AppComponent` and `HomeComponent` to mock Auth0.
+5. Update the unit test for `AppComponent` to mock Auth0.
 
 Update `app.routes.ts` to add a route guard to the `/search` and `/edit` routes.
 
@@ -1564,6 +1564,8 @@ Update `app.routes.ts` to add a route guard to the `/search` and `/edit` routes.
 .src/app/app-routing.ts
 ----
 import { AuthGuard } from '@auth0/auth0-angular';
+import { SearchComponent } from './search/search.component';
+import { EditComponent } from './edit/edit.component';
 
 export const routes: Routes = [
   ...
@@ -1614,7 +1616,21 @@ Modify `home.component.html` to display a welcome message to the user and provid
   <button (click)="logout()" id="logout">Logout</button>
 }
 </div>
+----
 
+You'll also need to import `RouterLink` in `home.component.ts`.
+
+[source,html]
+.src/app/home/home.component.ts
+----
+import { RouterLink } from '@angular/router';
+
+@Component({
+  standalone: true,
+  selector: 'app-home',
+  imports: [AsyncPipe, RouterLink],
+  ...
+})
 ----
 
 Refresh your app, and you should see your name with a link to *Search*.

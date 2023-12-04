@@ -36,3 +36,9 @@ jobs:
           CYPRESS_E2E_DOMAIN: ${{ secrets.E2E_DOMAIN }}
           CYPRESS_E2E_USERNAME: ${{ secrets.E2E_USERNAME }}
           CYPRESS_E2E_PASSWORD: ${{ secrets.E2E_PASSWORD }}
+      - name: Upload screenshots on failure
+        if: failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: cypress-screenshots
+          path: cypress/screenshots
