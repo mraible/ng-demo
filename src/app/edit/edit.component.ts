@@ -2,11 +2,14 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Person, SearchService } from '../shared';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-edit',
+  standalone: true,
+  imports: [FormsModule],
   templateUrl: './edit.component.html',
-  styleUrls: ['./edit.component.css']
+  styleUrl: './edit.component.css'
 })
 export class EditComponent implements OnInit, OnDestroy {
   person!: Person;
@@ -19,7 +22,7 @@ export class EditComponent implements OnInit, OnDestroy {
 
   async ngOnInit(): Promise<void> {
     this.sub = this.route.params.subscribe(params => {
-      const id = + params['id']; // (+) converts string 'id' to a number
+      const id = +params['id']; // (+) converts string 'id' to a number
       this.service.get(id).subscribe(person => {
         if (person) {
           this.person = person;

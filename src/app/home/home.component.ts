@@ -1,9 +1,12 @@
 import { Component, Inject } from '@angular/core';
 import { AuthService } from '@auth0/auth0-angular';
-import { DOCUMENT } from '@angular/common';
+import { AsyncPipe, DOCUMENT } from '@angular/common';
+import { RouterLink } from '@angular/router';
 
 @Component({
+  standalone: true,
   selector: 'app-home',
+  imports: [AsyncPipe, RouterLink],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })

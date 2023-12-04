@@ -1,26 +1,24 @@
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
+import { AuthService } from '@auth0/auth0-angular';
 import { AppComponent } from './app.component';
-import { AuthModule } from '@auth0/auth0-angular';
 
 describe('AppComponent', () => {
-  const config = {
-    domain: 'https://not-real.auth0.com',
-    clientId: 'fake-client-id',
-    redirectUri: 'http://localhost:4200'
-  };
+  let authServiceSpy: unknown;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [
-        RouterTestingModule,
-        AuthModule.forRoot(config)
+  beforeEach(async () => {
+    authServiceSpy = jasmine.createSpyObj('AuthService', ['loginWithRedirect']);
+    await TestBed.configureTestingModule({
+      imports: [RouterTestingModule],
+      declarations: [],
+      providers: [
+        {
+          provide: AuthService,
+          useValue: authServiceSpy,
+        },
       ],
-      declarations: [
-        AppComponent
-      ]
     }).compileComponents();
-  }));
+  });
 
   it('should create the app', () => {
     const fixture = TestBed.createComponent(AppComponent);
