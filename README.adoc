@@ -2,10 +2,10 @@
 
 :author: Matt Raible
 :email:  matt@raibledesigns.com
-:revnumber: 15.1
+:revnumber: 17.0.0
 :revdate: {docdate}
 :subject: Angular and Angular CLI
-:keywords: Angular, Angular CLI, TypeScript, JavaScript, Node, npm, Jasmine, Protractor
+:keywords: Angular, Angular CLI, TypeScript, JavaScript, Node, npm, Jasmine, Cypress
 :icons: font
 :lang: en
 :language: javadocript
@@ -33,11 +33,9 @@ endif::[]
 IMPORTANT: For a book of this tutorial, please check out https://www.infoq.com/minibooks/angular-mini-book/[The Angular Mini-Book]. Its "Build an Angular App" chapter was inspired by this tutorial.
 
 This tutorial shows you how to build a bare-bones search and edit application using https://angular.io[Angular] and
-https://github.com/angular/angular-cli[Angular CLI] version 15.
+https://github.com/angular/angular-cli[Angular CLI] version 17.
 
 toc::[]
-
-// For older versions of Angular, please see previous tutorials: https://github.com/mraible/ng-demo/blob/0dd604537e18b3ccf1f707d45af54b418a574954/README.adoc[Angular 10], https://github.com/mraible/ng-demo/blob/bec5fdf3b3da0419b012971ab42870df03ce94ea/README.adoc[Angular 9], https://github.com/mraible/ng-demo/blob/6a24488ca847dea215ad70101a22f3ebf67ba79a/README.adoc[Angular 7], https://github.com/mraible/ng-demo/blob/41d9526dbc0a35131118f7f101938dfe75a0e212/README.adoc[Angular 6], and https://github.com/mraible/ng-demo/blob/662159470802c53f445db6393576c0926e31d642/README.adoc[Angular 5].
 
 ifdef::env-github[]
 TIP: It appears you're reading this document on GitHub. If you want a prettier view, install https://chrome.google.com/webstore/detail/asciidoctorjs-live-previe/iaalpfgpbocpdfblpnhhgllgbdbchmia[Asciidoctor.js Live Preview for Chrome], then view the https://raw.githubusercontent.com/mraible/ng-demo/main/README.adoc?toc=left[raw document]. Another option is to use the https://gist.asciidoctor.org/?github-mraible%2Fng-demo%2Fmain%2F%2FREADME.adoc[DocGist view].
@@ -64,7 +62,7 @@ You'll build a simple web application with Angular CLI, a tool for Angular devel
 If you don't have Angular CLI installed, install it:
 
 ----
-npm install -g @angular/cli@15
+npm install -g @angular/cli@17
 ----
 
 NOTE: IntelliJ IDEA Ultimate Edition has the best support for TypeScript. If you'd rather not pay for your IDE, checkout https://code.visualstudio.com/[Visual Studio Code].
@@ -77,7 +75,7 @@ Create a new project using the `ng new` command:
 ng new ng-demo
 ----
 
-When prompted to install Angular routing, type "`Y`". For the stylesheet format, choose "`CSS`" (the default).
+When prompted for the stylesheet format, choose "`CSS`" (the default). Accept the default (No) for SSR (Server-Side Rendering) and SSG (Static Site Generation).
 
 This will create a `ng-demo` project and run `npm install` in it. It takes about a minute to complete, but will vary based on your internet connection speed.
 
@@ -86,17 +84,9 @@ You can see the version of Angular CLI you're using with the `ng version` comman
 ----
 $ ng version
 
-     _                      _                 ____ _     ___
-    / \   _ __   __ _ _   _| | __ _ _ __     / ___| |   |_ _|
-   / △ \ | '_ \ / _` | | | | |/ _` | '__|   | |   | |    | |
-  / ___ \| | | | (_| | |_| | | (_| | |      | |___| |___ | |
- /_/   \_\_| |_|\__, |\__,_|_|\__,_|_|       \____|_____|___|
-                |___/
-
-
-Angular CLI: 15.1.6
-Node: 18.14.0
-Package Manager: npm 9.3.1
+Angular CLI: 17.0.5
+Node: 18.18.2
+Package Manager: npm 9.8.1
 OS: darwin arm64
 
 Angular:
@@ -104,31 +94,31 @@ Angular:
 
 Package                      Version
 ------------------------------------------------------
-@angular-devkit/architect    0.1501.6 (cli-only)
-@angular-devkit/core         15.1.6 (cli-only)
-@angular-devkit/schematics   15.1.6 (cli-only)
-@schematics/angular          15.1.6 (cli-only)
+@angular-devkit/architect    0.1700.5 (cli-only)
+@angular-devkit/core         17.0.5 (cli-only)
+@angular-devkit/schematics   17.0.5 (cli-only)
+@schematics/angular          17.0.5 (cli-only)
 ----
 
 If you run this command from the `ng-demo` directory, you'll see even more information.
 
 ----
-....
+...
 
-Angular: 15.1.5
-... animations, common, compiler, compiler-cli, core, forms
+Angular: 17.0.5
+... animations, cli, common, compiler, compiler-cli, core, forms
 ... platform-browser, platform-browser-dynamic, router
 
 Package                         Version
 ---------------------------------------------------------
-@angular-devkit/architect       0.1501.6
-@angular-devkit/build-angular   15.1.6
-@angular-devkit/core            15.1.6
-@angular-devkit/schematics      15.1.6
-@angular/cli                    15.1.6
-@schematics/angular             15.1.6
-rxjs                            7.8.0
-typescript                      4.9.5
+@angular-devkit/architect       0.1700.5
+@angular-devkit/build-angular   17.0.5
+@angular-devkit/core            17.0.5
+@angular-devkit/schematics      17.0.5
+@schematics/angular             17.0.5
+rxjs                            7.8.1
+typescript                      5.2.2
+zone.js                         0.14.2
 ----
 
 == Run the application
@@ -150,7 +140,7 @@ You can make sure your new project's tests pass, run `ng test`:
 ----
 $ ng test
 ...
-...: Executed 3 of 3 SUCCESS (0.061 secs / 0.055 secs)
+...: Executed 3 of 3 SUCCESS (0.048 secs / 0.044 secs)
 ----
 
 == Add a search feature
@@ -159,7 +149,7 @@ To add a search feature, open the project in an IDE or your favorite text editor
 
 === The Basics
 
-In a terminal window, cd into your project's directory and run the following command to create a search component.
+In a terminal window, cd into the `ng-demo` directory and run the following command to create a search component.
 
 [source]
 ----
@@ -197,14 +187,15 @@ export class SearchComponent implements OnInit {
 }
 ----
 
-In `src/app/app-routing.module.ts`, modify the `routes` constant to add `SearchComponent` as the default:
+In `src/app/app.routes.ts`, modify the `routes` constant to add `SearchComponent` as the default:
 
 [source,typescript]
-.src/app/app-routing.module.ts
+.src/app/app.routes.ts
 ----
+import { Routes } from '@angular/router';
 import { SearchComponent } from './search/search.component';
 
-const routes: Routes = [
+export const routes: Routes = [
   { path: 'search', component: SearchComponent },
   { path: '', redirectTo: '/search', pathMatch: 'full' }
 ];
@@ -213,26 +204,26 @@ const routes: Routes = [
 Run `ng serve` again you will see a compilation error.
 
 ----
-ERROR in src/app/search/search.component.html:3:37 - error NG8002:
- Can't bind to 'ngModel' since it isn't a known property of 'input'.
+⠹ Building...✘ [ERROR] NG8002: Can't bind to 'ngModel' since it
+  isn't a known property of 'input'. [plugin angular-compiler]
 ----
 
-To solve this, open `src/app/app.module.ts` and add `FormsModule` as an import in `@NgModule`:
+To solve this, open `search.component.ts`. Import `FormsModule` and `JsonPipe`:
 
 [source,typescript]
-.src/app/app.module.ts
+.src/app/search/search.component.ts
 ----
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { JsonPipe } from '@angular/common';
 
-@NgModule({
-  ...
-  imports: [
-    ...
-    FormsModule
-  ]
-  ...
+@Component({
+  selector: 'app-search',
+  standalone: true,
+  imports: [FormsModule, JsonPipe],
+  templateUrl: './search.component.html',
+  styleUrl: './search.component.css'
 })
-export class AppModule { }
 ----
 
 Now you should be able to see the search form.
@@ -420,33 +411,28 @@ search(): void {
 At this point, if your app is running, you'll see the following message in your browser's console.
 
 ----
-NullInjectorError: No provider for HttpClient!
+NullInjectorError: No provider for _HttpClient!
 ----
 
-To fix the "`No provider`" error from above, update `app.module.ts` to import `HttpClientModule`.
+To fix the "`No provider`" error from above, update `app.config.ts` to import and use `provideHttpClient`.
 
 [source,typescript]
-.src/app/app.module.ts
+.src/app/app.config.ts
 ----
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient } from '@angular/common/http';
 
-@NgModule({
-  ...
-  imports: [
-    ...
-    HttpClientModule
-  ],
-  providers: [],
-  bootstrap: [AppComponent]
-})
+export const appConfig: ApplicationConfig = {
+  providers: [provideRouter(routes), provideHttpClient()]
+};
 ----
 
-Now clicking the search button should work. To make the results look better, remove the `<pre>` tag and replace it with a `<table>` in `search.component.html`.
+Now clicking the search button should work. To make the results look better, remove the `<pre>` tag and replace it with the following in `search.component.html`.
 
 [source,xml]
 .src/app/search/search.component.html
 ----
-<table *ngIf="searchResults?.length">
+@if (searchResults.length) {
+<table>
   <thead>
   <tr>
     <th>Name</th>
@@ -455,15 +441,18 @@ Now clicking the search button should work. To make the results look better, rem
   </tr>
   </thead>
   <tbody>
-  <tr *ngFor="let person of searchResults; let i=index">
+  @for (person of searchResults; track person; let i = $index) {
+  <tr>
     <td>{{person.name}}</td>
     <td>{{person.phone}}</td>
     <td>{{person.address.street}}<br/>
       {{person.address.city}}, {{person.address.state}} {{person.address.zip}}
     </td>
   </tr>
+  }
   </tbody>
 </table>
+}
 ----
 
 Then add some additional CSS to `search.component.css` to improve its table layout.
@@ -534,8 +523,9 @@ This won't compile right away.
 
 [source,shell]
 ----
-Error: src/app/search/search.component.ts:19:31 - error TS2345:
- Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+[ERROR] TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'. [plugin angular-compiler]
+
 ----
 
 Since `query` will always be assigned (even if it's empty), change its variable declaration to:
@@ -561,6 +551,21 @@ Modify `search.component.html` to wrap the person's name with a link.
 <td><a [routerLink]="['/edit', person.id]">{{person.name}}</a></td>
 ----
 
+Add `RouterLink` as an import to `search.component.ts` so everything will compile:
+
+[source,typescript]
+.src/app/search/search.component.ts
+----
+import { RouterLink } from '@angular/router';
+
+@Component({
+  selector: 'app-search',
+  standalone: true,
+  imports: [FormsModule, JsonPipe, RouterLink],
+  ...
+})
+----
+
 Run the following command to generate an `EditComponent`.
 
 [source]
@@ -568,10 +573,10 @@ Run the following command to generate an `EditComponent`.
 ng g component edit
 ----
 
-Add a route for this component in `app-routing.module.ts`:
+Add a route for this component in `app.routes.ts`:
 
 [source,typescript]
-.src/app/app-routing.module.ts
+.src/app/app.routes.ts
 ----
 import { EditComponent } from './edit/edit.component';
 
@@ -587,8 +592,8 @@ Update `src/app/edit/edit.component.html` to display an editable form. You might
 [source,html]
 .src/app/edit/edit.component.html
 ----
-<div *ngIf="person">
-  <h3>{{person.name}}</h3>
+@if (person) {
+<h3>{{person.name}}</h3>
   <div>
     <label>Id:</label>
     {{person.id}}
@@ -612,7 +617,7 @@ Update `src/app/edit/edit.component.html` to display an editable form. You might
   </fieldset>
   <button (click)="save()" id="save">Save</button>
   <button (click)="cancel()" id="cancel">Cancel</button>
-</div>
+}
 ----
 
 Modify `EditComponent` to import model and service classes and to use the `SearchService` to get data.
@@ -620,15 +625,18 @@ Modify `EditComponent` to import model and service classes and to use the `Searc
 [source,typescript]
 .src/app/edit/edit.component.ts
 ----
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Person, SearchService } from '../shared';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-edit',
+  standalone: true,
+  imports: [FormsModule],
   templateUrl: './edit.component.html',
-  styleUrls: ['./edit.component.css']
+  styleUrl: './edit.component.css'
 })
 export class EditComponent implements OnInit, OnDestroy {
   person!: Person;
@@ -669,7 +677,7 @@ export class EditComponent implements OnInit, OnDestroy {
 
   async gotoList() {
     if (this.person) {
-      await this.router.navigate(['/search', {term: this.person.name} ]);
+      await this.router.navigate(['/search', {term: this.person.name}]);
     } else {
       await this.router.navigate(['/search']);
     }
@@ -751,7 +759,7 @@ Since the `SearchComponent` doesn't execute a search automatically when you exec
 [source,typescript]
 .src/app/search/search.component.ts
 ----
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Subscription } from 'rxjs';
 ...
 
@@ -1044,7 +1052,7 @@ describe('SearchComponent', () => {
     mockActivatedRoute = new MockActivatedRoute({term: 'nikola'});
 
     await TestBed.configureTestingModule({
-      declarations: [SearchComponent],
+      declarations: [],
       providers: [
         {provide: ActivatedRoute, useValue: mockActivatedRoute}
       ],
@@ -1111,7 +1119,7 @@ describe('EditComponent', () => {
     mockRouter = new MockRouter();
 
     await TestBed.configureTestingModule({
-      declarations: [EditComponent],
+      declarations: [],
       providers: [
         {provide: ActivatedRoute, useValue: mockActivatedRoute},
         {provide: Router, useValue: mockRouter}
@@ -1160,7 +1168,7 @@ You can use the official https://www.npmjs.com/package/@cypress/schematic[Cypres
 ng add @cypress/schematic
 ----
 
-When prompted to proceed and use Cypress for `ng e2e`, answer "`Yes`".
+When prompted to proceed and use Cypress for `ng e2e` and component testing, answer "`Yes`".
 
 This will add Cypress as a dependency and create configuration files to work with Angular and TypeScript. Rename `cypress/e2e/spec.cy.ts` to `home.cy.ts` and change it to look for the title of your app.
 
@@ -1176,7 +1184,7 @@ describe('Home', () => {
 })
 ----
 
-Then, run `ng e2e`. This will compile your app, start it on `http://localhost:4200`, and launch the Cypress Electron app.
+Then, run `ng e2e`. This will compile your app, start it on `http://localhost:4200`, and launch the Cypress Electron app. When prompted to choose a browser, select *Electron*.
 
 .Cypress Electron App
 image::ng-demo/cypress-electron-app.png[Cypress Electron App, 800, scaledwidth="100%", align=center]
@@ -1316,10 +1324,10 @@ You'll see a print out of code coverage in your terminal window.
 
 ----
 =============================== Coverage summary ===============================
-Statements   : 79.41% ( 54/68 )
-Branches     : 76.31% ( 29/38 )
+Statements   : 81.96% ( 50/61 )
+Branches     : 70% ( 21/30 )
 Functions    : 83.33% ( 25/30 )
-Lines        : 78.46% ( 51/65 )
+Lines        : 81.03% ( 47/58 )
 ================================================================================
 ----
 
@@ -1353,9 +1361,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Use Node 18
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 18
       - name: Install latest Chrome
@@ -1368,7 +1376,7 @@ jobs:
       - name: Run unit tests
         run: xvfb-run npm test -- --watch=false
       - name: Run integration tests
-        uses: cypress-io/github-action@v5
+        uses: cypress-io/github-action@v6
         with:
           browser: chrome
           start: npm start

@@ -3,7 +3,8 @@
   <input type="search" name="query" [(ngModel)]="query" (keyup.enter)="search()">
   <button type="button" (click)="search()">Search</button>
 </form>
-<table *ngIf="searchResults?.length">
+@if (searchResults.length) {
+<table>
   <thead>
   <tr>
     <th>Name</th>
@@ -12,12 +13,15 @@
   </tr>
   </thead>
   <tbody>
-  <tr *ngFor="let person of searchResults; let i=index">
+  @for (person of searchResults; track person; let i = $index) {
+  <tr>
     <td><a [routerLink]="['/edit', person.id]">{{person.name}}</a></td>
     <td>{{person.phone}}</td>
     <td>{{person.address.street}}<br/>
       {{person.address.city}}, {{person.address.state}} {{person.address.zip}}
     </td>
   </tr>
+  }
   </tbody>
 </table>
+}

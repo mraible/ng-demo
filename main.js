@@ -1,6 +1,6 @@
 const { app, BrowserWindow } = require('electron')
 const url = require('url');
-const path = require('path');
+const path = require('node:path');
 
 let mainWindow
 
@@ -13,15 +13,10 @@ function createWindow () {
     }
   })
 
-  mainWindow.loadURL(
-    url.format({
-      pathname: path.join(__dirname, `/dist/ng-demo/index.html`),
-      protocol: "file:",
-      slashes: true
-    })
-  );
+  mainWindow.loadFile(`dist/ng-demo/browser/index.html`);
+
   // Uncomment if you want to open Chrome DevTools by default
-  // mainWindow.webContents.openDevTools()
+  mainWindow.webContents.openDevTools()
 
   mainWindow.on('closed', function () {
     mainWindow = null
