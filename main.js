@@ -13,7 +13,7 @@ function createWindow () {
     }
   })
 
-  mainWindow.loadFile(`dist/ng-demo/browser/index.html`);
+  mainWindow.loadFile(`${__dirname}/dist/ng-demo/browser/index.html`)
 
   // Uncomment if you want to open Chrome DevTools by default
   mainWindow.webContents.openDevTools()
