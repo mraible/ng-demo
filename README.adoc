@@ -1381,10 +1381,8 @@ jobs:
           browser: chrome
           start: npm start
           install: false
-          wait-on: http://[::1]:4200
+          wait-on: http://localhost:4200
 ----
-
-TIP: See https://github.com/cypress-io/github-action/issues/634[issue #634] for more information on the strange syntax for `wait-on`.
 
 Check it in on a branch, create a pull request for that branch, and you should see your tests running.
 
