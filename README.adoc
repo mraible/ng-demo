@@ -46,6 +46,8 @@ endif::[]
 If you'd like to get right to it, the https://github.com/mraible/ng-demo[source is on GitHub]. To run the app, use `ng serve`. To test it, run `ng test`. To run its integration tests, run `ng e2e`.
 ****
 
+Check out the *bonus section* at the end of this document for Angular Material, Bootstrap, Auth0, and Electron tutorials.
+
 toc::[]
 
 == What you'll build
@@ -1381,10 +1383,8 @@ jobs:
           browser: chrome
           start: npm start
           install: false
-          wait-on: http://[::1]:4200
+          wait-on: http://localhost:4200
 ----
-
-TIP: See https://github.com/cypress-io/github-action/issues/634[issue #634] for more information on the strange syntax for `wait-on`.
 
 Check it in on a branch, create a pull request for that branch, and you should see your tests running.
 
