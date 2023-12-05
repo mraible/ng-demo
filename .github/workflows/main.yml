@@ -28,10 +28,9 @@ jobs:
       - name: Run integration tests
         uses: cypress-io/github-action@v6
         with:
-          browser: chrome
           start: npm start
           install: false
-          wait-on: http://[::1]:4200
+          wait-on: http://localhost:4200
         env:
           CYPRESS_E2E_DOMAIN: ${{ secrets.E2E_DOMAIN }}
           CYPRESS_E2E_USERNAME: ${{ secrets.E2E_USERNAME }}
