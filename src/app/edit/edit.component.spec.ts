@@ -17,7 +17,7 @@ describe('EditComponent', () => {
     mockRouter = new MockRouter();
 
     await TestBed.configureTestingModule({
-      declarations: [EditComponent],
+      declarations: [],
       providers: [
         {provide: ActivatedRoute, useValue: mockActivatedRoute},
         {provide: Router, useValue: mockRouter}
