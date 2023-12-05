@@ -46,8 +46,6 @@ endif::[]
 If you'd like to get right to it, the https://github.com/mraible/ng-demo[source is on GitHub]. To run the app, use `ng serve`. To test it, run `ng test`. To run its integration tests, run `ng e2e`.
 ****
 
-Check out the *bonus section* at the end of this document for Angular Material, Bootstrap, Auth0, and Electron tutorials.
-
 toc::[]
 
 == What you'll build
