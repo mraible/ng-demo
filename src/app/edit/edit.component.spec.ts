@@ -5,7 +5,8 @@ import { MockActivatedRoute, MockRouter } from '../shared/search/mocks/routes';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { of } from 'rxjs';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('EditComponent', () => {
   let mockSearchService: SearchService;
@@ -17,13 +18,15 @@ describe('EditComponent', () => {
     mockRouter = new MockRouter();
 
     await TestBed.configureTestingModule({
-      declarations: [],
-      providers: [
-        {provide: ActivatedRoute, useValue: mockActivatedRoute},
-        {provide: Router, useValue: mockRouter}
-      ],
-      imports: [FormsModule, HttpClientTestingModule]
-    }).compileComponents();
+    declarations: [],
+    imports: [FormsModule],
+    providers: [
+        { provide: ActivatedRoute, useValue: mockActivatedRoute },
+        { provide: Router, useValue: mockRouter },
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
+    ]
+}).compileComponents();
 
     mockSearchService = TestBed.inject(SearchService);
   });
