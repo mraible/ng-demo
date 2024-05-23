@@ -19,14 +19,14 @@ describe('SearchComponent', () => {
     mockActivatedRoute = new MockActivatedRoute({term: 'nikola'});
 
     await TestBed.configureTestingModule({
-    declarations: [],
-    imports: [FormsModule, RouterTestingModule],
-    providers: [
-        { provide: ActivatedRoute, useValue: mockActivatedRoute },
+      declarations: [],
+      imports: [FormsModule, RouterTestingModule],
+      providers: [
+        {provide: ActivatedRoute, useValue: mockActivatedRoute},
         provideHttpClient(withInterceptorsFromDi()),
         provideHttpClientTesting()
-    ]
-}).compileComponents();
+      ]
+    }).compileComponents();
   });
 
   beforeEach(() => {

@@ -9,9 +9,9 @@ describe('SearchService', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [],
-    providers: [SearchService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-});
+      imports: [],
+      providers: [SearchService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+    });
 
     service = TestBed.inject(SearchService);
     httpMock = TestBed.inject(HttpTestingController);

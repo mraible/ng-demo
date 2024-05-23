@@ -18,15 +18,15 @@ describe('EditComponent', () => {
     mockRouter = new MockRouter();
 
     await TestBed.configureTestingModule({
-    declarations: [],
-    imports: [FormsModule],
-    providers: [
-        { provide: ActivatedRoute, useValue: mockActivatedRoute },
-        { provide: Router, useValue: mockRouter },
+      declarations: [],
+      imports: [FormsModule],
+      providers: [
+        {provide: ActivatedRoute, useValue: mockActivatedRoute},
+        {provide: Router, useValue: mockRouter},
         provideHttpClient(withInterceptorsFromDi()),
         provideHttpClientTesting()
-    ]
-}).compileComponents();
+      ]
+    }).compileComponents();
 
     mockSearchService = TestBed.inject(SearchService);
   });
