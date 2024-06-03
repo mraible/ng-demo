@@ -1,15 +1,16 @@
 import { TestBed } from '@angular/core/testing';
 import { SearchService } from './search.service';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('SearchService', () => {
   let service: SearchService;
   let httpMock: HttpTestingController;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      providers: [SearchService]
+    TestBed.configureTestingModule({
+      imports: [],
+      providers: [SearchService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
     });
 
     service = TestBed.inject(SearchService);
