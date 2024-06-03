@@ -17,7 +17,7 @@ describe('EditComponent', () => {
     mockActivatedRoute = new MockActivatedRoute({id: 1});
     mockRouter = new MockRouter();
 
-    await TestBed.configureTestingModule({
+    TestBed.configureTestingModule({
       declarations: [],
       imports: [FormsModule],
       providers: [

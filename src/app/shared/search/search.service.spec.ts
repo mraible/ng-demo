@@ -8,7 +8,7 @@ describe('SearchService', () => {
   let httpMock: HttpTestingController;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
+    TestBed.configureTestingModule({
       imports: [],
       providers: [SearchService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
     });

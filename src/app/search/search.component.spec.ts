@@ -18,7 +18,7 @@ describe('SearchComponent', () => {
   beforeEach(async () => {
     mockActivatedRoute = new MockActivatedRoute({term: 'nikola'});
 
-    await TestBed.configureTestingModule({
+    TestBed.configureTestingModule({
       declarations: [],
       imports: [FormsModule, RouterTestingModule],
       providers: [
