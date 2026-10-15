@@ -53,6 +53,10 @@ Add `provideAuth0()` to `src/app/app.config.ts` with your domain and client ID.
 @@show auth0~2 src/app/app.config.ts@@
 ----
 
+By default, the SDK keeps tokens in memory, and when you reload the page, it checks if you're logged in with a hidden iframe on your Auth0 domain. Many browsers block the third-party cookies that iframe needs (in this project's CI, headless Chrome did), so you'd be logged out every time you reload. Setting `useRefreshTokens: true` and `cacheLocation: 'localstorage'` keeps you logged in by storing a refresh token in `localStorage` instead. Make sure your Auth0 app has https://auth0.com/docs/secure/tokens/refresh-tokens/refresh-token-rotation[refresh token rotation] turned on, which limits the damage if a refresh token is stolen. You can check with `auth0 apps show <client-id> --json` and look for `"rotation_type": "rotating"`.
+
+WARNING: Anything in `localStorage` can be read by JavaScript on your page, so this makes cross-site scripting (XSS) more dangerous. Angular escapes values in templates by default, and the strict CSP in `netlify.toml` blocks inline scripts, which both help.
+
 NOTE: The domain and client ID aren't secrets. They're visible to anyone who uses your app, which is why single-page apps use the https://auth0.com/docs/get-started/authentication-and-authorization-flow/authorization-code-flow-with-pkce[Authorization Code Flow with PKCE] instead of a client secret.
 
 Generate a home component.
