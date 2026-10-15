@@ -42,7 +42,7 @@ Install the Auth0 Angular SDK.
 
 [source,shell]
 ----
-npm install @auth0/auth0-angular
+npm install --save-exact @auth0/auth0-angular@2.13.0
 ----
 
 Add `provideAuth0()` to `src/app/app.config.ts` with your domain and client ID.
@@ -137,6 +137,8 @@ Click it, and you'll be redirected to Auth0 to log in.
 [[auth0-login-form]]
 .Auth0 login page
 image::static/auth0-login-form.png[Auth0 login page, 800, scaledwidth="100%"]
+
+NOTE: If your tenant's Google connection uses Auth0's development keys, Auth0 shows a red warning icon in the top-right corner of this page. It's been removed from the screenshot above. To make it go away, add your own Google client ID and secret to the connection, or disable it. See https://auth0.com/docs/authenticate/identity-providers/social-identity-providers/devkeys[Test Social Connections with Auth0 Developer Keys] for more information.
 
 Sign up or log in, and you'll be redirected back to your app with a welcome message and a link to *Search*.
 
