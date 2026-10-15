@@ -4,7 +4,6 @@ import { map, Observable } from 'rxjs';
 
 @Service()
 export class SearchService {
-
   private readonly http = inject(HttpClient);
 
   getAll(): Observable<Person[]> {
