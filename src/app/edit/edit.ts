@@ -7,7 +7,6 @@ import { Person, SearchService } from '../shared';
 @Component({
   imports: [FormsModule],
   selector: 'app-edit',
-  styleUrl: './edit.css',
   templateUrl: './edit.html',
 })
 export class Edit implements OnInit, OnDestroy {
