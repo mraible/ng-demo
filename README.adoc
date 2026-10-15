@@ -1498,96 +1498,74 @@ node {
 . Create a new project with **Dashboard** > **New Item** > **Pipeline** > **Pipeline script from SCM** (near the bottom). Point it at your project's repository and specify the `main` branch.
 . Click **Save**, then **Build Now** on the following screen.
 
-== Deployment to Heroku
+== Deploy to Netlify
 
-This section shows you how to deploy an Angular app to https://heroku.com[Heroku].
+This section shows you how to deploy your Angular app to https://www.netlify.com[Netlify]. Netlify detects Angular projects automatically, gives you HTTPS and a global CDN, and has a free plan that's plenty for an app like this.
 
-https://signup.heroku.com/[Create a Heroku account], https://devcenter.heroku.com/articles/heroku-cli[install the heroku CLI], and run `heroku login`.
+Create a `netlify.toml` file in your project's root directory. It tells Netlify how to build your app and where the files are, sends every route to `index.html` so Angular's router can handle it, and adds security headers to every response.
 
-Run `heroku create` to create an app on Heroku.
-
-Create a `config/nginx.conf.erb` file with the configuration for secure headers and redirect all HTTP requests to HTTPS.
-
-[source,ruby]
+[source,toml]
+.netlify.toml
 ----
-daemon off;
-# Heroku dynos have at least 4 cores.
-worker_processes <%= ENV['NGINX_WORKERS'] || 4 %>;
+[build]
+  command = "npm run build"
+  publish = "dist/ng-demo/browser"
 
-events {
-	use epoll;
-	accept_mutex on;
-	worker_connections <%= ENV['NGINX_WORKER_CONNECTIONS'] || 1024 %>;
-}
+[build.environment]
+  NODE_VERSION = "24"
 
-http {
-	gzip on;
-	gzip_comp_level 2;
-	gzip_min_length 512;
-	gzip_proxied any; # Heroku router sends Via header
+# Send all routes to index.html so Angular's router can handle them
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
 
-	server_tokens off;
-
-	log_format l2met 'measure#nginx.service=$request_time request_id=$http_x_request_id';
-	access_log <%= ENV['NGINX_ACCESS_LOG_PATH'] || 'logs/nginx/access.log' %> l2met;
-	error_log <%= ENV['NGINX_ERROR_LOG_PATH'] || 'logs/nginx/error.log' %>;
-
-	include mime.types;
-	default_type application/octet-stream;
-	sendfile on;
-
-	# Must read the body in 5 seconds.
-	client_body_timeout <%= ENV['NGINX_CLIENT_BODY_TIMEOUT'] || 5 %>;
-
-	server {
-		listen <%= ENV["PORT"] %>;
-		server_name _;
-		keepalive_timeout 5;
-		client_max_body_size <%= ENV['NGINX_CLIENT_MAX_BODY_SIZE'] || 1 %>M;
-
-		root dist/ng-demo/browser;
-		index index.html;
-
-		location / {
-			try_files $uri /index.html;
-		}
-
-		add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; frame-ancestors 'none'; connect-src 'self' https://*.auth0.com https://*.herokuapp.com";
-		add_header Referrer-Policy "no-referrer, strict-origin-when-cross-origin";
-		add_header Strict-Transport-Security "max-age=63072000; includeSubDomains";
-		add_header X-Content-Type-Options nosniff;
-		add_header X-Frame-Options DENY;
-		add_header X-XSS-Protection "1; mode=block";
-		add_header Permissions-Policy "geolocation=(self), microphone=(), accelerometer=(), camera=()";
-	}
-}
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Content-Security-Policy = "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; frame-ancestors 'none'"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Strict-Transport-Security = "max-age=63072000; includeSubDomains"
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "DENY"
+    Permissions-Policy = "geolocation=(), microphone=(), camera=()"
 ----
 
-NOTE: In this code, you might notice that some https URLs are allowed in the content security policy. Those are there so this app can make XHR requests to those domains when that functionality is added. The `root` is `dist/ng-demo/browser` because that's where Angular's application builder puts the files for your browser app.
+TIP: The content security policy (CSP) only allows scripts, styles, images, and fonts from your own site. Angular doesn't need `'unsafe-eval'`, but it does need `'unsafe-inline'` for styles, because it adds component styles to the page in `<style>` elements.
 
-For `config/nginx.conf.erb` to be read, you have to use the https://elements.heroku.com/buildpacks/heroku/heroku-buildpack-nginx[Heroku NGINX buildpack].
-
-Add a `Procfile` to the root of your project.
+You can test this configuration locally with the https://docs.netlify.com/cli/get-started/[Netlify CLI]. The `netlify serve` command builds your app and serves it with the same redirects and headers that Netlify uses.
 
 [source,shell]
 ----
-web: bin/start-nginx-solo
+npx netlify-cli@27.12.1 serve
 ----
 
-Commit your changes to Git, add the Node.js + NGINX buildpack, and redeploy your Angular app using `git push`.
+Open `http://localhost:8888/search` and make sure everything works. The Netlify CLI adds its local `.netlify` folder to your `.gitignore` the first time you run it.
+
+https://app.netlify.com/signup[Create a Netlify account], then log in with the Netlify CLI.
 
 [source,shell]
 ----
-git add .
-git commit -m "Configure secure headers and nginx buildpack"
-heroku buildpacks:add heroku/nodejs
-heroku buildpacks:add heroku-community/nginx
-git push heroku main
+npx netlify-cli@27.12.1 login
 ----
 
-View the application in your browser with `heroku open`. Try your app's URL on <https://securityheaders.com> to be pleasantly surprised.
+Deploy your app to a new site. Replace `<your-site-name>` with a name that's unique on Netlify.
 
-TIP: You can watch your app's logs using `heroku logs --tail`.
+[source,shell]
+----
+npx netlify-cli@27.12.1 deploy --site-name <your-site-name>
+----
+
+This creates a draft deploy with its own URL, so you can check it before your users see it. When you're happy, deploy it to production.
+
+[source,shell]
+----
+npx netlify-cli@27.12.1 deploy --prod
+----
+
+Your app will be live at `\https://<your-site-name>.netlify.app`. Try its URL on https://securityheaders.com[securityheaders.com] to be pleasantly surprised.
+
+TIP: To deploy every time you push to GitHub, run `npx netlify-cli@27.12.1 init` and choose to connect your repository. Netlify will build and deploy your `main` branch automatically, and create deploy previews for your pull requests.
 
 == Source code
 
