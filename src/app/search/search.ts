@@ -1,11 +1,17 @@
 import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatMiniFabButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { MatList, MatListItem, MatListItemLine, MatListItemTitle } from '@angular/material/list';
 import { Subscription } from 'rxjs';
 import { Person, SearchService } from '../shared';
 
 @Component({
-  imports: [FormsModule, RouterLink],
+  imports: [FormsModule, RouterLink, MatFormField, MatLabel, MatInput, MatMiniFabButton, MatIcon,
+    MatList, MatListItem, MatListItemTitle, MatListItemLine],
   selector: 'app-search',
   styleUrl: './search.css',
   templateUrl: './search.html',
