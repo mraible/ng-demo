@@ -9,6 +9,9 @@ jobs:
     strategy:
       matrix:
         node-version: [22, 24]
+    env:
+      # Secrets aren't available to pull requests from forks or Dependabot
+      HAS_E2E_SECRETS: ${{ secrets.E2E_DOMAIN != '' }}
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -22,8 +25,13 @@ jobs:
       - name: Run unit tests
         run: npm test -- --watch=false
       - name: Run integration tests
+        if: env.HAS_E2E_SECRETS == 'true'
         uses: cypress-io/github-action@c541a95ea92d9239347a2355f2e895cd4b3f8060 # v7.4.6
         with:
           start: npm start
           install: false
           wait-on: http://localhost:4200
+        env:
+          CYPRESS_E2E_DOMAIN: ${{ secrets.E2E_DOMAIN }}
+          CYPRESS_E2E_USERNAME: ${{ secrets.E2E_USERNAME }}
+          CYPRESS_E2E_PASSWORD: ${{ secrets.E2E_PASSWORD }}
