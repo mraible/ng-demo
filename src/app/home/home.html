@@ -1,0 +1,9 @@
+@if (auth.user$ | async; as user) {
+  <h2>Welcome, {{user.name}}!</h2>
+  <p><a routerLink="/search">Search</a></p>
+}
+@if (auth.isAuthenticated$ | async) {
+  <button (click)="logout()" id="logout">Logout</button>
+} @else {
+  <button (click)="login()" id="login">Login</button>
+}
