@@ -1525,11 +1525,12 @@ Create a `netlify.toml` file in your project's root directory. It tells Netlify 
   [headers.values]
     Content-Security-Policy = "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; frame-ancestors 'none'"
     Referrer-Policy = "strict-origin-when-cross-origin"
-    Strict-Transport-Security = "max-age=63072000; includeSubDomains"
     X-Content-Type-Options = "nosniff"
     X-Frame-Options = "DENY"
     Permissions-Policy = "geolocation=(), microphone=(), camera=()"
 ----
+
+Netlify serves your site over HTTPS and adds a `Strict-Transport-Security` header for you, so you don't need to add one.
 
 TIP: The content security policy (CSP) only allows scripts, styles, images, and fonts from your own site. Angular doesn't need `'unsafe-eval'`, but it does need `'unsafe-inline'` for styles, because it adds component styles to the page in `<style>` elements.
 

@@ -259,8 +259,8 @@ diff --git a/netlify.toml b/netlify.toml
 -    Content-Security-Policy = "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; frame-ancestors 'none'"
 +    Content-Security-Policy = "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self' https://dev-06bzs1cu.us.auth0.com; frame-src https://dev-06bzs1cu.us.auth0.com; frame-ancestors 'none'"
      Referrer-Policy = "strict-origin-when-cross-origin"
-     Strict-Transport-Security = "max-age=63072000; includeSubDomains"
      X-Content-Type-Options = "nosniff"
+     X-Frame-Options = "DENY"
 ----
 
 When you deploy to Netlify, add your site's URL to your Auth0 app's allowed URLs, too. For example, run `auth0 apps update` and add `\https://<your-site-name>.netlify.app/home` to the callback URLs and `\https://<your-site-name>.netlify.app` to the logout URLs, allowed origins, and web origins.
