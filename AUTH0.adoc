@@ -413,7 +413,7 @@ Then, pass them to Cypress as `CYPRESS_` environment variables in `.github/workf
 diff --git a/.github/workflows/main.yml b/.github/workflows/main.yml
 --- a/.github/workflows/main.yml
 +++ b/.github/workflows/main.yml
-@@ -27,3 +27,7 @@ jobs:
+@@ -29,3 +29,7 @@ jobs:
            start: npm start
            install: false
            wait-on: http://localhost:4200
