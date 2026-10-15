@@ -1,43 +1,25 @@
-// ***********************************************
-// This example namespace declaration will help
-// with Intellisense and code completion in your
-// IDE or Text Editor.
-// ***********************************************
-// declare namespace Cypress {
-//   interface Chainable<Subject = any> {
-//     customCommand(param: any): typeof customCommand;
-//   }
-// }
-//
-// function customCommand(param: any): void {
-//   console.warn(param);
-// }
-//
-// NOTE: You can use it like so:
-// Cypress.Commands.add('customCommand', customCommand);
-//
-// ***********************************************
-// This example commands.js shows you how to
-// create various custom commands and overwrite
-// existing commands.
-//
-// For more comprehensive examples of custom
-// commands please read more here:
-// https://on.cypress.io/custom-commands
-// ***********************************************
-//
-//
-// -- This is a parent command --
-// Cypress.Commands.add("login", (email, password) => { ... })
-//
-//
-// -- This is a child command --
-// Cypress.Commands.add("drag", { prevSubject: 'element'}, (subject, options) => { ... })
-//
-//
-// -- This is a dual command --
-// Cypress.Commands.add("dismiss", { prevSubject: 'optional'}, (subject, options) => { ... })
-//
-//
-// -- This will overwrite an existing command --
-// Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
+declare namespace Cypress {
+  interface Chainable {
+    signIn(): Chainable<void>;
+  }
+}
+
+Cypress.Commands.add('signIn', () => {
+  // Log in once and reuse the session in every test, so the tests send fewer requests to Auth0
+  cy.session('auth0', () => {
+    cy.intercept('POST', '**/oauth/token').as('token');
+    cy.visit('/');
+    cy.get('#login').click();
+    cy.env(['E2E_DOMAIN']).then(({E2E_DOMAIN}) => {
+      cy.origin(E2E_DOMAIN, () => {
+        cy.env(['E2E_USERNAME', 'E2E_PASSWORD']).then(({E2E_USERNAME, E2E_PASSWORD}) => {
+          cy.get('input[name=username]').type(E2E_USERNAME, {log: false});
+          cy.get('input[name=password]').type(`${E2E_PASSWORD}{enter}`, {log: false});
+        });
+      });
+    });
+    // The app goes to /home even if getting tokens fails, so check the token response and the Logout button
+    cy.wait('@token', {timeout: 10000}).its('response.statusCode').should('equal', 200);
+    cy.get('#logout').should('exist');
+  }, {cacheAcrossSpecs: true});
+});
