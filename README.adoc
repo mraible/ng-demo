@@ -1577,13 +1577,11 @@ I hope you've enjoyed this in-depth tutorial on how to get started with Angular 
 
 == Bonus: Angular Material, Bootstrap, Auth0, and Electron
 
-If you'd like to see how to integrate https://material.angular.dev/[Angular Material], https://getbootstrap.com[Bootstrap], https://developer.auth0.com[Auth0], or https://www.electronjs.org/[Electron] this section is for you!
+Now that you've built and tested an Angular app, you can make it look better, add authentication, or turn it into a desktop app. Each of these bonus tutorials starts with the app you just built:
 
-I've created branches to show how to integrate each of these libraries. Click on the links below to see each branch's documentation.
+* link:MATERIAL.adoc[Angular Material]: Make your app look like a Google app with a Material toolbar, form fields, buttons, icons, and lists.
+* link:BOOTSTRAP.adoc[Bootstrap]: Style your app with Bootstrap and highlight search matches with NG Bootstrap.
+* link:AUTH0.adoc[Auth0]: Add login and logout, protect your routes, and log in with Cypress.
+* link:ELECTRON.adoc[Electron]: Run your app on the desktop and package it for distribution.
 
-* https://github.com/mraible/ng-demo/tree/angular-material#bonus-angular-material[Angular Material]
-* https://github.com/mraible/ng-demo/tree/bootstrap#bonus-bootstrap[Bootstrap]
-* https://github.com/mraible/ng-demo/tree/auth0#bonus-auth0[Auth0]
-* https://github.com/mraible/ng-demo/tree/electron#bonus-electron[Electron]
-
-NOTE: These branches are based on earlier versions of Angular and haven't been updated for Angular 22 yet.
+The finished code for each tutorial is in its own branch: https://github.com/mraible/ng-demo/tree/angular-material[`angular-material`], https://github.com/mraible/ng-demo/tree/bootstrap[`bootstrap`], https://github.com/mraible/ng-demo/tree/auth0[`auth0`], and https://github.com/mraible/ng-demo/tree/electron[`electron`]. Each branch is the `main` branch plus one commit per section of its tutorial.

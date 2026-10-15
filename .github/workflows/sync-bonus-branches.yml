@@ -1,0 +1,78 @@
+name: Sync bonus branches
+# Rebases each bonus branch (one commit per section of its tutorial) onto main after every push to main, runs CI on it,
+# and opens an issue if a rebase conflicts or a tutorial's code snippets no longer match its branch.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  actions: write
+  contents: write
+  issues: write
+concurrency: sync-bonus-branches
+env:
+  GH_TOKEN: ${{ github.token }}
+jobs:
+  branches:
+    runs-on: ubuntu-latest
+    outputs:
+      names: ${{ steps.read.outputs.names }}
+    steps:
+      - uses: actions/checkout@v7
+      - id: read
+        run: echo "names=$(jq -c keys .github/bonus/branches.json)" >> "$GITHUB_OUTPUT"
+  rebase:
+    needs: branches
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        branch: ${{ fromJson(needs.branches.outputs.names) }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ matrix.branch }}
+          fetch-depth: 0
+      - name: Rebase ${{ matrix.branch }} onto main
+        id: rebase
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          commits=$(git show origin/main:.github/bonus/branches.json | jq -r '.["${{ matrix.branch }}"].commits')
+          if git rebase --onto origin/main "HEAD~$commits"; then
+            if [ "$(git rev-parse HEAD)" != "$(git rev-parse origin/${{ matrix.branch }})" ]; then
+              git push --force-with-lease=${{ matrix.branch }}:origin/${{ matrix.branch }} origin HEAD:${{ matrix.branch }}
+              gh workflow run main.yml --ref ${{ matrix.branch }}
+            fi
+          else
+            git rebase --abort
+            echo "conflict=true" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Open an issue
+        if: steps.rebase.outputs.conflict == 'true'
+        run: |
+          title='The ${{ matrix.branch }} branch needs attention'
+          if [ -z "$(gh issue list --state open --search "\"$title\" in:title" --json number --jq '.[].number')" ]; then
+            gh issue create --title "$title" --body "After ${GITHUB_SHA::7} was pushed to main, the ${{ matrix.branch }} branch couldn't be rebased onto main because of a conflict. Rebase it onto main and fix the conflicts, keeping one commit per section of its tutorial, then run \`python3 .github/bonus/generate.py ${{ matrix.branch }}\` on main and commit the tutorial if it changed. See ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}."
+          fi
+  snippets:
+    needs: rebase
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - name: Check the tutorials' snippets
+        id: check
+        run: |
+          python3 .github/bonus/generate.py --remote origin
+          stale=$(git diff --name-only -- '*.adoc' | tr '\n' ' ')
+          echo "stale=$stale" >> "$GITHUB_OUTPUT"
+      - name: Open an issue
+        if: steps.check.outputs.stale != ''
+        run: |
+          title='The bonus tutorials are out of date'
+          if [ -z "$(gh issue list --state open --search "\"$title\" in:title" --json number --jq '.[].number')" ]; then
+            gh issue create --title "$title" --body "After ${GITHUB_SHA::7} was pushed to main, these tutorials no longer match their branches: ${{ steps.check.outputs.stale }}. Run \`python3 .github/bonus/generate.py\` on main and commit the changes. See ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}."
+          fi

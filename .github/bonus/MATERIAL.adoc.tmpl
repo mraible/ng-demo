@@ -1,0 +1,184 @@
+= Angular Material with Angular 22
+@@include header.txt@@
+
+This tutorial shows you how to make the search and edit app from the link:README.adoc[Bare Bones Angular tutorial] look like a Google app with https://material.angular.dev/[Angular Material]. You'll add a Material theme, then swap the app's plain HTML for a toolbar, form fields, buttons, icons, and a list.
+
+.Source Code
+****
+The finished code is in the https://github.com/mraible/ng-demo/tree/angular-material[`angular-material` branch]. Each section below is one commit, and you can see all the changes in the https://github.com/mraible/ng-demo/compare/main...angular-material[comparison with `main`].
+****
+
+== Prerequisites
+
+You'll need the app from the link:README.adoc[Bare Bones Angular tutorial]. If you didn't build it, clone the `main` branch and install its dependencies.
+
+[source,shell]
+----
+git clone https://github.com/mraible/ng-demo.git
+cd ng-demo
+npm install
+----
+
+== Add Angular Material
+
+Run `ng add` to install Angular Material and its Component Dev Kit (CDK).
+
+[source,shell]
+----
+ng add @angular/material
+----
+
+When prompted, pick a color palette for your theme. This tutorial uses the default, Azure/Blue.
+
+The schematic creates a `src/material-theme.scss` file that defines a Material 3 theme and sets the page's background, font, and text colors.
+
+[source,scss]
+.src/material-theme.scss
+----
+@@show angular-material~3 src/material-theme.scss@@
+----
+
+It also adds the theme to the `styles` in `angular.json`.
+
+[source,diff]
+----
+@@diff angular-material~4 angular-material~3 angular.json@@
+----
+
+And it loads the Roboto font and Material Symbols icons in `src/index.html`.
+
+[source,diff]
+----
+@@diff angular-material~4 angular-material~3 src/index.html@@
+----
+
+TIP: `ng add` might reformat `angular.json` and `src/index.html` with Prettier. The diffs above only show the lines that matter.
+
+The `angular.json` diff also turns off `inlineCritical` for production builds. By default, Angular inlines your app's critical CSS in `index.html`, loads the rest of your styles with `media="print"`, and adds an inline script that switches them to `media="all"`. Your Netlify content security policy (CSP) blocks inline scripts, so without this change, your deployed app would only get the critical CSS.
+
+Since your theme loads fonts from Google, allow them in the CSP in `netlify.toml` too.
+
+[source,diff]
+----
+@@diff angular-material~4 angular-material~3 netlify.toml@@
+----
+
+== Use a Material toolbar
+
+Replace the `<h1>` in `src/app/app.html` with a `<mat-toolbar>`.
+
+[source,html]
+.src/app/app.html
+----
+@@show angular-material~2 src/app/app.html@@
+----
+
+Import `MatToolbar` in `src/app/app.ts`. Angular Material's components are standalone, so you can import just the ones you use.
+
+[source,typescript]
+.src/app/app.ts
+----
+@@show angular-material~2 src/app/app.ts@@
+----
+
+Material 3 toolbars use the same color as the page, so give it your theme's primary color in `src/app/app.css`.
+
+[source,css]
+.src/app/app.css
+----
+@@show angular-material~2 src/app/app.css@@
+----
+
+Then, update `src/app/app.spec.ts` to look for the title in the toolbar.
+
+[source,typescript]
+.src/app/app.spec.ts
+----
+@@lines angular-material~2 src/app/app.spec.ts :: it\('should render title' :: ^  \}\);@@
+----
+
+== Make search look like Material
+
+Change `src/app/search/search.html` to use a Material form field and an icon button for the search form, and a Material list for the results.
+
+[source,html]
+.src/app/search/search.html
+----
+@@show angular-material~1 src/app/search/search.html@@
+----
+
+Import the components you used in `src/app/search/search.ts`.
+
+[source,typescript]
+.src/app/search/search.ts
+----
+@@lines angular-material~1 src/app/search/search.ts :: ^import :: ^\}\)@@
+----
+
+Replace the table styles in `src/app/search/search.css` with a rule that lines up the button with the search field.
+
+[source,css]
+.src/app/search/search.css
+----
+@@show angular-material~1 src/app/search/search.css@@
+----
+
+The search results aren't in a table anymore, so update the selectors in `cypress/e2e/search.cy.ts` and `cypress/e2e/edit.cy.ts` to look for `mat-list-item` elements.
+
+[source,diff]
+----
+@@diff angular-material~2 angular-material~1 cypress/e2e/search.cy.ts@@
+----
+
+Run `ng serve` and click the search button. You'll see the results in a Material list.
+
+[[material-search]]
+.Search with Angular Material
+image::static/material-search.png[Search with Angular Material, 800, scaledwidth="100%"]
+
+== Make the edit form look like Material
+
+Update `src/app/edit/edit.html` to use Material form fields with labels, an error message for the required name, and Material buttons.
+
+[source,html]
+.src/app/edit/edit.html
+----
+@@show angular-material src/app/edit/edit.html@@
+----
+
+Import the form field, input, and button components in `src/app/edit/edit.ts`.
+
+[source,typescript]
+.src/app/edit/edit.ts
+----
+@@lines angular-material src/app/edit/edit.ts :: ^import :: ^\}\)@@
+----
+
+Add some spacing between the fields and buttons in `src/app/edit/edit.css`.
+
+[source,css]
+.src/app/edit/edit.css
+----
+@@show angular-material src/app/edit/edit.css@@
+----
+
+Now, when you clear the name field, Material shows the error message under it and disables the *Save* button.
+
+[[material-edit]]
+.Edit form with Angular Material
+image::static/material-edit.png[Edit form with Angular Material, 800, scaledwidth="100%"]
+
+With Angular Material's components and theme, your bundle is a bit larger than the 500 kB budget, so `ng build` will warn you. Raise the warning threshold in `angular.json`.
+
+[source,diff]
+----
+@@diff angular-material~1 angular-material angular.json@@
+----
+
+Run `ng test` and `npm run cy:run` to make sure all your tests still pass.
+
+== Learn more
+
+To learn more about Angular Material, see its https://material.angular.dev/components/categories[components] and https://material.angular.dev/guide/theming[theming guide].
+
+Go back to the link:README.adoc[Bare Bones Angular tutorial] to try the other bonus tutorials.
