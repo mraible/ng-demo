@@ -1,6 +1,5 @@
 describe('Home', () => {
-  it('Visits the initial project page', () => {
-    cy.visit('/')
+  it('Welcomes the user after they log in', () => {
     cy.contains('Welcome to ng-demo!')
     cy.contains('Search')
   })
