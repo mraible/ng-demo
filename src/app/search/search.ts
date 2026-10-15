@@ -20,7 +20,7 @@ export class Search implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.sub = this.route.params.subscribe(params => {
       if (params['term']) {
-        this.query = decodeURIComponent(params['term']);
+        this.query = params['term'];
         this.search();
       }
     });

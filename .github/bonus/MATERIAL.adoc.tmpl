@@ -54,9 +54,7 @@ And it loads the Roboto font and Material Symbols icons in `src/index.html`.
 
 TIP: `ng add` might reformat `angular.json` and `src/index.html` with Prettier. The diffs above only show the lines that matter.
 
-The `angular.json` diff also turns off `inlineCritical` for production builds. By default, Angular inlines your app's critical CSS in `index.html`, loads the rest of your styles with `media="print"`, and adds an inline script that switches them to `media="all"`. Your Netlify content security policy (CSP) blocks inline scripts, so without this change, your deployed app would only get the critical CSS.
-
-Since your theme loads fonts from Google, allow them in the CSP in `netlify.toml` too.
+Since your theme loads fonts from Google, allow them in the content security policy (CSP) in `netlify.toml`.
 
 [source,diff]
 ----
@@ -128,6 +126,11 @@ The search results aren't in a table anymore, so update the selectors in `cypres
 [source,diff]
 ----
 @@diff angular-material~2 angular-material~1 cypress/e2e/search.cy.ts@@
+----
+
+[source,diff]
+----
+@@diff angular-material~2 angular-material~1 cypress/e2e/edit.cy.ts@@
 ----
 
 Run `ng serve` and click the search button. You'll see the results in a Material list.

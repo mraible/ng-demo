@@ -20,8 +20,13 @@ export class SearchService {
       map((data: Person[]) => data
         .map((item: Person) => !!localStorage['person' + item.id] ?
           JSON.parse(localStorage['person' + item.id]) : item)
-        .filter((item: Person) => JSON.stringify(item).toLowerCase().includes(q))
+        .filter((item: Person) => this.matches(item, q))
       ));
+  }
+
+  private matches(person: Person, q: string): boolean {
+    const values = [person.name, person.phone, ...Object.values(person.address ?? {})];
+    return values.some(value => value?.toLowerCase().includes(q));
   }
 
   get(id: number): Observable<Person> {

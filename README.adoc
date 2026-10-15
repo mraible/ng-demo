@@ -532,7 +532,7 @@ Now the search results look better.
 .Search results
 image::static/search-results.png[Search Results, 800, scaledwidth="100%"]
 
-But wait, you still don't have search functionality! To add a search feature, add a `search()` method to `SearchService`.
+But wait, you still don't have search functionality! To add a search feature, add a `search()` method to `SearchService`. It returns the people whose name, phone, or address contains the query.
 
 [source,typescript]
 .src/app/shared/search/search-service.ts
@@ -548,8 +548,13 @@ import { map, Observable } from 'rxjs';
     }
     return this.getAll().pipe(
       map((data: Person[]) => data
-        .filter((item: Person) => JSON.stringify(item).toLowerCase().includes(q)))
+        .filter((item: Person) => this.matches(item, q)))
     );
+  }
+
+  private matches(person: Person, q: string): boolean {
+    const values = [person.name, person.phone, ...Object.values(person.address ?? {})];
+    return values.some(value => value?.toLowerCase().includes(q));
   }
 ----
 
@@ -746,7 +751,7 @@ search(q: string): Observable<Person[]> {
     map((data: Person[]) => data
       .map((item: Person) => !!localStorage['person' + item.id] ?
         JSON.parse(localStorage['person' + item.id]) : item)
-      .filter((item: Person) => JSON.stringify(item).toLowerCase().includes(q))
+      .filter((item: Person) => this.matches(item, q))
     ));
 }
 
@@ -821,7 +826,7 @@ export class Search implements OnInit {
   ngOnInit(): void {
     this.sub = this.route.params.subscribe(params => {
       if (params['term']) {
-        this.query = decodeURIComponent(params['term']);
+        this.query = params['term'];
         this.search();
       }
     });
@@ -863,7 +868,7 @@ To make name required, modify `edit.html` to add a `required` attribute to the n
 </div>
 ----
 
-You'll also need to wrap everything in a `<form>` element. Add `<form>` after the `<h3>` tag and close it before the closing `}`. You'll also need to add an `(ngSubmit)` handler to the form, give it the name of `editForm`, and change the save button to be a regular submit button that's disabled when the form is invalid.
+You'll also need to wrap everything in a `<form>` element. Add `<form>` after the `<h3>` tag and close it before the closing `}`. You'll also need to add an `(ngSubmit)` handler to the form, give it the name of `editForm`, and change the save button to be a regular submit button that's disabled when the form is invalid. Give the cancel button `type="button"`, too. Buttons in a form default to `type="submit"`, so without it, clicking *Cancel* would submit the form and save your changes.
 
 [source,html]
 .src/app/edit/edit.html
@@ -872,7 +877,7 @@ You'll also need to wrap everything in a `<form>` element. Add `<form>` after th
 <form (ngSubmit)="save()" #editForm="ngForm">
   ...
   <button type="submit" id="save" [disabled]="!editForm.form.valid">Save</button>
-  <button (click)="cancel()" id="cancel">Cancel</button>
+  <button type="button" (click)="cancel()" id="cancel">Cancel</button>
 </form>
 ----
 
@@ -1533,6 +1538,22 @@ Create a `netlify.toml` file in your project's root directory. It tells Netlify 
 Netlify serves your site over HTTPS and adds a `Strict-Transport-Security` header for you, so you don't need to add one.
 
 TIP: The content security policy (CSP) only allows scripts, styles, images, and fonts from your own site. Angular doesn't need `'unsafe-eval'`, but it does need `'unsafe-inline'` for styles, because it adds component styles to the page in `<style>` elements.
+
+The CSP blocks inline scripts, though, and Angular's production build adds one by default. It inlines your app's critical CSS in `index.html`, loads the rest of your global styles with `media="print"`, and adds an inline script that switches them to `media="all"`. Turn off `inlineCritical` for production builds in `angular.json` so your deployed app gets all of its global styles.
+
+[source,json]
+.angular.json
+----
+"production": {
+  ...
+  "outputHashing": "all",
+  "optimization": {
+    "styles": {
+      "inlineCritical": false
+    }
+  }
+},
+----
 
 You can test this configuration locally with the https://docs.netlify.com/cli/get-started/[Netlify CLI]. The `netlify serve` command builds your app and serves it with the same redirects and headers that Netlify uses.
 
