@@ -1231,6 +1231,20 @@ export default defineConfig({
 
 If you skip this step, `npm run cypress:run` will fail with "`The testing type selected (e2e) is not configured in your config file.`"
 
+The schematic also adds itself as the first schematic collection in `angular.json`. Since it has its own `component` schematic that only works with NgModules, `ng g component` will fail with "`Could not find an NgModule`" after you add Cypress (see https://github.com/cypress-io/cypress/issues/28470[cypress#28470]). Move `@schematics/angular` to the top of the list to fix it.
+
+[source,json]
+.angular.json
+----
+"cli": {
+  ...
+  "schematicCollections": [
+    "@schematics/angular",
+    "@cypress/schematic"
+  ]
+},
+----
+
 Rename `cypress/e2e/spec.cy.ts` to `home.cy.ts` and change it to look for the title of your app.
 
 [source,typescript]

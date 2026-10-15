@@ -5,8 +5,8 @@
     "packageManager": "npm",
     "analytics": false,
     "schematicCollections": [
-      "@cypress/schematic",
-      "@schematics/angular"
+      "@schematics/angular",
+      "@cypress/schematic"
     ]
   },
   "newProjectRoot": "projects",
