@@ -25,7 +25,7 @@ describe('SearchService', () => {
   it('should retrieve all search results', () => {
     const mockResponse = [
       {name: 'Nikola Jokić'},
-      {name: 'Mike Malone'}
+      {name: 'David Adelman'}
     ];
 
     service.getAll().subscribe((people: any) => {
@@ -55,11 +55,11 @@ describe('SearchService', () => {
   it('should fetch by id', () => {
     const mockResponse = [
       {id: 1, name: 'Nikola Jokić'},
-      {id: 2, name: 'Mike Malone'}
+      {id: 2, name: 'David Adelman'}
     ];
 
     service.get(2).subscribe((person: any) => {
-      expect(person.name).toBe('Mike Malone');
+      expect(person.name).toBe('David Adelman');
     });
 
     const req = httpMock.expectOne('data/people.json');
