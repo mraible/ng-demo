@@ -1,13 +1,13 @@
 import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { NgbHighlight } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
 import { Person, SearchService } from '../shared';
 
 @Component({
-  imports: [FormsModule, RouterLink],
+  imports: [FormsModule, RouterLink, NgbHighlight],
   selector: 'app-search',
-  styleUrl: './search.css',
   templateUrl: './search.html',
 })
 export class Search implements OnInit, OnDestroy {
