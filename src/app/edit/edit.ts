@@ -1,11 +1,14 @@
 import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { MatError, MatFormField, MatHint, MatLabel } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatButton } from '@angular/material/button';
 import { Subscription } from 'rxjs';
 import { Person, SearchService } from '../shared';
 
 @Component({
-  imports: [FormsModule],
+  imports: [FormsModule, MatFormField, MatLabel, MatError, MatHint, MatInput, MatButton],
   selector: 'app-edit',
   styleUrl: './edit.css',
   templateUrl: './edit.html',
