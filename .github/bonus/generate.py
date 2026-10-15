@@ -1,6 +1,7 @@
 # Generates each bonus tutorial (MATERIAL.adoc, AUTH0.adoc, ...) from its template in this directory by expanding
 # these placeholders with code from the tutorial's branch:
-#   @@show REV PATH@@, @@diff A B PATH@@, @@lines REV PATH :: START_REGEX :: END_REGEX@@, and @@include FILE@@
+#   @@show REV PATH@@, @@diff A B PATH@@, @@lines REV PATH :: START_REGEX :: END_REGEX@@, @@include FILE@@, and
+#   @@version REV PACKAGE@@, which becomes PACKAGE@VERSION with the version from REV's package.json
 # REV is a branch name with an optional ~N suffix (bootstrap, bootstrap~1, and so on), where each commit on the branch
 # is one tutorial step. Use BRANCH~N, where N is the branch's number of commits, to refer to main.
 # Usage: python3 .github/bonus/generate.py [--remote origin] [branch ...] (default: all branches in branches.json)
@@ -36,6 +37,9 @@ def expand(m):
         _, rev, path = head.split(' ')
         return lines(rev, path, start, end)
     kind, *a = body.split(' ')
+    if kind == 'version':
+        pkg = json.loads(git('show', f'{ref(a[0])}:package.json'))
+        return f"{a[1]}@{({**pkg.get('dependencies', {}), **pkg.get('devDependencies', {})})[a[1]]}"
     if kind == 'show':
         return git('show', f'{ref(a[0])}:{a[1]}').rstrip('\n')
     # diff-tree is plumbing, so it ignores diff settings in the user's git config that would change the output
@@ -45,6 +49,6 @@ def expand(m):
 for branch in args or branches:
     doc = branches[branch]['doc']
     tmpl = os.path.join(here, doc + '.tmpl')
-    text = re.sub(r'@@((?:show|diff|lines|include) (?:[^@]|@(?!@))+)@@', expand, open(tmpl).read())
+    text = re.sub(r'@@((?:show|diff|lines|include|version) (?:[^@]|@(?!@))+)@@', expand, open(tmpl).read())
     open(os.path.join(repo, doc), 'w').write(text)
     print('wrote', doc)
