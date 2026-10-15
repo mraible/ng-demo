@@ -64,7 +64,7 @@ You'll build a simple web application with Angular CLI, a tool for Angular devel
 If you don't have Angular CLI installed, install it:
 
 ----
-npm install -g @angular/cli@22
+npm install -g @angular/cli@22.2.2
 ----
 
 NOTE: IntelliJ IDEA Ultimate Edition has the best support for TypeScript. If you'd rather not pay for your IDE, checkout https://code.visualstudio.com/[Visual Studio Code].
@@ -1214,7 +1214,7 @@ To test if the application works end-to-end, you can write tests with http://www
 You can use the official https://www.npmjs.com/package/@cypress/schematic[Cypress Angular Schematic] to add Cypress to your Angular project.
 
 ----
-ng add @cypress/schematic
+ng add @cypress/schematic@6.0.0
 ----
 
 When prompted to proceed and use Cypress for `ng e2e`, answer "`Yes`". When asked if you'd like to add Cypress component testing, answer "`No`". This tutorial doesn't use component testing, and the schematic configures it with webpack, which Angular 22 projects don't include.
@@ -1305,7 +1305,7 @@ You can also install https://www.npmjs.com/package/concurrently[concurrently] so
 
 [source,shell]
 ----
-npm install -D concurrently
+npm install -D --save-exact concurrently@10.0.6
 ----
 
 Then, add a `cy:run` script to your `package.json`:
@@ -1395,7 +1395,7 @@ Code coverage requires either "@vitest/coverage-v8" or "@vitest/coverage-istanbu
 Install the V8 provider and run the command again.
 
 ----
-npm install -D @vitest/coverage-v8
+npm install -D --save-exact @vitest/coverage-v8@5.0.4
 ----
 
 You'll see a print out of code coverage in your terminal window.

@@ -25,7 +25,7 @@ Install Electron.
 
 [source,shell]
 ----
-npm install -D electron
+npm install -D --save-exact electron@44.7.2
 ----
 
 An Electron app has a _main process_, which runs in Node.js and creates windows, and _renderer processes_, which display web pages in those windows. Create a `main.js` file in your project's root directory for the main process.
@@ -59,7 +59,7 @@ To package your app for macOS, Windows, or Linux, install electron-builder.
 
 [source,shell]
 ----
-npm install -D electron-builder
+npm install -D --save-exact electron-builder@26.15.3
 ----
 
 Add a `build` section to `package.json` with your app's ID and name, and `pack` and `dist` scripts.

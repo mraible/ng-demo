@@ -20,7 +20,7 @@ jobs:
     outputs:
       names: ${{ steps.read.outputs.names }}
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - id: read
         run: echo "names=$(jq -c keys .github/bonus/branches.json)" >> "$GITHUB_OUTPUT"
   rebase:
@@ -31,7 +31,7 @@ jobs:
       matrix:
         branch: ${{ fromJson(needs.branches.outputs.names) }}
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ matrix.branch }}
           fetch-depth: 0
@@ -61,7 +61,7 @@ jobs:
     if: always()
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
       - name: Check the tutorials' snippets
