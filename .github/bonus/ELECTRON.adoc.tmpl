@@ -1,0 +1,90 @@
+= Electron with Angular 22
+@@include header.txt@@
+
+This tutorial shows you how to turn the search and edit app from the link:README.adoc[Bare Bones Angular tutorial] into a desktop app with https://www.electronjs.org/[Electron]. Then, you'll package it for distribution with https://www.electron.build/[electron-builder].
+
+.Source Code
+****
+The finished code is in the https://github.com/mraible/ng-demo/tree/electron[`electron` branch]. Each section below is one commit, and you can see all the changes in the https://github.com/mraible/ng-demo/compare/main...electron[comparison with `main`].
+****
+
+== Prerequisites
+
+You'll need the app from the link:README.adoc[Bare Bones Angular tutorial]. If you didn't build it, clone the `main` branch and install its dependencies.
+
+[source,shell]
+----
+git clone https://github.com/mraible/ng-demo.git
+cd ng-demo
+npm install
+----
+
+== Run your Angular app in Electron
+
+Install Electron.
+
+[source,shell]
+----
+npm install -D --save-exact @@version electron electron@@
+----
+
+An Electron app has a _main process_, which runs in Node.js and creates windows, and _renderer processes_, which display web pages in those windows. Create a `main.js` file in your project's root directory for the main process.
+
+[source,javascript]
+.main.js
+----
+@@show electron~1 main.js@@
+----
+
+This code serves your built Angular app from a custom `app://` protocol instead of loading `index.html` from the file system. If you use `mainWindow.loadFile()` instead, the app works until you reload the window (for example, with *View* > *Reload*). Then, Electron tries to load a file named `search` and fails with `ERR_FILE_NOT_FOUND`. The protocol handler returns `index.html` for paths like that, so Angular's router can handle them, just like a web server would. It also adds a Content Security Policy, which keeps Electron from logging a security warning.
+
+TIP: Electron's https://www.electronjs.org/docs/latest/tutorial/security[security checklist] recommends a custom protocol over `file://`. You don't need `nodeIntegration`, since your Angular app doesn't use Node.js APIs.
+
+Set `main.js` as your app's entry point and add an `electron` script to `package.json` that builds your app and starts Electron.
+
+[source,diff]
+----
+@@diff electron~2 electron~1 package.json@@
+----
+
+Run `npm run electron`, and your app will open in a desktop window.
+
+[[electron]]
+.Angular in Electron
+image::static/electron.png[Angular in Electron, 800, scaledwidth="100%"]
+
+== Package your app for distribution
+
+To package your app for macOS, Windows, or Linux, install electron-builder.
+
+[source,shell]
+----
+npm install -D --save-exact @@version electron electron-builder@@
+----
+
+Add a `build` section to `package.json` with your app's ID and name, and `pack` and `dist` scripts.
+
+[source,diff]
+----
+@@diff electron~1 electron package.json@@
+----
+
+The `files` setting only packages `main.js` and your built Angular app. Your Angular dependencies are already bundled into the app's JavaScript, so there's no need to include `node_modules`. The `directories.output` setting puts packages in a `release` directory, so they don't mix with Angular's build output in `dist`. Add it to `.gitignore`.
+
+[source,diff]
+----
+@@diff electron~1 electron .gitignore@@
+----
+
+To package your app:
+
+* `npm run pack` creates an unpacked app in `release/mac-arm64` (or the folder for your platform), which is handy for testing.
+* `npm run dist` creates a distributable format, like a `.dmg` on macOS, an installer on Windows, or an AppImage on Linux.
+
+NOTE: If you don't have a code-signing certificate, electron-builder will try to find one and skip signing. To skip the search on macOS, run `export CSC_IDENTITY_AUTO_DISCOVERY=false` first. To distribute your app outside your own machine, see electron-builder's https://www.electron.build/code-signing[code signing] documentation.
+
+== Learn more
+
+To learn more, see https://www.electronjs.org/docs/latest/[Electron's documentation] and https://www.electron.build/[electron-builder's documentation].
+
+Go back to the link:README.adoc[Bare Bones Angular tutorial] to try the other bonus tutorials.

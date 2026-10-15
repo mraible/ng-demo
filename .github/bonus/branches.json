@@ -1,0 +1,6 @@
+{
+  "angular-material": { "doc": "MATERIAL.adoc", "commits": 4 },
+  "bootstrap": { "doc": "BOOTSTRAP.adoc", "commits": 4 },
+  "auth0": { "doc": "AUTH0.adoc", "commits": 3 },
+  "electron": { "doc": "ELECTRON.adoc", "commits": 2 }
+}

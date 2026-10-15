@@ -1,6 +1,6 @@
 name: Angular
 
-on: [push, pull_request]
+on: [push, pull_request, workflow_dispatch]
 
 jobs:
   build:
@@ -8,25 +8,23 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [18, 20]
+        node-version: [22, 24]
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Check the tutorial's pinned versions
+        run: python3 .github/check-versions.py
       - name: Use Node ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Install latest Chrome
-        run: |
-          sudo apt update
-          sudo apt --only-upgrade install google-chrome-stable
-          google-chrome --version
+          cache: npm
       - name: Install dependencies
         run: npm ci
       - name: Run unit tests
-        run: xvfb-run npm test -- --watch=false
+        run: npm test -- --watch=false
       - name: Run integration tests
-        uses: cypress-io/github-action@v6
+        uses: cypress-io/github-action@c541a95ea92d9239347a2355f2e895cd4b3f8060 # v7.4.6
         with:
           start: npm start
           install: false

@@ -9,7 +9,3 @@ export class MockActivatedRoute extends ActivatedRoute {
     this.params = of(parameters);
   }
 }
-
-export class MockRouter {
-  navigate = jasmine.createSpy('navigate');
-}

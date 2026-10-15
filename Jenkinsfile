@@ -1,5 +1,5 @@
 node {
-    def nodeHome = tool name: 'node-18', type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'
+    def nodeHome = tool name: 'node-24', type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'
     env.PATH = "${nodeHome}/bin:${env.PATH}"
 
     stage('check tools') {
@@ -12,7 +12,7 @@ node {
     }
 
     stage('npm install') {
-        sh "npm install"
+        sh "npm ci"
     }
 
     stage('unit tests') {
@@ -20,7 +20,6 @@ node {
     }
 
     stage('cypress tests') {
-        sh "npm start &"
-        sh "npm run cypress:run"
+        sh "npm run cy:run"
     }
 }

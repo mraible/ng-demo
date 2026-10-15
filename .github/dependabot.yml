@@ -14,9 +14,7 @@ updates:
           - '@angular/*'
           - '@angular-devkit/*'
           - 'typescript'
-      angular-eslint:
+      vitest:
         patterns:
-          - '@angular-eslint/*'
-      typescript-eslint:
-        patterns:
-          - '@typescript-eslint/*'
+          - 'vitest'
+          - '@vitest/*'
