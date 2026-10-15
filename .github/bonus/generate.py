@@ -38,7 +38,8 @@ def expand(m):
     kind, *a = body.split(' ')
     if kind == 'show':
         return git('show', f'{ref(a[0])}:{a[1]}').rstrip('\n')
-    d = git('diff', ref(a[0]), ref(a[1]), '--', a[2])
+    # diff-tree is plumbing, so it ignores diff settings in the user's git config that would change the output
+    d = git('diff-tree', '-p', ref(a[0]), ref(a[1]), '--', a[2])
     return re.sub(r'^index .*\n', '', d, flags=re.M).rstrip('\n')
 
 for branch in args or branches:
