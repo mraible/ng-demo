@@ -45,3 +45,6 @@ Thumbs.db
 
 # Local Netlify folder
 .netlify
+
+# Electron packages
+/release

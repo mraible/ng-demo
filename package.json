@@ -4,6 +4,21 @@
   "version": "22.0.0",
   "license": "MIT",
   "main": "main.js",
+  "build": {
+    "appId": "bare.bones.angular",
+    "productName": "Bare Bones Angular",
+    "directories": {
+      "output": "release"
+    },
+    "mac": {
+      "category": "public.app-category.developer-tools"
+    },
+    "files": [
+      "main.js",
+      "dist/ng-demo/browser/**/*",
+      "!node_modules/**/*"
+    ]
+  },
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -14,7 +29,9 @@
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",
     "cy:run": "concurrently -k -s first \"ng serve\" \"cypress run\"",
-    "electron": "ng build && electron ."
+    "electron": "ng build && electron .",
+    "pack": "ng build && electron-builder --dir",
+    "dist": "ng build && electron-builder"
   },
   "private": true,
   "packageManager": "npm@11.13.0",
@@ -37,6 +54,7 @@
     "concurrently": "10.0.6",
     "cypress": "16.2.0",
     "electron": "44.9.0",
+    "electron-builder": "26.15.3",
     "jsdom": "30.1.3",
     "prettier": "3.9.10",
     "typescript": "6.0.3",
