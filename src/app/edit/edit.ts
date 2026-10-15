@@ -1,31 +1,28 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Person, SearchService } from '../shared';
-import { Subscription } from 'rxjs';
+import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { Subscription } from 'rxjs';
+import { Person, SearchService } from '../shared';
 
 @Component({
-  selector: 'app-edit',
-  standalone: true,
   imports: [FormsModule],
-  templateUrl: './edit.component.html',
-  styleUrl: './edit.component.css'
+  selector: 'app-edit',
+  styleUrl: './edit.css',
+  templateUrl: './edit.html',
 })
-export class EditComponent implements OnInit, OnDestroy {
-  person!: Person;
+export class Edit implements OnInit, OnDestroy {
+  person = signal<Person | undefined>(undefined);
   sub!: Subscription;
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+  private readonly service = inject(SearchService);
 
-  constructor(private route: ActivatedRoute,
-              private router: Router,
-              private service: SearchService) {
-  }
-
-  async ngOnInit(): Promise<void> {
+  ngOnInit(): void {
     this.sub = this.route.params.subscribe(params => {
       const id = +params['id']; // (+) converts string 'id' to a number
       this.service.get(id).subscribe(person => {
         if (person) {
-          this.person = person;
+          this.person.set(person);
         } else {
           this.gotoList();
         }
@@ -44,13 +41,14 @@ export class EditComponent implements OnInit, OnDestroy {
   }
 
   async save() {
-    this.service.save(this.person);
+    this.service.save(this.person()!);
     await this.gotoList();
   }
 
   async gotoList() {
-    if (this.person) {
-      await this.router.navigate(['/search', {term: this.person.name}]);
+    const person = this.person();
+    if (person) {
+      await this.router.navigate(['/search', {term: person.name}]);
     } else {
       await this.router.navigate(['/search']);
     }

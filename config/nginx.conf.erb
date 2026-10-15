@@ -33,14 +33,14 @@ http {
 		keepalive_timeout 5;
 		client_max_body_size <%= ENV['NGINX_CLIENT_MAX_BODY_SIZE'] || 1 %>M;
 
-		root dist/ng-demo;
+		root dist/ng-demo/browser;
 		index index.html;
 
 		location / {
 			try_files $uri /index.html;
 		}
 
-		add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; frame-ancestors 'none'; connect-src 'self' https://*.auth0.com https://*.herokuapp.com";
+		add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; frame-ancestors 'none'; connect-src 'self' https://*.auth0.com https://*.herokuapp.com";
 		add_header Referrer-Policy "no-referrer, strict-origin-when-cross-origin";
 		add_header Strict-Transport-Security "max-age=63072000; includeSubDomains";
 		add_header X-Content-Type-Options nosniff;

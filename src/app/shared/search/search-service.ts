@@ -1,16 +1,14 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Service()
 export class SearchService {
 
-  constructor(private http: HttpClient) { }
+  private readonly http = inject(HttpClient);
 
   getAll(): Observable<Person[]> {
-    return this.http.get<Person[]>('assets/data/people.json');
+    return this.http.get<Person[]>('data/people.json');
   }
 
   search(q: string): Observable<Person[]> {

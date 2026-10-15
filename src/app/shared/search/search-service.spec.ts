@@ -1,18 +1,15 @@
 import { TestBed } from '@angular/core/testing';
-import { SearchService } from './search.service';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { SearchService } from './search-service';
 
 describe('SearchService', () => {
   let service: SearchService;
   let httpMock: HttpTestingController;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [],
-      providers: [SearchService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+      providers: [provideHttpClientTesting()]
     });
-
     service = TestBed.inject(SearchService);
     httpMock = TestBed.inject(HttpTestingController);
   });
@@ -37,7 +34,7 @@ describe('SearchService', () => {
       expect(people).toEqual(mockResponse);
     });
 
-    const req = httpMock.expectOne('assets/data/people.json');
+    const req = httpMock.expectOne('data/people.json');
     expect(req.request.method).toBe('GET');
     req.flush(mockResponse);
   });
@@ -50,7 +47,7 @@ describe('SearchService', () => {
       expect(people[0].name).toBe('Nikola Jokić');
     });
 
-    const req = httpMock.expectOne('assets/data/people.json');
+    const req = httpMock.expectOne('data/people.json');
     expect(req.request.method).toBe('GET');
     req.flush(mockResponse);
   });
@@ -65,7 +62,7 @@ describe('SearchService', () => {
       expect(person.name).toBe('Mike Malone');
     });
 
-    const req = httpMock.expectOne('assets/data/people.json');
+    const req = httpMock.expectOne('data/people.json');
     expect(req.request.method).toBe('GET');
     req.flush(mockResponse);
   });

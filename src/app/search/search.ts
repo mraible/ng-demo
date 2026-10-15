@@ -1,23 +1,21 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { JsonPipe } from '@angular/common';
-import { Person, SearchService } from '../shared';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { Person, SearchService } from '../shared';
 
 @Component({
+  imports: [FormsModule, RouterLink],
   selector: 'app-search',
-  standalone: true,
-  imports: [FormsModule, JsonPipe, RouterLink],
-  templateUrl: './search.component.html',
-  styleUrl: './search.component.css'
+  styleUrl: './search.css',
+  templateUrl: './search.html',
 })
-export class SearchComponent implements OnInit, OnDestroy {
+export class Search implements OnInit, OnDestroy {
   query!: string;
-  searchResults: Person[] = [];
+  searchResults = signal<Person[]>([]);
   sub!: Subscription;
-
-  constructor(private searchService: SearchService, private route: ActivatedRoute) { }
+  private readonly searchService = inject(SearchService);
+  private readonly route = inject(ActivatedRoute);
 
   ngOnInit(): void {
     this.sub = this.route.params.subscribe(params => {
@@ -37,10 +35,9 @@ export class SearchComponent implements OnInit, OnDestroy {
   search(): void {
     this.searchService.search(this.query).subscribe({
       next: (data: Person[]) => {
-        this.searchResults = data;
+        this.searchResults.set(data);
       },
       error: error => console.log(error)
     });
   }
-
 }

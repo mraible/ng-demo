@@ -1,4 +1,4 @@
-@if (person) {
+@if (person(); as person) {
 <h3>{{person.name}}</h3>
 <form (ngSubmit)="save()" #editForm="ngForm">
   <div>
