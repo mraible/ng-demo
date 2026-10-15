@@ -949,7 +949,7 @@ Now this test should pass.
 
 [NOTE]
 ====
-You might notice that `ng test` doesn't fail on this test _before_ you change it, even though the `<h1>` no longer says "Hello, ng-demo". Vitest caches compiled test files in `node_modules/.vitest-cache`, and that cache isn't invalidated when only a component's HTML template changes. If a test passes when you expect it to fail, delete the cache and run your tests again.
+You might notice that `ng test` doesn't fail on this test _before_ you change it, even though the `<h1>` no longer says "Hello, ng-demo". With Angular CLI 22.2.2 and Vitest 5, compiled test files are cached in `node_modules/.vitest-cache`, and that cache isn't invalidated when only a component's HTML template changes. This is https://github.com/angular/angular-cli/pull/34311[fixed in Angular CLI] and the fix will be in its next patch release. Until then, if a test passes when you expect it to fail, delete the cache and run your tests again.
 
 ----
 rm -rf node_modules/.vitest-cache
