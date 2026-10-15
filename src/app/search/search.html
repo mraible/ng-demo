@@ -1,10 +1,15 @@
-<h2>Search</h2>
-<form>
-  <input type="search" name="query" [(ngModel)]="query" (keyup.enter)="search()">
-  <button type="button" (click)="search()">Search</button>
+<h2 class="mt-3">Search</h2>
+<form class="row g-2">
+  <div class="col-auto">
+    <input type="search" name="query" [(ngModel)]="query" (keyup.enter)="search()"
+           placeholder="Search" class="form-control">
+  </div>
+  <div class="col-auto">
+    <button type="button" (click)="search()" class="btn btn-primary">Search</button>
+  </div>
 </form>
 @if (searchResults().length) {
-<table>
+<table class="table table-striped mt-3">
   <thead>
   <tr>
     <th>Name</th>
@@ -15,7 +20,7 @@
   <tbody>
   @for (person of searchResults(); track person.id) {
   <tr>
-    <td><a [routerLink]="['/edit', person.id]">{{person.name}}</a></td>
+    <td><a [routerLink]="['/edit', person.id]"><ngb-highlight [result]="person.name" [term]="searchedTerm()" /></a></td>
     <td>{{person.phone}}</td>
     <td>{{person.address.street}}<br/>
       {{person.address.city}}, {{person.address.state}} {{person.address.zip}}
