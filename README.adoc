@@ -1566,6 +1566,10 @@ npx netlify-cli@27.12.1 deploy --prod
 
 Your app will be live at `\https://<your-site-name>.netlify.app`. Try its URL on https://securityheaders.com[securityheaders.com] to be pleasantly surprised.
 
+[[security-headers]]
+.Security headers grade
+image::static/security-headers.png[Security headers grade, 800, scaledwidth="100%"]
+
 TIP: To deploy every time you push to GitHub, run `npx netlify-cli@27.12.1 init` and choose to connect your repository. Netlify will build and deploy your `main` branch automatically, and create deploy previews for your pull requests.
 
 == Source code
