@@ -44,7 +44,7 @@ Run `ng add` to install NG Bootstrap, Bootstrap, Popper, and `@angular/localize`
 ng add @ng-bootstrap/ng-bootstrap
 ----
 
-The schematic adds Bootstrap's CSS and the `@angular/localize` polyfill to `angular.json`. The diff below also turns off `inlineCritical` for production builds. By default, Angular inlines your app's critical CSS in `index.html`, loads the rest of your styles with `media="print"`, and adds an inline script that switches them to `media="all"`. Your Netlify content security policy (CSP) blocks inline scripts, so without this change, your deployed app would only get the critical CSS.
+The schematic adds Bootstrap's CSS and the `@angular/localize` polyfill to `angular.json`.
 
 [source,diff]
 ----
@@ -72,20 +72,6 @@ diff --git a/angular.json b/angular.json
                    "maximumError": "1MB"
                  },
                  {
-@@ -47,7 +51,12 @@
-                   "maximumError": "8kB"
-                 }
-               ],
--              "outputHashing": "all"
-+              "outputHashing": "all",
-+              "optimization": {
-+                "styles": {
-+                  "inlineCritical": false
-+                }
-+              }
-             },
-             "development": {
-               "optimization": false,
 ----
 
 It also adds a reference to `@angular/localize` types in `src/main.ts`, `tsconfig.app.json`, and `tsconfig.spec.json`.

@@ -106,20 +106,6 @@ diff --git a/angular.json b/angular.json
                "src/styles.css"
              ]
            },
-@@ -47,7 +48,12 @@
-                   "maximumError": "8kB"
-                 }
-               ],
--              "outputHashing": "all"
-+              "outputHashing": "all",
-+              "optimization": {
-+                "styles": {
-+                  "inlineCritical": false
-+                }
-+              }
-             },
-             "development": {
-               "optimization": false,
 ----
 
 And it loads the Roboto font and Material Symbols icons in `src/index.html`.
@@ -144,9 +130,7 @@ diff --git a/src/index.html b/src/index.html
 
 TIP: `ng add` might reformat `angular.json` and `src/index.html` with Prettier. The diffs above only show the lines that matter.
 
-The `angular.json` diff also turns off `inlineCritical` for production builds. By default, Angular inlines your app's critical CSS in `index.html`, loads the rest of your styles with `media="print"`, and adds an inline script that switches them to `media="all"`. Your Netlify content security policy (CSP) blocks inline scripts, so without this change, your deployed app would only get the critical CSS.
-
-Since your theme loads fonts from Google, allow them in the CSP in `netlify.toml` too.
+Since your theme loads fonts from Google, allow them in the content security policy (CSP) in `netlify.toml`.
 
 [source,diff]
 ----
@@ -306,6 +290,22 @@ diff --git a/cypress/e2e/search.cy.ts b/cypress/e2e/search.cy.ts
 -    const list = cy.get('app-search table tbody tr');
 +    const list = cy.get('app-search mat-list-item');
      list.should('have.length', 3);
+   });
+ });
+----
+
+[source,diff]
+----
+diff --git a/cypress/e2e/edit.cy.ts b/cypress/e2e/edit.cy.ts
+--- a/cypress/e2e/edit.cy.ts
++++ b/cypress/e2e/edit.cy.ts
+@@ -15,7 +15,7 @@ describe('Edit', () => {
+     cy.get('#name').type(' Rocks!');
+     cy.get('#save').click();
+     // verify one element matched this change
+-    const list = cy.get('app-search table tbody tr');
++    const list = cy.get('app-search mat-list-item');
+     list.should('have.length', 1);
    });
  });
 ----
