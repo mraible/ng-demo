@@ -1,8 +1,9 @@
 # A git merge driver for package.json that sync-bonus-branches.yml uses while it rebases a bonus branch onto main.
 # Dependabot bumps on main change lines next to the ones a bonus branch adds, so a line-based merge conflicts. This
 # merges the JSON instead: a key changed on one side takes that side's value, and a key changed differently on both
-# sides is a real conflict. Angular packages that only the branch has (like @angular/material) move to main's
-# @angular/core version when main's Angular version changes and that version is published.
+# sides is a real conflict. When main's @angular/core version changes, Angular packages that only the branch has and
+# that were on main's old version (like @angular/localize, which requires the same version as @angular/compiler) move
+# to the new version if it's published. Others, like @angular/material, have their own version numbers and stay put.
 # Usage (as a merge driver): python3 merge-package-json.py %O %A %B, where %A is replaced with the result
 import json, subprocess, sys
 
@@ -49,7 +50,7 @@ def align_angular(base, ours, merged):
     main_deps = deps(ours)
     for section in DEPS:
         for name, version in merged.get(section, {}).items():
-            if name.startswith('@angular/') and name not in main_deps and version != new and published(name, new):
+            if name.startswith('@angular/') and name not in main_deps and version == old and published(name, new):
                 print(f'{name}: {version} -> {new} to match @angular/core', file=sys.stderr)
                 merged[section][name] = new
 
