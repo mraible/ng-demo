@@ -8,7 +8,7 @@
 :keywords: Angular, Angular CLI, TypeScript, JavaScript, Node, npm, Vitest, Cypress
 :icons: font
 :lang: en
-:language: javadocript
+:language: javascript
 :sourcedir: .
 ifndef::env-github[]
 :icons: font
@@ -47,8 +47,6 @@ If you'd like to get right to it, the https://github.com/mraible/ng-demo[source 
 ****
 
 Check out the *bonus section* at the end of this document for Angular Material, Bootstrap, Auth0, and Electron tutorials.
-
-toc::[]
 
 == What you'll build
 
@@ -790,7 +788,7 @@ At this point, you should be able to search for a person and update their inform
 .Edit component
 image::static/edit-form.png[Edit form, 800, scaledwidth="100%"]
 
-The &lt;form> in `src/app/edit/edit.html` calls a `save()` function to update a person's data. You already implemented this above.
+The *Save* button in `src/app/edit/edit.html` calls a `save()` function to update a person's data. You already implemented this above.
 The function calls a `gotoList()` function that appends the person's name to the URL when sending the user back to the search screen.
 
 [source,typescript]
@@ -1318,7 +1316,7 @@ Then, add a `cy:run` script to your `package.json`:
 }
 ----
 
-Then, you can run `npm run cy:run` to start your app, run your end-to-end tests, and stop the app when they're done. The `-k` option kills the other process when one exits, and `-s first` makes the command's exit code match the first process to exit (Cypress).
+Then, you can run `npm run cy:run` to start your app, run your end-to-end tests, and stop the app when they're done. The `-k` option kills the other process when one exits, and `-s first` makes the command's exit code match the first process to exit (Cypress). You don't need to wait for `ng serve` to finish starting, because Cypress retries connecting to your `baseUrl` for several seconds before it gives up.
 
 === Testing the search feature
 
@@ -1402,10 +1400,10 @@ You'll see a print out of code coverage in your terminal window.
 
 ----
 =============================== Coverage summary ===============================
-Statements   : 75% ( 129/172 )
-Branches     : 67.41% ( 60/89 )
-Functions    : 58.97% ( 23/39 )
-Lines        : 76.85% ( 83/108 )
+Statements   : 75.42% ( 132/175 )
+Branches     : 68.13% ( 62/91 )
+Functions    : 60.97% ( 25/41 )
+Lines        : 77.27% ( 85/110 )
 ================================================================================
 ----
 
