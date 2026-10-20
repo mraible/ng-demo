@@ -1,6 +1,7 @@
 name: Sync bonus branches
 # Rebases each bonus branch (one commit per section of its tutorial) onto main after every push to main, regenerates
-# the tutorials from the rebased branches, and commits them to main if they changed. It opens an issue if a branch
+# the tutorials from the rebased branches, updates the versions pinned in README.adoc to match package.json (since
+# Dependabot only updates package.json), and commits them to main if they changed. It opens an issue if a branch
 # can't be rebased or pushed, or if the tutorials can't be generated or pushed. Once a week, it also opens an issue
 # if a package that only a bonus branch uses has a new version, because Dependabot only updates main.
 # package.json conflicts from Dependabot bumps on main are merged by .github/bonus/merge-package-json.py, and each
@@ -83,13 +84,14 @@ jobs:
           ref: main
           fetch-depth: 0
           token: ${{ secrets.BONUS_SYNC_TOKEN }}
-      - name: Regenerate the tutorials and commit them if they changed
+      - name: Regenerate the tutorials, update their pinned versions, and commit them if they changed
         run: |
           python3 .github/bonus/generate.py --remote origin
+          python3 .github/check-versions.py --fix
           if [ -n "$(git status --porcelain -- '*.adoc')" ]; then
             git config user.name 'github-actions[bot]'
             git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-            git commit --quiet -m 'Regenerate the bonus tutorials from their branches' -- '*.adoc'
+            git commit --quiet -m 'Update the tutorials to match the bonus branches and package.json' -- '*.adoc'
             # This push runs the workflow again, which rebases the branches onto this commit
             git push origin HEAD:main
           fi
@@ -98,7 +100,7 @@ jobs:
         run: |
           title='The bonus tutorials are out of date'
           if [ -z "$(gh issue list --state open --search "\"$title\" in:title" --json number --jq '.[].number')" ]; then
-            gh issue create --title "$title" --body "After ${GITHUB_SHA::7} was pushed to main, the bonus tutorials couldn't be regenerated from their branches or pushed to main. Run \`python3 .github/bonus/generate.py\` on main and commit the changes. See ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}."
+            gh issue create --title "$title" --body "After ${GITHUB_SHA::7} was pushed to main, the tutorials couldn't be regenerated from their branches or pushed to main. Run \`python3 .github/bonus/generate.py\` and \`python3 .github/check-versions.py --fix\` on main and commit the changes. See ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}."
           fi
   outdated:
     if: github.event_name != 'push'
