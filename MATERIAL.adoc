@@ -406,7 +406,7 @@ button {
 }
 ----
 
-Now, when you clear the name field, Material shows the error message under it and disables the *Save* button.
+Now, when you clear the name field, Material disables the *Save* button. When you leave the field, it turns red and shows the error message under it.
 
 [[material-edit]]
 .Edit form with Angular Material

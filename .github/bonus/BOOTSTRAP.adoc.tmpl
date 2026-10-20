@@ -37,7 +37,13 @@ The schematic adds Bootstrap's CSS and the `@angular/localize` polyfill to `angu
 
 It also adds a reference to `@angular/localize` types in `src/main.ts`, `tsconfig.app.json`, and `tsconfig.spec.json`.
 
-The schematic adds `importProvidersFrom(NgbModule)` to `src/app/app.config.ts` too. You don't need it, because NG Bootstrap's components are standalone and you'll import the ones you use. Remove it, and your bundle will be about 35 kB smaller.
+The schematic adds `importProvidersFrom(NgbModule)` to `src/app/app.config.ts` too. You don't need it, because NG Bootstrap's components are standalone and you'll import the ones you use. Remove it, along with the `importProvidersFrom` and `NgbModule` imports, and your bundle will be about 35 kB smaller. Your `app.config.ts` should look like it did before.
+
+[source,typescript]
+.src/app/app.config.ts
+----
+@@show bootstrap~3 src/app/app.config.ts@@
+----
 
 Even without it, Bootstrap's CSS makes your bundle bigger than the 500 kB budget, so `ng build` will warn you. That's why the diff above raises the warning threshold to 600 kB.
 
@@ -69,12 +75,12 @@ Change `src/app/search/search.html` to use Bootstrap's form and table classes. T
 @@show bootstrap~1 src/app/search/search.html@@
 ----
 
-Import `NgbHighlight` in `src/app/search/search.ts`. You can also delete `search.css` and remove its `styleUrl`, since Bootstrap handles the styling now.
+Import `NgbHighlight` in `src/app/search/search.ts`. Then, add a `searchedTerm` signal and set it when the results come back, so the highlight matches the results, not whatever you're typing in the search box. You can also delete `search.css` and remove its `styleUrl`, since Bootstrap handles the styling now.
 
 [source,typescript]
 .src/app/search/search.ts
 ----
-@@lines bootstrap~1 src/app/search/search.ts :: ^import :: ^\}\)@@
+@@show bootstrap~1 src/app/search/search.ts@@
 ----
 
 Run `ng serve`, search for "`ar`", and you'll see the match highlighted.

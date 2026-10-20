@@ -76,7 +76,22 @@ diff --git a/angular.json b/angular.json
 
 It also adds a reference to `@angular/localize` types in `src/main.ts`, `tsconfig.app.json`, and `tsconfig.spec.json`.
 
-The schematic adds `importProvidersFrom(NgbModule)` to `src/app/app.config.ts` too. You don't need it, because NG Bootstrap's components are standalone and you'll import the ones you use. Remove it, and your bundle will be about 35 kB smaller.
+The schematic adds `importProvidersFrom(NgbModule)` to `src/app/app.config.ts` too. You don't need it, because NG Bootstrap's components are standalone and you'll import the ones you use. Remove it, along with the `importProvidersFrom` and `NgbModule` imports, and your bundle will be about 35 kB smaller. Your `app.config.ts` should look like it did before.
+
+[source,typescript]
+.src/app/app.config.ts
+----
+import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
+import { provideRouter } from '@angular/router';
+import { routes } from './app.routes';
+
+export const appConfig: ApplicationConfig = {
+  providers: [
+    provideBrowserGlobalErrorListeners(),
+    provideRouter(routes)
+  ]
+};
+----
 
 Even without it, Bootstrap's CSS makes your bundle bigger than the 500 kB budget, so `ng build` will warn you. That's why the diff above raises the warning threshold to 600 kB.
 
@@ -139,7 +154,7 @@ Change `src/app/search/search.html` to use Bootstrap's form and table classes. T
   <tbody>
   @for (person of searchResults(); track person.id) {
   <tr>
-    <td><a [routerLink]="['/edit', person.id]"><ngb-highlight [result]="person.name" [term]="query" /></a></td>
+    <td><a [routerLink]="['/edit', person.id]"><ngb-highlight [result]="person.name" [term]="searchedTerm()" /></a></td>
     <td>{{person.phone}}</td>
     <td>{{person.address.street}}<br/>
       {{person.address.city}}, {{person.address.state}} {{person.address.zip}}
@@ -151,7 +166,7 @@ Change `src/app/search/search.html` to use Bootstrap's form and table classes. T
 }
 ----
 
-Import `NgbHighlight` in `src/app/search/search.ts`. You can also delete `search.css` and remove its `styleUrl`, since Bootstrap handles the styling now.
+Import `NgbHighlight` in `src/app/search/search.ts`. Then, add a `searchedTerm` signal and set it when the results come back, so the highlight matches the results, not whatever you're typing in the search box. You can also delete `search.css` and remove its `styleUrl`, since Bootstrap handles the styling now.
 
 [source,typescript]
 .src/app/search/search.ts
@@ -168,6 +183,39 @@ import { Person, SearchService } from '../shared';
   selector: 'app-search',
   templateUrl: './search.html',
 })
+export class Search implements OnInit, OnDestroy {
+  query!: string;
+  searchResults = signal<Person[]>([]);
+  searchedTerm = signal('');
+  sub!: Subscription;
+  private readonly searchService = inject(SearchService);
+  private readonly route = inject(ActivatedRoute);
+
+  ngOnInit(): void {
+    this.sub = this.route.params.subscribe(params => {
+      if (params['term']) {
+        this.query = params['term'];
+        this.search();
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    if (this.sub) {
+      this.sub.unsubscribe();
+    }
+  }
+
+  search(): void {
+    this.searchService.search(this.query).subscribe({
+      next: (data: Person[]) => {
+        this.searchResults.set(data);
+        this.searchedTerm.set(this.query);
+      },
+      error: error => console.log(error)
+    });
+  }
+}
 ----
 
 Run `ng serve`, search for "`ar`", and you'll see the match highlighted.

@@ -31,8 +31,11 @@ auth0 apps create --name "Bare Bones Angular" --type spa \
   --callbacks http://localhost:4200/home \
   --logout-urls http://localhost:4200 \
   --origins http://localhost:4200 \
-  --web-origins http://localhost:4200
+  --web-origins http://localhost:4200 \
+  --refresh-token '{"rotation_type":"rotating","expiration_type":"expiring"}'
 ----
+
+The `--refresh-token` option turns on https://auth0.com/docs/secure/tokens/refresh-tokens/refresh-token-rotation[refresh token rotation], so each refresh token can only be used once. That limits the damage if one is stolen. You'll see why you need refresh tokens in the next step.
 
 Copy the domain and client ID from the output. You'll need them in the next step.
 
@@ -53,7 +56,7 @@ Add `provideAuth0()` to `src/app/app.config.ts` with your domain and client ID.
 @@show auth0~2 src/app/app.config.ts@@
 ----
 
-By default, the SDK keeps tokens in memory, and when you reload the page, it checks if you're logged in with a hidden iframe on your Auth0 domain. Many browsers block the third-party cookies that iframe needs (in this project's CI, headless Chrome did), so you'd be logged out every time you reload. Setting `useRefreshTokens: true` and `cacheLocation: 'localstorage'` keeps you logged in by storing a refresh token in `localStorage` instead. Make sure your Auth0 app has https://auth0.com/docs/secure/tokens/refresh-tokens/refresh-token-rotation[refresh token rotation] turned on, which limits the damage if a refresh token is stolen. You can check with `auth0 apps show <client-id> --json` and look for `"rotation_type": "rotating"`.
+By default, the SDK keeps tokens in memory, and when you reload the page, it checks if you're logged in with a hidden iframe on your Auth0 domain. Many browsers block the third-party cookies that iframe needs (in this project's CI, headless Chrome did), so you'd be logged out every time you reload. Setting `useRefreshTokens: true` and `cacheLocation: 'localstorage'` keeps you logged in by storing a refresh token in `localStorage` instead. If you created your app some other way, make sure refresh token rotation is turned on. You can check with `auth0 apps show <client-id> --json` and look for `"rotation_type": "rotating"`.
 
 WARNING: Anything in `localStorage` can be read by JavaScript on your page, so this makes cross-site scripting (XSS) more dangerous. Angular escapes values in templates by default, and the strict CSP in `netlify.toml` blocks inline scripts, which both help.
 
@@ -117,7 +120,7 @@ Your bundle is now larger than the 500 kB budget, so raise the warning threshold
 @@diff auth0~3 auth0~2 angular.json@@
 ----
 
-Your content security policy in `netlify.toml` only lets your app connect to itself. The Auth0 SDK gets tokens from your Auth0 domain and uses an iframe to check whether you're logged in when the app loads, so allow your domain for both.
+Your content security policy in `netlify.toml` only lets your app connect to itself. The Auth0 SDK gets tokens from your Auth0 domain, so add your domain to `connect-src`. Because you're using refresh tokens, the SDK doesn't need the hidden iframe, so you don't need to allow your domain in `frame-src`.
 
 [source,diff]
 ----
@@ -220,6 +223,8 @@ Then, pass them to Cypress as `CYPRESS_` environment variables in `.github/workf
 ----
 @@diff auth0~1 auth0 .github/workflows/main.yml@@
 ----
+
+GitHub doesn't give secrets to workflows triggered by pull requests from forks or by Dependabot. The `HAS_E2E_SECRETS` variable skips the Cypress step in those cases, so the unit tests still run instead of the whole job failing. The secrets go in a separate `env` on the Cypress step, so other steps, like `npm ci`, can't read them.
 
 CAUTION: You might be tempted to upload Cypress's screenshots when a test fails. If your repository is public, remember that anyone can download them, and a screenshot of Auth0's login page will show your test user's email address.
 

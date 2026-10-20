@@ -41,7 +41,7 @@ Install Electron.
 
 [source,shell]
 ----
-npm install -D --save-exact electron@44.7.2
+npm install -D --save-exact electron@44.9.0
 ----
 
 An Electron app has a _main process_, which runs in Node.js and creates windows, and _renderer processes_, which display web pages in those windows. Create a `main.js` file in your project's root directory for the main process.
@@ -49,11 +49,12 @@ An Electron app has a _main process_, which runs in Node.js and creates windows,
 [source,javascript]
 .main.js
 ----
-const { app, BrowserWindow, net, protocol } = require('electron');
+const { app, BrowserWindow, net, protocol, shell } = require('electron');
 const fs = require('node:fs');
 const path = require('node:path');
 const { pathToFileURL } = require('node:url');
 
+const appUrl = 'app://ng-demo/';
 const browserDir = path.join(__dirname, 'dist/ng-demo/browser');
 
 // Serve the Angular app from app://ng-demo/ so deep links and reloads work like they do on a web server
@@ -61,13 +62,29 @@ protocol.registerSchemesAsPrivileged([
   { scheme: 'app', privileges: { standard: true, secure: true, supportFetchAPI: true } }
 ]);
 
+// Open links to other sites in the user's browser instead of in the app's window
+function openExternally(url) {
+  if (url.startsWith('https://')) shell.openExternal(url);
+}
+
 function createWindow() {
   const mainWindow = new BrowserWindow({
     width: 800,
     height: 600
   });
 
-  mainWindow.loadURL('app://ng-demo/');
+  mainWindow.webContents.on('will-navigate', (event, url) => {
+    if (!url.startsWith(appUrl)) {
+      event.preventDefault();
+      openExternally(url);
+    }
+  });
+  mainWindow.webContents.setWindowOpenHandler(({ url }) => {
+    openExternally(url);
+    return { action: 'deny' };
+  });
+
+  mainWindow.loadURL(appUrl);
 
   // Uncomment if you want to open Chrome DevTools by default
   // mainWindow.webContents.openDevTools();
@@ -75,16 +92,19 @@ function createWindow() {
 
 app.whenReady().then(() => {
   protocol.handle('app', async (request) => {
-    const file = path.join(browserDir, decodeURIComponent(new URL(request.url).pathname));
+    const pathname = decodeURIComponent(new URL(request.url).pathname);
+    const file = path.join(browserDir, pathname);
     const isFile = file.startsWith(browserDir + path.sep) && fs.statSync(file, { throwIfNoEntry: false })?.isFile();
-    // Return index.html for routes like /search so Angular's router can handle them
+    // Return 404 for missing files like main-1234.js, and index.html for routes like /search;term=Nikola so
+    // Angular's router can handle them
+    if (!isFile && /\.[a-z0-9]+$/i.test(pathname) && !pathname.includes(';')) {
+      return new Response('Not found', { status: 404 });
+    }
     const response = await net.fetch(pathToFileURL(isFile ? file : path.join(browserDir, 'index.html')).toString());
-    return new Response(response.body, {
-      headers: {
-        'Content-Type': response.headers.get('Content-Type'),
-        'Content-Security-Policy': "default-src 'self'; style-src 'self' 'unsafe-inline'"
-      }
-    });
+    const headers = new Headers({ 'Content-Security-Policy': "default-src 'self'; style-src 'self' 'unsafe-inline'" });
+    const contentType = response.headers.get('Content-Type');
+    if (contentType) headers.set('Content-Type', contentType);
+    return new Response(response.body, { headers });
   });
 
   createWindow();
@@ -99,7 +119,9 @@ app.on('window-all-closed', () => {
 });
 ----
 
-This code serves your built Angular app from a custom `app://` protocol instead of loading `index.html` from the file system. If you use `mainWindow.loadFile()` instead, the app works until you reload the window (for example, with *View* > *Reload*). Then, Electron tries to load a file named `search` and fails with `ERR_FILE_NOT_FOUND`. The protocol handler returns `index.html` for paths like that, so Angular's router can handle them, just like a web server would. It also adds a Content Security Policy, which keeps Electron from logging a security warning.
+This code serves your built Angular app from a custom `app://` protocol instead of loading `index.html` from the file system. If you use `mainWindow.loadFile()` instead, the app works until you reload the window (for example, with *View* > *Reload*). Then, Electron tries to load a file named `search` and fails with `ERR_FILE_NOT_FOUND`. The protocol handler returns `index.html` for paths like that, so Angular's router can handle them, just like a web server would. A path that looks like a file (such as `main-1234.js`) gets a 404 if the file doesn't exist, so a missing script fails clearly instead of loading `index.html`. The handler also adds a Content Security Policy, which keeps Electron from logging a security warning.
+
+The `will-navigate` listener and `setWindowOpenHandler()` keep your app's window on `app://ng-demo/`. If a link points to another site, it opens in the user's browser instead of in a window that can load your app's protocol.
 
 TIP: Electron's https://www.electronjs.org/docs/latest/tutorial/security[security checklist] recommends a custom protocol over `file://`. You don't need `nodeIntegration`, since your Angular app doesn't use Node.js APIs.
 
@@ -132,7 +154,7 @@ diff --git a/package.json b/package.json
      "@vitest/coverage-v8": "5.0.4",
      "concurrently": "10.0.6",
      "cypress": "16.2.0",
-+    "electron": "44.7.2",
++    "electron": "44.9.0",
      "jsdom": "30.1.3",
      "prettier": "3.9.10",
      "typescript": "6.0.3",
@@ -196,7 +218,7 @@ diff --git a/package.json b/package.json
 @@ -37,6 +54,7 @@
      "concurrently": "10.0.6",
      "cypress": "16.2.0",
-     "electron": "44.7.2",
+     "electron": "44.9.0",
 +    "electron-builder": "26.15.3",
      "jsdom": "30.1.3",
      "prettier": "3.9.10",
