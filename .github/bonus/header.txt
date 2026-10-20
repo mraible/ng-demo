@@ -1,0 +1,17 @@
+:author: Matt Raible
+:email:  matt@raibledesigns.com
+:revnumber: 22.0.0
+:revdate: {docdate}
+:icons: font
+:lang: en
+ifdef::env-github[]
+:outfilesuffix: .adoc
+:caution-caption: :fire:
+:important-caption: :exclamation:
+:note-caption: :paperclip:
+:tip-caption: :bulb:
+:warning-caption: :warning:
+endif::[]
+:toc:
+:toclevels: 2
+:source-highlighter: highlight.js

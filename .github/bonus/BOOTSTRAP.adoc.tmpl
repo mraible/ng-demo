@@ -1,0 +1,116 @@
+= Bootstrap with Angular 22
+@@include header.txt@@
+
+This tutorial shows you how to style the search and edit app from the link:README.adoc[Bare Bones Angular tutorial] with https://getbootstrap.com[Bootstrap]. You'll also use https://ng-bootstrap.github.io[NG Bootstrap], a library of Bootstrap widgets written for Angular, to highlight search matches.
+
+.Source Code
+****
+The finished code is in the https://github.com/mraible/ng-demo/tree/bootstrap[`bootstrap` branch]. Each section below is one commit, and you can see all the changes in the https://github.com/mraible/ng-demo/compare/main...bootstrap[comparison with `main`].
+****
+
+== Prerequisites
+
+You'll need the app from the link:README.adoc[Bare Bones Angular tutorial]. If you didn't build it, clone the `main` branch and install its dependencies.
+
+[source,shell]
+----
+git clone https://github.com/mraible/ng-demo.git
+cd ng-demo
+npm install
+----
+
+== Add Bootstrap and NG Bootstrap
+
+Run `ng add` to install NG Bootstrap, Bootstrap, Popper, and `@angular/localize` (which NG Bootstrap uses to translate its widgets).
+
+[source,shell]
+----
+ng add @@version bootstrap @ng-bootstrap/ng-bootstrap@@
+----
+
+The schematic adds Bootstrap's CSS and the `@angular/localize` polyfill to `angular.json`.
+
+[source,diff]
+----
+@@diff bootstrap~4 bootstrap~3 angular.json@@
+----
+
+It also adds a reference to `@angular/localize` types in `src/main.ts`, `tsconfig.app.json`, and `tsconfig.spec.json`.
+
+The schematic adds `importProvidersFrom(NgbModule)` to `src/app/app.config.ts` too. You don't need it, because NG Bootstrap's components are standalone and you'll import the ones you use. Remove it, along with the `importProvidersFrom` and `NgbModule` imports, and your bundle will be about 35 kB smaller. Your `app.config.ts` should look like it did before.
+
+[source,typescript]
+.src/app/app.config.ts
+----
+@@show bootstrap~3 src/app/app.config.ts@@
+----
+
+Even without it, Bootstrap's CSS makes your bundle bigger than the 500 kB budget, so `ng build` will warn you. That's why the diff above raises the warning threshold to 600 kB.
+
+== Use a Bootstrap navbar
+
+Replace the `<h1>` in `src/app/app.html` with a navbar, and wrap the router outlet in a container.
+
+[source,html]
+.src/app/app.html
+----
+@@show bootstrap~2 src/app/app.html@@
+----
+
+Update `src/app/app.spec.ts` to look for the title in the navbar.
+
+[source,typescript]
+.src/app/app.spec.ts
+----
+@@lines bootstrap~2 src/app/app.spec.ts :: it\('should render title' :: ^  \}\);@@
+----
+
+== Style search and highlight matches
+
+Change `src/app/search/search.html` to use Bootstrap's form and table classes. Then, wrap each person's name in an `<ngb-highlight>` component, so the part of the name that matches your query is bold.
+
+[source,html]
+.src/app/search/search.html
+----
+@@show bootstrap~1 src/app/search/search.html@@
+----
+
+Import `NgbHighlight` in `src/app/search/search.ts`. Then, add a `searchedTerm` signal and set it when the results come back, so the highlight matches the results, not whatever you're typing in the search box. You can also delete `search.css` and remove its `styleUrl`, since Bootstrap handles the styling now.
+
+[source,typescript]
+.src/app/search/search.ts
+----
+@@show bootstrap~1 src/app/search/search.ts@@
+----
+
+Run `ng serve`, search for "`ar`", and you'll see the match highlighted.
+
+[[bootstrap-search]]
+.Search with Bootstrap
+image::static/bootstrap-search.png[Search with Bootstrap, 800, scaledwidth="100%"]
+
+== Style the edit form
+
+Update `src/app/edit/edit.html` to use Bootstrap's form controls, its grid for the address, and its validation classes. The `[class.is-invalid]` binding adds Bootstrap's `is-invalid` class when the name is empty, which turns the field red and shows the `invalid-feedback` message.
+
+[source,html]
+.src/app/edit/edit.html
+----
+@@show bootstrap src/app/edit/edit.html@@
+----
+
+Delete `edit.css` and remove its `styleUrl` from `src/app/edit/edit.ts`.
+
+Now, the edit form looks like a Bootstrap form.
+
+[[bootstrap-edit]]
+.Edit form with Bootstrap
+image::static/bootstrap-edit.png[Edit form with Bootstrap, 800, scaledwidth="100%"]
+
+You didn't change any element IDs or the structure of the search results, so all your tests pass without changes. Run `ng test` and `npm run cy:run` to prove it.
+
+== Learn more
+
+To learn more, see https://getbootstrap.com/docs/5.3/getting-started/introduction/[Bootstrap's documentation] and https://ng-bootstrap.github.io/#/components[NG Bootstrap's components].
+
+Go back to the link:README.adoc[Bare Bones Angular tutorial] to try the other bonus tutorials.
