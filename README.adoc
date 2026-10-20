@@ -62,7 +62,7 @@ You'll build a simple web application with Angular CLI, a tool for Angular devel
 If you don't have Angular CLI installed, install it:
 
 ----
-npm install -g @angular/cli@22.2.2
+npm install -g @angular/cli@22.2.3
 ----
 
 NOTE: IntelliJ IDEA Ultimate Edition has the best support for TypeScript. If you'd rather not pay for your IDE, checkout https://code.visualstudio.com/[Visual Studio Code].
