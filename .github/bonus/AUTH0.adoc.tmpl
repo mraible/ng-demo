@@ -171,7 +171,7 @@ This command uses `cy.origin()` to run commands on Auth0's domain, and `cy.env()
 
 `cy.session()` saves the cookies and local storage after the first login and restores them in later tests, and `cacheAcrossSpecs: true` shares them between spec files. Your tests log in to Auth0 once per run instead of before every test, which makes them faster and sends far fewer requests to Auth0, so they're less likely to hit its rate limits.
 
-After logging in, the Auth0 Angular SDK exchanges a code for tokens and goes to `/home`. It goes to `/home` even if that exchange fails (for example, because of a rate limit), so checking the URL isn't enough to know you're logged in. The command waits for the token request and makes sure it succeeded, then checks for the *Logout* button.
+After logging in, the Auth0 Angular SDK exchanges a code for tokens and goes to `/home`. It goes to `/home` even if that exchange fails, so checking the URL isn't enough to know you're logged in. The command waits for the token request and makes sure it succeeded, then checks for the *Logout* button.
 
 Update `cypress/support/e2e.ts` to call `signIn()` before each test. The first call logs in, and the others restore the saved session.
 
