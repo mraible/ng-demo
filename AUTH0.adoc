@@ -309,7 +309,7 @@ Log out and go to `http://localhost:4200/search`. You'll be sent to Auth0 to log
 
 == Log in with Cypress
 
-Your Cypress tests will fail now, because they can't get to the search and edit pages without logging in. Add a `signIn()` command to `cypress/support/commands.ts` that logs in on Auth0's login page.
+Your Cypress tests will fail now, because they can't get to the search and edit pages without logging in. Add a `signIn()` command to `cypress/support/commands.ts` that logs in on Auth0's login page and saves the session with `cy.session()`.
 
 [source,typescript]
 .cypress/support/commands.ts
@@ -321,22 +321,33 @@ declare namespace Cypress {
 }
 
 Cypress.Commands.add('signIn', () => {
-  cy.env(['E2E_DOMAIN']).then(({E2E_DOMAIN}) => {
-    cy.origin(E2E_DOMAIN, () => {
-      cy.env(['E2E_USERNAME', 'E2E_PASSWORD']).then(({E2E_USERNAME, E2E_PASSWORD}) => {
-        cy.get('input[name=username]').type(E2E_USERNAME, {log: false});
-        cy.get('input[name=password]').type(`${E2E_PASSWORD}{enter}`, {log: false});
+  // Log in once and reuse the session in every test, so the tests send fewer requests to Auth0
+  cy.session('auth0', () => {
+    cy.intercept('POST', '**/oauth/token').as('token');
+    cy.visit('/');
+    cy.get('#login').click();
+    cy.env(['E2E_DOMAIN']).then(({E2E_DOMAIN}) => {
+      cy.origin(E2E_DOMAIN, () => {
+        cy.env(['E2E_USERNAME', 'E2E_PASSWORD']).then(({E2E_USERNAME, E2E_PASSWORD}) => {
+          cy.get('input[name=username]').type(E2E_USERNAME, {log: false});
+          cy.get('input[name=password]').type(`${E2E_PASSWORD}{enter}`, {log: false});
+        });
       });
     });
-  });
-  // Auth0 can take a few seconds to redirect back to your app
-  cy.url({timeout: 10000}).should('equal', 'http://localhost:4200/home');
+    // The app goes to /home even if getting tokens fails, so check the token response and the Logout button
+    cy.wait('@token', {timeout: 10000}).its('response.statusCode').should('equal', 200);
+    cy.get('#logout').should('exist');
+  }, {cacheAcrossSpecs: true});
 });
 ----
 
 This command uses `cy.origin()` to run commands on Auth0's domain, and `cy.env()` to read the credentials. `cy.env()` replaces `Cypress.env()`, which was removed in Cypress 16, and it only gives your tests the variables they ask for. The `{log: false}` options keep the username and password out of the Command Log.
 
-Update `cypress/support/e2e.ts` to log in before each test and log out after it.
+`cy.session()` saves the cookies and local storage after the first login and restores them in later tests, and `cacheAcrossSpecs: true` shares them between spec files. Your tests log in to Auth0 once per run instead of before every test, which makes them faster and sends far fewer requests to Auth0, so they're less likely to hit its rate limits.
+
+After logging in, the Auth0 Angular SDK exchanges a code for tokens and goes to `/home`. It goes to `/home` even if that exchange fails, so checking the URL isn't enough to know you're logged in. The command waits for the token request and makes sure it succeeded, then checks for the *Logout* button.
+
+Update `cypress/support/e2e.ts` to call `signIn()` before each test. The first call logs in, and the others restore the saved session.
 
 [source,typescript]
 .cypress/support/e2e.ts
@@ -344,28 +355,8 @@ Update `cypress/support/e2e.ts` to log in before each test and log out after it.
 import './commands';
 
 beforeEach(() => {
-  cy.visit('/');
-  cy.get('#login').click();
   cy.signIn();
 });
-
-afterEach(() => {
-  cy.visit('/');
-  cy.get('#logout').click();
-});
-----
-
-Since the `beforeEach()` lands on the home page after logging in, `cypress/e2e/home.cy.ts` doesn't need to visit it.
-
-[source,typescript]
-.cypress/e2e/home.cy.ts
-----
-describe('Home', () => {
-  it('Welcomes the user after they log in', () => {
-    cy.contains('Welcome to ng-demo!')
-    cy.contains('Search')
-  })
-})
 ----
 
 Create a `cypress.env.json` file in your project's root directory with your Auth0 domain and the credentials of a user to test with.
@@ -396,7 +387,7 @@ diff --git a/.gitignore b/.gitignore
 +cypress.env.json
 ----
 
-Now, `npm run cy:run` will log in before each test, and your tests should pass.
+Now, `npm run cy:run` will log in once, and your tests should pass.
 
 === Run Cypress in GitHub Actions
 
