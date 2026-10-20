@@ -1,12 +1,18 @@
 name: Sync bonus branches
-# Rebases each bonus branch (one commit per section of its tutorial) onto main after every push to main, and opens an
-# issue if a branch can't be rebased or pushed, or if a tutorial's code snippets no longer match its branch.
+# Rebases each bonus branch (one commit per section of its tutorial) onto main after every push to main, regenerates
+# the tutorials from the rebased branches, and commits them to main if they changed. It opens an issue if a branch
+# can't be rebased or pushed, or if the tutorials can't be generated or pushed. Once a week, it also opens an issue
+# if a package that only a bonus branch uses has a new version, because Dependabot only updates main.
+# package.json conflicts from Dependabot bumps on main are merged by .github/bonus/merge-package-json.py, and each
+# replayed commit's package-lock.json is updated with npm by .github/bonus/update-lock.sh.
 # The branches are pushed with the BONUS_SYNC_TOKEN secret, a fine-grained personal access token with read and write
 # access to this repository's contents and workflows. GITHUB_TOKEN can't push changes to .github/workflows, and its
 # pushes don't trigger CI. Pushing with a personal access token runs CI on each branch and reports failures to you.
 on:
   push:
     branches: [main]
+  schedule:
+    - cron: '0 12 * * 1'
   workflow_dispatch:
 permissions:
   contents: read
@@ -36,13 +42,24 @@ jobs:
           ref: ${{ matrix.branch }}
           fetch-depth: 0
           token: ${{ secrets.BONUS_SYNC_TOKEN }}
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
       - name: Rebase ${{ matrix.branch }} onto main
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          # Use main's merge scripts, since the branch's copies can be older
+          git show origin/main:.github/bonus/merge-package-json.py > "$RUNNER_TEMP/merge-package-json.py"
+          git show origin/main:.github/bonus/update-lock.sh > "$RUNNER_TEMP/update-lock.sh"
+          chmod +x "$RUNNER_TEMP/update-lock.sh"
+          printf 'package.json merge=package-json\npackage-lock.json merge=keep-ours\n' > "$RUNNER_TEMP/gitattributes"
+          git config core.attributesFile "$RUNNER_TEMP/gitattributes"
+          git config merge.package-json.driver "python3 $RUNNER_TEMP/merge-package-json.py %O %A %B"
+          git config merge.keep-ours.driver true
           commits=$(git show origin/main:.github/bonus/branches.json | jq -r '.["${{ matrix.branch }}"].commits')
           # Stop instead of dropping a commit that becomes empty, so the branch keeps one commit per section
-          if ! git rebase --empty=stop --onto origin/main "HEAD~$commits"; then
+          if ! git rebase --empty=stop --exec "$RUNNER_TEMP/update-lock.sh" --onto origin/main "HEAD~$commits"; then
             git rebase --abort
             exit 1
           fi
@@ -63,17 +80,51 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          ref: main
           fetch-depth: 0
-      - name: Check the tutorials' snippets
-        id: check
+          token: ${{ secrets.BONUS_SYNC_TOKEN }}
+      - name: Regenerate the tutorials and commit them if they changed
         run: |
           python3 .github/bonus/generate.py --remote origin
-          stale=$(git diff --name-only -- '*.adoc' | tr '\n' ' ')
-          echo "stale=$stale" >> "$GITHUB_OUTPUT"
+          if [ -n "$(git status --porcelain -- '*.adoc')" ]; then
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git commit --quiet -m 'Regenerate the bonus tutorials from their branches' -- '*.adoc'
+            # This push runs the workflow again, which rebases the branches onto this commit
+            git push origin HEAD:main
+          fi
       - name: Open an issue
-        if: failure() || steps.check.outputs.stale != ''
+        if: failure()
         run: |
           title='The bonus tutorials are out of date'
           if [ -z "$(gh issue list --state open --search "\"$title\" in:title" --json number --jq '.[].number')" ]; then
-            gh issue create --title "$title" --body "After ${GITHUB_SHA::7} was pushed to main, these tutorials couldn't be generated or no longer match their branches: ${{ steps.check.outputs.stale }}. Run \`python3 .github/bonus/generate.py\` on main and commit the changes. See ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}."
+            gh issue create --title "$title" --body "After ${GITHUB_SHA::7} was pushed to main, the bonus tutorials couldn't be regenerated from their branches or pushed to main. Run \`python3 .github/bonus/generate.py\` on main and commit the changes. See ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}."
+          fi
+  outdated:
+    if: github.event_name != 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+      - name: Find new versions of the bonus branches' packages
+        id: check
+        run: |
+          python3 .github/bonus/outdated.py --remote origin | tee "$RUNNER_TEMP/outdated.md"
+          [ -s "$RUNNER_TEMP/outdated.md" ] && echo "found=true" >> "$GITHUB_OUTPUT" || true
+      - name: Open an issue
+        if: steps.check.outputs.found == 'true'
+        run: |
+          title='The bonus branches have outdated packages'
+          if [ -z "$(gh issue list --state open --search "\"$title\" in:title" --json number --jq '.[].number')" ]; then
+            gh issue create --title "$title" --body-file - <<EOF
+          Dependabot only updates main, so these packages that only the bonus branches use have new versions:
+
+          $(cat "$RUNNER_TEMP/outdated.md")
+
+          Update each one in the commit that adds it (with \`npm install --save-exact\`), then run \`python3 .github/bonus/generate.py\` on main and commit the tutorials. See ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}.
+          EOF
           fi
