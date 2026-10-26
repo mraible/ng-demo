@@ -151,7 +151,7 @@ diff --git a/package.json b/package.json
    "private": true,
    "packageManager": "npm@11.13.0",
 @@ -34,6 +36,7 @@
-     "@vitest/coverage-v8": "5.0.4",
+     "@vitest/coverage-v8": "5.0.5",
      "concurrently": "10.0.6",
      "cypress": "16.2.0",
 +    "electron": "44.9.0",

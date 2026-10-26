@@ -62,7 +62,7 @@ You'll build a simple web application with Angular CLI, a tool for Angular devel
 If you don't have Angular CLI installed, install it:
 
 ----
-npm install -g @angular/cli@22.2.3
+npm install -g @angular/cli@22.2.4
 ----
 
 NOTE: IntelliJ IDEA Ultimate Edition has the best support for TypeScript. If you'd rather not pay for your IDE, checkout https://code.visualstudio.com/[Visual Studio Code].
@@ -1393,7 +1393,7 @@ Code coverage requires either "@vitest/coverage-v8" or "@vitest/coverage-istanbu
 Install the V8 provider and run the command again.
 
 ----
-npm install -D --save-exact @vitest/coverage-v8@5.0.4
+npm install -D --save-exact @vitest/coverage-v8@5.0.5
 ----
 
 You'll see a print out of code coverage in your terminal window.
