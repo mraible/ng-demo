@@ -417,16 +417,11 @@ diff --git a/.github/workflows/main.yml b/.github/workflows/main.yml
      steps:
        - name: Checkout
          uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-@@ -22,8 +25,13 @@ jobs:
-       - name: Run unit tests
-         run: npm test -- --watch=false
-       - name: Run integration tests
-+        if: env.HAS_E2E_SECRETS == 'true'
-         uses: cypress-io/github-action@c541a95ea92d9239347a2355f2e895cd4b3f8060 # v7.4.6
-         with:
+@@ -27,3 +30,8 @@ jobs:
            start: npm start
            install: false
            wait-on: http://localhost:4200
++        if: env.HAS_E2E_SECRETS == 'true'
 +        env:
 +          CYPRESS_E2E_DOMAIN: ${{ secrets.E2E_DOMAIN }}
 +          CYPRESS_E2E_USERNAME: ${{ secrets.E2E_USERNAME }}
