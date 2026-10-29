@@ -1,1 +1,6 @@
-<p>search works!</p>
+<h2>Search</h2>
+<form>
+  <input type="search" name="query" [(ngModel)]="query" (keyup.enter)="search()" />
+  <button type="button" (click)="search()">Search</button>
+</form>
+<pre>{{ searchResults() | json }}</pre>
