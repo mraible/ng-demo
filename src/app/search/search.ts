@@ -13,7 +13,7 @@ export class Search implements OnInit {
   private readonly searchService = inject(SearchService);
   private readonly route = inject(ActivatedRoute);
 
-  protected query = '';
+  query = '';
   protected readonly searchResults = signal<Person[]>([]);
 
   ngOnInit(): void {

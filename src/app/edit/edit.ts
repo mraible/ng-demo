@@ -14,7 +14,7 @@ export class Edit implements OnInit {
   private readonly router = inject(Router);
   private readonly service = inject(SearchService);
 
-  protected readonly person = signal<Person | undefined>(undefined);
+  readonly person = signal<Person | undefined>(undefined);
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.params['id']);
