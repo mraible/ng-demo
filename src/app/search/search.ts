@@ -1,16 +1,23 @@
-import { JsonPipe } from '@angular/common';
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Person, SearchService } from '../shared';
 
 @Component({
-  imports: [FormsModule, JsonPipe],
+  imports: [FormsModule],
   selector: 'app-search',
   styleUrl: './search.css',
   templateUrl: './search.html',
 })
 export class Search {
-  protected query = '';
-  protected readonly searchResults = signal<unknown>(null);
+  private readonly searchService = inject(SearchService);
 
-  search(): void {}
+  protected query = '';
+  protected readonly searchResults = signal<Person[]>([]);
+
+  search(): void {
+    this.searchService.search(this.query).subscribe({
+      next: (data: Person[]) => this.searchResults.set(data),
+      error: error => console.log(error),
+    });
+  }
 }

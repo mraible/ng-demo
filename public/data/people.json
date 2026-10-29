@@ -1,0 +1,35 @@
+[
+  {
+    "id": 1,
+    "name": "Nikola Jokić",
+    "phone": "(720) 555-1212",
+    "address": {
+      "street": "2000 16th Street",
+      "city": "Denver",
+      "state": "CO",
+      "zip": "80202"
+    }
+  },
+  {
+    "id": 2,
+    "name": "Jamal Murray",
+    "phone": "(303) 321-8765",
+    "address": {
+      "street": "2654 Washington Street",
+      "city": "Lakewood",
+      "state": "CO",
+      "zip": "80568"
+    }
+  },
+  {
+    "id": 3,
+    "name": "Aaron Gordon",
+    "phone": "(303) 323-1233",
+    "address": {
+      "street": "46 Creekside Way",
+      "city": "Winter Park",
+      "state": "CO",
+      "zip": "80482"
+    }
+  }
+]

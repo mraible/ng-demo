@@ -3,4 +3,26 @@
   <input type="search" name="query" [(ngModel)]="query" (keyup.enter)="search()" />
   <button type="button" (click)="search()">Search</button>
 </form>
-<pre>{{ searchResults() | json }}</pre>
+@if (searchResults().length) {
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Phone</th>
+        <th>Address</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (person of searchResults(); track person.id) {
+        <tr>
+          <td>{{ person.name }}</td>
+          <td>{{ person.phone }}</td>
+          <td>
+            {{ person.address.street }}<br />
+            {{ person.address.city }}, {{ person.address.state }} {{ person.address.zip }}
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+}
