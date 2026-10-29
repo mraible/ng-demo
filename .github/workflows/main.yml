@@ -1,0 +1,26 @@
+name: Demo CI
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    name: Build and Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+      - name: Use Node 24
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+      - name: Install dependencies
+        run: npm ci
+      - name: Run unit tests
+        run: npm test -- --watch=false
+      - name: Run integration tests
+        uses: cypress-io/github-action@v7
+        with:
+          browser: chrome
+          start: npm start
+          install: false
+          wait-on: http://[::1]:4200
