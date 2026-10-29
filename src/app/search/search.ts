@@ -1,10 +1,25 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { MatMiniFabButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { MatFormField, MatInput } from '@angular/material/input';
+import { MatList, MatListItem, MatListItemLine, MatListItemTitle } from '@angular/material/list';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Person, SearchService } from '../shared';
 
 @Component({
-  imports: [FormsModule, RouterLink],
+  imports: [
+    FormsModule,
+    MatFormField,
+    MatIcon,
+    MatInput,
+    MatList,
+    MatListItem,
+    MatListItemLine,
+    MatListItemTitle,
+    MatMiniFabButton,
+    RouterLink,
+  ],
   selector: 'app-search',
   styleUrl: './search.css',
   templateUrl: './search.html',
