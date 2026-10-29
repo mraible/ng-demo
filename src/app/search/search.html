@@ -15,7 +15,7 @@
     <tbody>
       @for (person of searchResults(); track person.id) {
         <tr>
-          <td>{{ person.name }}</td>
+          <td><a [routerLink]="['/edit', person.id]">{{ person.name }}</a></td>
           <td>{{ person.phone }}</td>
           <td>
             {{ person.address.street }}<br />

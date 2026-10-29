@@ -1,1 +1,26 @@
-<p>edit works!</p>
+@if (person(); as person) {
+  <h3>{{ person.name }}</h3>
+  <div>
+    <label>Id:</label>
+    {{ person.id }}
+  </div>
+  <div>
+    <label>Name:</label>
+    <input [(ngModel)]="person.name" name="name" id="name" placeholder="Name" />
+  </div>
+  <div>
+    <label>Phone:</label>
+    <input [(ngModel)]="person.phone" name="phone" id="phone" placeholder="Phone" />
+  </div>
+  <fieldset>
+    <legend>Address:</legend>
+    <address>
+      <input [(ngModel)]="person.address.street" id="street" /><br />
+      <input [(ngModel)]="person.address.city" id="city" />,
+      <input [(ngModel)]="person.address.state" id="state" size="2" />
+      <input [(ngModel)]="person.address.zip" id="zip" size="5" />
+    </address>
+  </fieldset>
+  <button (click)="save()" id="save">Save</button>
+  <button (click)="cancel()" id="cancel">Cancel</button>
+}
