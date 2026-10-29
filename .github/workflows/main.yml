@@ -24,3 +24,13 @@ jobs:
           start: npm start
           install: false
           wait-on: http://[::1]:4200
+        env:
+          CYPRESS_E2E_DOMAIN: ${{ secrets.E2E_DOMAIN }}
+          CYPRESS_E2E_USERNAME: ${{ secrets.E2E_USERNAME }}
+          CYPRESS_E2E_PASSWORD: ${{ secrets.E2E_PASSWORD }}
+      - name: Upload screenshots on failure
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: cypress-screenshots
+          path: cypress/screenshots

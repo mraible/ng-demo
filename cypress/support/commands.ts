@@ -1,43 +1,33 @@
-// ***********************************************
-// This example namespace declaration will help
-// with Intellisense and code completion in your
-// IDE or Text Editor.
-// ***********************************************
-// declare namespace Cypress {
-//   interface Chainable<Subject = any> {
-//     customCommand(param: any): typeof customCommand;
-//   }
-// }
-//
-// function customCommand(param: any): void {
-//   console.warn(param);
-// }
-//
-// NOTE: You can use it like so:
-// Cypress.Commands.add('customCommand', customCommand);
-//
-// ***********************************************
-// This example commands.js shows you how to
-// create various custom commands and overwrite
-// existing commands.
-//
-// For more comprehensive examples of custom
-// commands please read more here:
-// https://on.cypress.io/custom-commands
-// ***********************************************
-//
-//
-// -- This is a parent command --
-// Cypress.Commands.add("login", (email, password) => { ... })
-//
-//
-// -- This is a child command --
-// Cypress.Commands.add("drag", { prevSubject: 'element'}, (subject, options) => { ... })
-//
-//
-// -- This is a dual command --
-// Cypress.Commands.add("dismiss", { prevSubject: 'optional'}, (subject, options) => { ... })
-//
-//
-// -- This will overwrite an existing command --
-// Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
+// Sign in on Auth0's login page, which Cypress reaches with cy.origin().
+// Cypress 16 reads secrets with cy.env() (Cypress.env() is gone): set E2E_DOMAIN, E2E_USERNAME and
+// E2E_PASSWORD in cypress.env.json or as CYPRESS_E2E_* environment variables.
+declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
+  namespace Cypress {
+    interface Chainable {
+      signIn(): Chainable<void>;
+    }
+  }
+}
+
+Cypress.Commands.add('signIn', () => {
+  cy.env<{ E2E_DOMAIN: string; E2E_USERNAME: string; E2E_PASSWORD: string }>([
+    'E2E_DOMAIN',
+    'E2E_USERNAME',
+    'E2E_PASSWORD',
+  ]).then(({ E2E_DOMAIN, E2E_USERNAME, E2E_PASSWORD }) => {
+    Cypress.log({
+      message: [`🔐 Authenticating: ${E2E_USERNAME}`],
+      autoEnd: false,
+    });
+
+    cy.origin(E2E_DOMAIN, { args: { username: E2E_USERNAME, password: E2E_PASSWORD } }, ({ username, password }) => {
+      cy.get('input[name=username]').type(username);
+      cy.get('input[name=password]').type(`${password}{enter}`, { log: false });
+    });
+  });
+
+  cy.url().should('equal', 'http://localhost:4200/home');
+});
+
+export {};
