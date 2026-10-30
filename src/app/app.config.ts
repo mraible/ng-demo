@@ -10,6 +10,9 @@ const config = {
   authorizationParams: {
     redirect_uri: window.location.origin + '/home',
   },
+  // keep the session across page loads (e.g. a refresh, or Cypress visiting a guarded route)
+  useRefreshTokens: true,
+  cacheLocation: 'localstorage' as const,
   httpInterceptor: {
     allowedList: ['/api/*'],
   },
