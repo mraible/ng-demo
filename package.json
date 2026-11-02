@@ -33,7 +33,7 @@
     "@cypress/schematic": "6.0.0",
     "@vitest/coverage-v8": "5.0.5",
     "concurrently": "10.0.6",
-    "cypress": "16.2.0",
+    "cypress": "16.2.1",
     "jsdom": "30.1.3",
     "prettier": "3.9.10",
     "typescript": "6.0.3",
