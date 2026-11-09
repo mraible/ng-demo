@@ -92,8 +92,8 @@ You can see the version of Angular CLI you're using with the `ng version` comman
 ----
 $ ng version
 
-Angular CLI       : 22.2.2
-Node.js           : 24.16.0
+Angular CLI       : 22.2.6
+Node.js          : 24.16.0
 Package Manager   : npm 11.13.0
 Operating System  : darwin arm64
 ----
@@ -101,8 +101,8 @@ Operating System  : darwin arm64
 If you run this command from the `ng-demo` directory, you'll see even more information.
 
 ----
-Angular CLI       : 22.2.2
-Angular           : 22.2.3
+Angular CLI       : 22.2.6
+Angular           : 22.2.5
 Node.js           : 24.16.0
 Package Manager   : npm 11.13.0
 Operating System  : darwin arm64
@@ -110,18 +110,18 @@ Operating System  : darwin arm64
 ┌───────────────────────────┬───────────────────┬───────────────────┐
 │ Package                   │ Installed Version │ Requested Version │
 ├───────────────────────────┼───────────────────┼───────────────────┤
-│ @angular/build            │ 22.2.2            │ ^22.2.2           │
-│ @angular/cli              │ 22.2.2            │ ^22.2.2           │
-│ @angular/common           │ 22.2.3            │ ^22.2.0           │
-│ @angular/compiler         │ 22.2.3            │ ^22.2.0           │
-│ @angular/compiler-cli     │ 22.2.3            │ ^22.2.0           │
-│ @angular/core             │ 22.2.3            │ ^22.2.0           │
-│ @angular/forms            │ 22.2.3            │ ^22.2.0           │
-│ @angular/platform-browser │ 22.2.3            │ ^22.2.0           │
-│ @angular/router           │ 22.2.3            │ ^22.2.0           │
+│ @angular/build            │ 22.2.6            │ ^22.2.6           │
+│ @angular/cli              │ 22.2.6            │ ^22.2.6           │
+│ @angular/common           │ 22.2.5            │ ^22.2.0           │
+│ @angular/compiler         │ 22.2.5            │ ^22.2.0           │
+│ @angular/compiler-cli     │ 22.2.5            │ ^22.2.0           │
+│ @angular/core             │ 22.2.5            │ ^22.2.0           │
+│ @angular/forms            │ 22.2.5            │ ^22.2.0           │
+│ @angular/platform-browser │ 22.2.5            │ ^22.2.0           │
+│ @angular/router           │ 22.2.5            │ ^22.2.0           │
 │ rxjs                      │ 7.8.2             │ ~7.8.0            │
 │ typescript                │ 6.0.3             │ ~6.0.2            │
-│ vitest                    │ 5.0.4             │ ^5.0.0            │
+│ vitest                    │ 5.1.0             │ ^5.0.0            │
 └───────────────────────────┴───────────────────┴───────────────────┘
 ----
 
@@ -949,15 +949,6 @@ it('should render title', async () => {
 ----
 
 Now this test should pass.
-
-[NOTE]
-====
-You might notice that `ng test` doesn't fail on this test _before_ you change it, even though the `<h1>` no longer says "Hello, ng-demo". With Angular CLI 22.2.2 and Vitest 5, compiled test files are cached in `node_modules/.vitest-cache`, and that cache isn't invalidated when only a component's HTML template changes. This is https://github.com/angular/angular-cli/pull/34311[fixed in Angular CLI] and the fix will be in its next patch release. Until then, if a test passes when you expect it to fail, delete the cache and run your tests again.
-
-----
-rm -rf node_modules/.vitest-cache
-----
-====
 
 === Unit test the SearchService
 
