@@ -1393,7 +1393,7 @@ Code coverage requires either "@vitest/coverage-v8" or "@vitest/coverage-istanbu
 Install the V8 provider and run the command again.
 
 ----
-npm install -D --save-exact @vitest/coverage-v8@5.0.5
+npm install -D --save-exact @vitest/coverage-v8@5.1.0
 ----
 
 You'll see a print out of code coverage in your terminal window.
