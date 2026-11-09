@@ -41,7 +41,7 @@ Install Electron.
 
 [source,shell]
 ----
-npm install -D --save-exact electron@45.2.1
+npm install -D --save-exact electron@45.2.3
 ----
 
 An Electron app has a _main process_, which runs in Node.js and creates windows, and _renderer processes_, which display web pages in those windows. Create a `main.js` file in your project's root directory for the main process.
@@ -154,7 +154,7 @@ diff --git a/package.json b/package.json
      "@vitest/coverage-v8": "5.1.0",
      "concurrently": "10.0.6",
      "cypress": "16.2.1",
-+    "electron": "45.2.1",
++    "electron": "45.2.3",
      "jsdom": "31.0.0",
      "prettier": "3.9.10",
      "typescript": "6.0.3",
@@ -218,7 +218,7 @@ diff --git a/package.json b/package.json
 @@ -37,6 +54,7 @@
      "concurrently": "10.0.6",
      "cypress": "16.2.1",
-     "electron": "45.2.1",
+     "electron": "45.2.3",
 +    "electron-builder": "26.18.0",
      "jsdom": "31.0.0",
      "prettier": "3.9.10",
