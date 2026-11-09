@@ -31,12 +31,12 @@
     "@angular/cli": "22.2.5",
     "@angular/compiler-cli": "22.2.4",
     "@cypress/schematic": "6.0.0",
-    "@vitest/coverage-v8": "5.0.5",
+    "@vitest/coverage-v8": "5.1.0",
     "concurrently": "10.0.6",
     "cypress": "16.2.1",
     "jsdom": "31.0.0",
     "prettier": "3.9.10",
     "typescript": "6.0.3",
-    "vitest": "5.0.5"
+    "vitest": "5.1.0"
   }
 }
