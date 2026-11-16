@@ -152,7 +152,7 @@ diff --git a/package.json b/package.json
    "packageManager": "npm@11.13.0",
 @@ -34,6 +36,7 @@
      "@vitest/coverage-v8": "5.1.0",
-     "concurrently": "10.0.6",
+     "concurrently": "10.0.7",
      "cypress": "16.2.1",
 +    "electron": "45.2.3",
      "jsdom": "31.0.1",
@@ -216,7 +216,7 @@ diff --git a/package.json b/package.json
    "private": true,
    "packageManager": "npm@11.13.0",
 @@ -37,6 +54,7 @@
-     "concurrently": "10.0.6",
+     "concurrently": "10.0.7",
      "cypress": "16.2.1",
      "electron": "45.2.3",
 +    "electron-builder": "26.18.0",
