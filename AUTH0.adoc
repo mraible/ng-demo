@@ -410,7 +410,7 @@ diff --git a/.github/workflows/main.yml b/.github/workflows/main.yml
 @@ -9,6 +9,9 @@ jobs:
      strategy:
        matrix:
-         node-version: [22, 24]
+         node-version: [24, 26]
 +    env:
 +      # Secrets aren't available to pull requests from forks or Dependabot
 +      HAS_E2E_SECRETS: ${{ secrets.E2E_DOMAIN != '' }}
