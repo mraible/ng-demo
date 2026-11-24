@@ -45,7 +45,7 @@ jobs:
           token: ${{ secrets.BONUS_SYNC_TOKEN }}
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
-          node-version: 24
+          node-version: 26
       - name: Rebase ${{ matrix.branch }} onto main
         run: |
           git config user.name 'github-actions[bot]'
@@ -111,7 +111,7 @@ jobs:
           fetch-depth: 0
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
-          node-version: 24
+          node-version: 26
       - name: Find new versions of the bonus branches' packages
         id: check
         run: |
